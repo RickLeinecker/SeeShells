@@ -52,6 +52,7 @@
     <Compile Include="ShellParser\IConfigParser.cs" />
     <Compile Include="ShellParser\KnownGuids.cs" />
     <Compile Include="ShellParser\OfflineRegistryReader.cs" />
+    <Compile Include="ShellParser\OnlineRegistryReader.cs" />
     <Compile Include="ShellParser\OverrunBufferException.cs" />
     <Compile Include="ShellParser\Program.cs" />
     <Compile Include="ShellParser\RegistryHelper.cs" />
