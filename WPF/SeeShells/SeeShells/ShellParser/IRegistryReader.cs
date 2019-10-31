@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SeeShells.ShellParser
 {
-    interface IRegistryReader
+    public interface IRegistryReader
     {
         List<RegistryKeyWrapper> GetRegistryKeys();
     }

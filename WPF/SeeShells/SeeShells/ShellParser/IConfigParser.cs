@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SeeShells.ShellParser
 {
-    interface IConfigParser
+    public interface IConfigParser
     {
         void GetConfig();
         void ParseConfig();

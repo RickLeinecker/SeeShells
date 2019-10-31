@@ -46,7 +46,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="IRegistryReader.cs" />
+    <Compile Include="ShellParser\IRegistryReader.cs" />
     <Compile Include="ShellParser\Block.cs" />
     <Compile Include="ShellParser\ConfigParser.cs" />
     <Compile Include="ShellParser\IConfigParser.cs" />
@@ -55,7 +55,7 @@
     <Compile Include="ShellParser\OverrunBufferException.cs" />
     <Compile Include="ShellParser\Program.cs" />
     <Compile Include="ShellParser\RegistryHelper.cs" />
-    <Compile Include="ShellParser\RegistryKey.cs" />
+    <Compile Include="ShellParser\RegistryKeyWrapper.cs" />
     <Compile Include="ShellParser\RegistryReader.cs" />
     <Compile Include="ShellParser\Shellitems.cs" />
     <Compile Include="ShellParser\Shitem.cs" />
