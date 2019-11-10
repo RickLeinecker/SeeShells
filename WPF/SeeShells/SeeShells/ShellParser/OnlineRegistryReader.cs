@@ -25,8 +25,8 @@ namespace SeeShells.ShellParser
             //get relevant online registries
             List<RegistryKey> registryStores = new List<RegistryKey>
             {
-                Registry.Users,
-                Registry.CurrentUser
+                Microsoft.Win32.Registry.Users,
+                Microsoft.Win32.Registry.CurrentUser
             };
 
 

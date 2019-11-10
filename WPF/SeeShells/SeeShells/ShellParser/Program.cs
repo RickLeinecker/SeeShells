@@ -25,7 +25,7 @@ namespace SeeShells.ShellParser
 
         static void iterateCurrentShellbags()
         {
-            RegistryKey rk = Registry.CurrentUser;
+            RegistryKey rk = Microsoft.Win32.Registry.CurrentUser;
             string sk = "Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\Shell";
             iterateRegistry(rk.OpenSubKey(sk), sk, 0, "");
         }

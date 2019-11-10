@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SeeShellsTests</RootNamespace>
     <AssemblyName>SeeShellsTests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -19,6 +19,7 @@
     <TestProjectType>UnitTest</TestProjectType>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -59,6 +60,8 @@
     <Compile Include="ShellParser\OnlineRegistryReaderTests.cs" />
     <Compile Include="ShellParser\ProgramTests.cs" />
     <Compile Include="ShellParser\ShellParserMocks\MockConfigParser.cs" />
+    <Compile Include="ShellParser\OfflineRegistryReaderTests.cs" />
+    <Compile Include="ShellParser\ShellParserMocks\OfflineMockConfigParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -10,7 +10,7 @@
         }
 
 
-        byte[] getValue()
+        public byte[] getValue()
         {
             return value;
         }
