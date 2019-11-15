@@ -17,6 +17,8 @@ namespace SeeShellsTests.ShellParser.ShellParserMocks
         public List<string> GetLocations()
         {
             List<String> list = new List<String>();
+            list.Add("Software\\Microsoft\\Windows\\Shell\\");
+            list.Add("Software\\Microsoft\\Windows\\ShellNoRoam\\");
             list.Add("Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\Shell");
             return list;
         }
