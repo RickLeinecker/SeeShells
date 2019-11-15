@@ -38,16 +38,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommandLine">
-      <HintPath>C:\Users\Aleksandar\Desktop\Parser\DLLS\CommandLine.dll</HintPath>
+      <HintPath>resources\CommandLine.dll</HintPath>
     </Reference>
     <Reference Include="NFluent">
-      <HintPath>C:\Users\Aleksandar\Desktop\Parser\DLLS\NFluent.dll</HintPath>
+      <HintPath>resources\NFluent.dll</HintPath>
     </Reference>
     <Reference Include="NLog">
-      <HintPath>C:\Users\Aleksandar\Desktop\Parser\DLLS\NLog.dll</HintPath>
+      <HintPath>resources\NLog.dll</HintPath>
     </Reference>
     <Reference Include="Registry">
-      <HintPath>C:\Users\Aleksandar\Desktop\Parser\DLLS\Registry.dll</HintPath>
+      <HintPath>resources\Registry.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
