@@ -27,7 +27,7 @@ namespace SeeShells.ShellParser
 
             foreach (string location in Parser.GetLocations())
             {
-                // Location of Offline Hive (change to local dir)
+                // Location of Offline Hive (to be obtained through UI)
                 var hive = new RegistryHiveOnDemand(@"C:\Users\Aleksandar\Desktop\CurrUser");
 
                 foreach (byte[] keyValue in IterateRegistry(hive.GetKey(@"ROOT\" + location), hive, location, 0, ""))
