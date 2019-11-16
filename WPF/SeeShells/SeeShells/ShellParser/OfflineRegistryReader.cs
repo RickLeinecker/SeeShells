@@ -56,19 +56,19 @@ namespace SeeShells.ShellParser
                     return retList;
                 }
 
-                foreach (KeyValue keyValue in rk.Values)
+                foreach (RegistryKey valueName in rk.SubKeys)
                 {
-                    if (keyValue.ValueName.ToUpper() == "ASSOCIATIONS")
+                    if (valueName.KeyName.ToUpper() == "ASSOCIATIONS")
                     {
                         continue;
                     }
 
-                string sk = getSubkeyString(subKey, keyValue.ValueName);
+                string sk = getSubkeyString(subKey, valueName.KeyName);
                     Console.WriteLine("{0}", sk);
                     RegistryKey rkNext;
                     try
                     {
-                        rkNext = hive.GetKey(getSubkeyString(rk.KeyPath, keyValue.ValueName));
+                        rkNext = hive.GetKey(getSubkeyString(rk.KeyPath, valueName.KeyName));
                     }
                     catch (System.Security.SecurityException ex)
                     {
@@ -100,22 +100,26 @@ namespace SeeShells.ShellParser
 
                     int intVal = 0;
                     string path = path_prefix;
-                    bool isNumeric = int.TryParse(keyValue.ValueName, out intVal);
+                    bool isNumeric = int.TryParse(valueName.KeyName, out intVal);
                     if (isNumeric)
                     {
                         try
                         {
-                            byte[] byteVal = (byte[])keyValue.ValueDataRaw;
+                        var k = hive.GetKey(valueName.KeyPath);
+                        foreach (KeyValue keyValue in k.Values)
+                        {
+                            byte[] byteVal = keyValue.ValueDataRaw;
                             retList.Add(byteVal);
+                        }
                         }
 
                         catch (OverrunBufferException ex)
                         {
-                            Console.WriteLine("OverrunBufferException: " + keyValue.ValueName);
+                            Console.WriteLine("OverrunBufferException: " + valueName.KeyName);
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine(keyValue.ValueName);
+                            Console.WriteLine(valueName.KeyName);
                         }
                     }
 

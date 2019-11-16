@@ -17,7 +17,6 @@ namespace SeeShellsTests.ShellParser
         {
             OfflineRegistryReader registryReader = new OfflineRegistryReader(new OfflineMockConfigParser());
             List<RegistryKeyWrapper> keys = registryReader.GetRegistryKeys();
-
             Assert.AreNotEqual(keys.Count, 0);
         }
     }

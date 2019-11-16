@@ -18,7 +18,7 @@ namespace SeeShellsTests.ShellParser.ShellParserMocks
         {
             List<String> list = new List<String>();
             /// If given the directory up to Shell, it does not find subkeys, thus it parses nothing
-            list.Add(@"Software\Microsoft\Windows\Shell\BagMRU");
+            list.Add(@"Software\Microsoft\Windows\Shell");
             return list;
         }
 
