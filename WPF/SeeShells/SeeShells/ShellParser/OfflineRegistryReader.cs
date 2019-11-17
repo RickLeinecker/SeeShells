@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using Registry;
 using Registry.Abstractions;
@@ -27,10 +28,10 @@ namespace SeeShells.ShellParser
 
             foreach (string location in Parser.GetLocations())
             {
-                // Location of Offline Hive (to be obtained through UI)
-                var hive = new RegistryHiveOnDemand(@"C:\Users\Aleksandar\Desktop\CurrUser");
+                // Location of Offline Hive
+                var hive = new RegistryHiveOnDemand(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\TestResource\NTUSER.DAT");
 
-                foreach (byte[] keyValue in IterateRegistry(hive.GetKey(@"ROOT\" + location), hive, location, 0, ""))
+                foreach (byte[] keyValue in IterateRegistry(hive.GetKey(location), hive, location, 0, ""))
                 {
                     retList.Add(new RegistryKeyWrapper(keyValue));
                 }
