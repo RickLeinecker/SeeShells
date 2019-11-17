@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Text;
 using Registry;
 using Registry.Abstractions;
 
@@ -16,10 +12,12 @@ namespace SeeShells.ShellParser
     public class OfflineRegistryReader : IRegistryReader
     {
         IConfigParser Parser { get; }
+        private String RegistryFilePath;
 
-        public OfflineRegistryReader(IConfigParser parser)
+        public OfflineRegistryReader(IConfigParser parser, String registryFilePath)
         {
             Parser = parser;
+            RegistryFilePath = registryFilePath;
         }
 
         public List<RegistryKeyWrapper> GetRegistryKeys()
@@ -28,8 +26,7 @@ namespace SeeShells.ShellParser
 
             foreach (string location in Parser.GetLocations())
             {
-                // Location of Offline Hive
-                var hive = new RegistryHiveOnDemand(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\TestResource\NTUSER.DAT");
+                var hive = new RegistryHiveOnDemand(RegistryFilePath);
 
                 foreach (byte[] keyValue in IterateRegistry(hive.GetKey(location), hive, location, 0, ""))
                 {
@@ -43,8 +40,8 @@ namespace SeeShells.ShellParser
         /// <summary>
         /// Recursively iterates over the a registry key and its subkeys for enumerating all values of the keys and subkeys
         /// </summary>
-        /// <param name="rk">The root registry key to start iterating over</param>
-        /// <param name="hive">The offline registry hive</param>
+        /// <param name="rk">the root registry key to start iterating over</param>
+        /// <param name="hive">the offline registry hive</param>
         /// <param name="subKey">the path of the first subkey under the root key</param>
         /// <param name="indent"></param>
         /// <param name="path_prefix">the header to the current root key, needed for identification of the registry store</param>
