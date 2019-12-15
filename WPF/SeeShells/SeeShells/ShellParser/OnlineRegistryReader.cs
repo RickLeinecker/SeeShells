@@ -23,7 +23,7 @@ namespace SeeShells.ShellParser
             List<RegistryKeyWrapper> retList = new List<RegistryKeyWrapper>();
 
             //get relevant online registry
-            RegistryKey store = Registry.Users;
+            RegistryKey store = Microsoft.Win32.Registry.Users;
 
             List<RegistryKey> userStores = new List<RegistryKey>();
             foreach (string userStoreName in store.GetSubKeyNames())
