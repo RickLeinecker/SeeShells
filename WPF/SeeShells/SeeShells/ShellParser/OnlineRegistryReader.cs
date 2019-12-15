@@ -22,23 +22,29 @@ namespace SeeShells.ShellParser
         {
             List<RegistryKeyWrapper> retList = new List<RegistryKeyWrapper>();
 
-            //get relevant online registries
-            List<RegistryKey> registryStores = new List<RegistryKey>
-            {
-                Microsoft.Win32.Registry.Users,
-                Microsoft.Win32.Registry.CurrentUser
-            };
+            //get relevant online registry
+            RegistryKey store = Registry.Users;
 
-
-            foreach (string location in Parser.GetLocations())
+            List<RegistryKey> userStores = new List<RegistryKey>();
+            foreach (string userStoreName in store.GetSubKeyNames())
             {
-                foreach (RegistryKey store in registryStores)
+                userStores.Add(store.OpenSubKey(userStoreName));
+            }
+
+            //iterate over each user's registry
+            foreach (RegistryKey userStore in userStores)
+            {
+                Console.WriteLine("NEW USER SID: " + userStore.Name);
+
+                foreach (string location in Parser.GetLocations())
                 {
-                    foreach (byte[] keyValue in IterateRegistry(store.OpenSubKey(location), location, 0, ""))
+                    foreach (byte[] keyValue in IterateRegistry(userStore.OpenSubKey(location), location, 0, ""))
                     {
                         retList.Add(new RegistryKeyWrapper(keyValue));
                     }
                 }
+                //todo: this is the ideal spot for labeling information by each user if needed.
+                //possible separation of RegistryKeyWrappers by user is also possible above.
             }
 
             return retList;
