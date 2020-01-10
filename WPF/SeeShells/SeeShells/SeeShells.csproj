@@ -75,6 +75,7 @@
     <Compile Include="ShellParser\RegistryKeyWrapper.cs" />
     <Compile Include="ShellParser\RegistryReader.cs" />
     <Compile Include="ShellParser\Shellitems.cs" />
+    <Compile Include="ShellParser\ShellItems\IShellItem.cs" />
     <Compile Include="ShellParser\Shitem.cs" />
     <Compile Include="ShellParser\ShitemList.cs" />
     <Page Include="MainWindow.xaml">
