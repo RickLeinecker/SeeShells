@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.Win32;
+using SeeShells.ShellParser.ShellItems;
 
 namespace SeeShells.ShellParser
 {
@@ -83,17 +84,17 @@ namespace SeeShells.ShellParser
                         byte[] byteVal = (byte[])rk.GetValue(valueName);
                         SHITEMLIST l = new SHITEMLIST(byteVal, 0, null);
 
-                        foreach (SHITEM item in l.items())
+                        foreach (ShellItem item in l.items())
                         {
                             if (path_prefix.Length == 0)
-                                path = item.name;
+                                path = item.Name;
                             else
-                                path = path_prefix + "\\" + item.name;
+                                path = path_prefix + "\\" + item.Name;
                             Dictionary<string, object> shellbag = new Dictionary<string, object>() {
                                 { "path", path},
-                                { "mtime", item.m_date },
-                                { "atime", item.a_date },
-                                { "crtime", item.cr_date },
+                                { "mtime", item.ModifiedDate },
+                                { "atime", item.AccessedDate },
+                                { "crtime", item.CreationDate },
                                 { "source", string.Format("{0} @ {1}", subKey, item.offset) },
                                 { "regsource", rkNext.Name }
                             };

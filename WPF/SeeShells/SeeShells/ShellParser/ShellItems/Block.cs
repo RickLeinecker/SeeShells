@@ -2,21 +2,21 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SeeShells.ShellParser
+namespace SeeShells.ShellParser.ShellItems
 {
-    class Block
+    public class Block
     {
-        public byte[] buf { get; set; }
-        public int offset { get; set; }
-        public object parent { get; set; }
-        public Block(byte[] buf, int offset, object parent)
+        protected byte[] buf { get; set; }
+        public int offset { get; protected set; }
+        protected object parent { get; set; }
+        protected Block(byte[] buf, int offset)
         {
             this.buf = buf;
             this.offset = offset;
-            this.parent = parent;
+            parent = parent;
         }
 
-        public byte unpack_byte(int off)
+        protected byte unpack_byte(int off)
         {
             try
             {
@@ -27,8 +27,10 @@ namespace SeeShells.ShellParser
                 throw new OverrunBufferException(offset + off, buf.Length);
             }
         }
-
-        public ushort unpack_word(int off)
+        /// <summary>
+        /// Unpacks a value equal to 2 bytes
+        /// </summary>
+        protected ushort unpack_word(int off)
         {
             try
             {
@@ -40,7 +42,7 @@ namespace SeeShells.ShellParser
             }
         }
 
-        public string unpack_guid(int off)
+        protected string unpack_guid(int off)
         {
             try
             {
@@ -56,8 +58,13 @@ namespace SeeShells.ShellParser
                 throw new OverrunBufferException(offset + off, buf.Length);
             }
         }
-
-        public string unpack_wstring(int off, int length = 0)
+        /// <summary>
+        /// Unpacks a Unicode encoded String of various sizing.
+        /// </summary>
+        /// <param name="off"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        protected string unpack_wstring(int off, int length = 0)
         {
             try
             {
@@ -83,7 +90,7 @@ namespace SeeShells.ShellParser
             }
         }
 
-        public string unpack_string(int off, int length = 0)
+        protected string unpack_string(int off, int length = 0)
         {
             try
             {
@@ -91,6 +98,7 @@ namespace SeeShells.ShellParser
                 {
                     int end = Array.IndexOf(buf, (byte)0, offset + off);
                     length = end - offset - off;
+                    if (length == 0) return string.Empty;
                 }
                 while (buf[offset + off + length - 1] == 0) --length;
                 return Encoding.ASCII.GetString(buf, offset + off, length);
@@ -101,7 +109,12 @@ namespace SeeShells.ShellParser
             }
         }
 
-        public uint unpack_dword(int off)
+        /// <summary>
+        /// unpacks a equivalent to 4 bytes
+        /// </summary>
+        /// <param name="off"></param>
+        /// <returns></returns>
+        protected uint unpack_dword(int off)
         {
             try
             {
@@ -113,12 +126,30 @@ namespace SeeShells.ShellParser
             }
         }
 
-        public DateTime unpack_dosdate(int off)
+        /// <summary>
+        /// unpacks a equivalent to 8 bytes
+        /// </summary>
+        /// <param name="off"></param>
+        /// <returns></returns>
+        protected ulong UnpackQword(int off)
         {
             try
             {
-                ushort dosdate = (ushort)((buf[offset + off + 1] << 8) | buf[offset + off]);
-                ushort dostime = (ushort)((buf[offset + off + 3] << 8) | buf[offset + off + 2]);
+                return BitConverter.ToUInt64(buf, offset + off);
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                throw new OverrunBufferException(offset + off, buf.Length);
+            }
+        }
+
+
+        protected DateTime unpack_dosdate(int off)
+        {
+            try
+            {
+                ushort dosdate = (ushort)(buf[offset + off + 1] << 8 | buf[offset + off]);
+                ushort dostime = (ushort)(buf[offset + off + 3] << 8 | buf[offset + off + 2]);
                 int day = dosdate & 0x1F;
                 int month = (dosdate & 0x1E0) >> 5;
                 int year = (dosdate & 0xFE00) >> 9;
@@ -135,11 +166,23 @@ namespace SeeShells.ShellParser
             }
         }
 
-        public int align(int off, int alignment)
+        /// <summary>
+        /// Pulls out a Windows File time from its byte representation
+        /// FileTimes are shown to be represented in 8 Bytes(QWord)
+        /// <
+        /// </summary>
+        /// <param name="off"></param>
+        /// <returns></returns>
+        protected DateTime UnpackFileTime(int off)
+        {
+            return DateTime.FromFileTimeUtc(BitConverter.ToInt64(buf, offset + off));
+        }
+
+        protected int align(int off, int alignment)
         {
             if (off % alignment == 0)
                 return off;
-            return off + (alignment - (off % alignment));
+            return off + (alignment - off % alignment);
         }
     }
 }
