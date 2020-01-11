@@ -62,6 +62,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ShellParser\ShellBagParser.cs" />
     <Compile Include="ShellParser\IRegistryReader.cs" />
     <Compile Include="ShellParser\Block.cs" />
     <Compile Include="ShellParser\ConfigParser.cs" />
