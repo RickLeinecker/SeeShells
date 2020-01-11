@@ -7,7 +7,11 @@ namespace SeeShells.ShellParser.ShellItems
 {
     public class ShellItemList : Block
     {
-        public ShellItemList(byte[] buf, int offset) : base(buf, offset) { }
+        /// <summary>
+        /// Converts a RegistryKey's value into a list of usable <see cref="IShellItem"/> objects.
+        /// </summary>
+        /// <param name="buffer">A Byte Array retrieved from the value of a Windows Registry Key.</param>
+        public ShellItemList(byte[] buffer) : base(buffer, 0) { }
 
         protected  IShellItem GetItem(int off)
         {
