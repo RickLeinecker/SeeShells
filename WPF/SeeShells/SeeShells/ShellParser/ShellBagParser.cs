@@ -6,7 +6,7 @@ namespace SeeShells.ShellParser
     /// <summary>
     /// This class is used to obtain and identify ShellBag items. 
     /// </summary>
-    class ShellBagParser
+    public class ShellBagParser
     {
         IRegistryReader registryReader;
         public ShellBagParser(IRegistryReader registryReader)
