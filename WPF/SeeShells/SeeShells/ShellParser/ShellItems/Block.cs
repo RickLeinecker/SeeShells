@@ -13,7 +13,6 @@ namespace SeeShells.ShellParser.ShellItems
         {
             this.buf = buf;
             this.offset = offset;
-            parent = parent;
         }
 
         protected byte unpack_byte(int off)
