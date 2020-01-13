@@ -57,6 +57,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShellParser\ShellBagParserTests.cs" />
     <Compile Include="ShellParser\OnlineRegistryReaderTests.cs" />
     <Compile Include="ShellParser\ProgramTests.cs" />
     <Compile Include="ShellParser\ShellItems\ShellItemsTests.cs" />

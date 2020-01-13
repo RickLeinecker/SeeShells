@@ -15,14 +15,19 @@ namespace SeeShells.ShellParser.ShellItems
 
         protected  IShellItem GetItem(int off)
         {
-            //item to return
-            IShellItem item = null;
             //the shell item type which can be identified by 2 bytes (0xXX)
-            int type = unpack_byte(off + 2);
+            String postfix = unpack_byte(off + 2).ToString("X2");
 
-            //TODO: Aleks - Dynamically call upon correct ShellItem0xXX to be instantiated
+            Type type = Type.GetType("SeeShells.ShellParser.ShellItems.ShellItem0x" + postfix);
+            if(type == null || postfix == "30" || postfix == "32" || postfix == "31" || postfix == "74")
+            {
+                // Getting here means that the ShellItem is unidentified
+                return new ShellItem(buf);
 
-            return item;
+                // TODO Embedded Scripting
+            }
+
+            return (IShellItem)Activator.CreateInstance(type, buf);
         }
 
         public IEnumerable<IShellItem> Items()
