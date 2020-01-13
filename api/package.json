@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/RickLeinecker/SeeShells#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "pg": "^7.17.1"
   }
 }
