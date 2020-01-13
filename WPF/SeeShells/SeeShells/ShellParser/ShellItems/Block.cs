@@ -149,6 +149,13 @@ namespace SeeShells.ShellParser.ShellItems
             {
                 ushort dosdate = (ushort)(buf[offset + off + 1] << 8 | buf[offset + off]);
                 ushort dostime = (ushort)(buf[offset + off + 3] << 8 | buf[offset + off + 2]);
+
+                //check if the bytes contained no data
+                if (dosdate == 0 && dostime == 0)
+                {
+                    return DateTime.MinValue; //same thing as invalid. (minvalue goes below the epoch)
+                }
+
                 int day = dosdate & 0x1F;
                 int month = (dosdate & 0x1E0) >> 5;
                 int year = (dosdate & 0xFE00) >> 9;
