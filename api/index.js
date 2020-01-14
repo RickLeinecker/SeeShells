@@ -8,6 +8,7 @@ var app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+
 app.get('/', function (req, res) {
     res.send({ test: 'testing', hello: 'klayton', and: 'aleks', aswellas: 'bridget', andlastbutnotleast: 'yara' });
 });
@@ -43,7 +44,6 @@ app.post('/register', function (req, res) {;
     });
     
 });
-
 
 app.listen(port, function () {
     console.log('Example app listening...');
