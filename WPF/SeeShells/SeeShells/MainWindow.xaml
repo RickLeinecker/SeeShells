@@ -5,8 +5,56 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SeeShells"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="SeeShells" Height="450" Width="800">
     <Grid>
-        
+        <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="421" VerticalAlignment="Top" Width="793" Margin="0,0,0,-0.333">
+            <TabItem Header="Home" Height="22" VerticalAlignment="Top" Foreground="White" Background="#FF343030" BorderBrush="#FF1A70B0">
+                <Grid Background="#FF343030" Margin="0,0,-0.333,-2.333">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="81*"/>
+                        <ColumnDefinition Width="721*"/>
+                    </Grid.ColumnDefinitions>
+                    <CheckBox x:Name="checkBox" Content="Offline" HorizontalAlignment="Left" Margin="51,74,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Checked="checkBox_Checked" Foreground="#FF1F52A1" FontSize="14"/>
+                    <CheckBox x:Name="checkBox1" Content="Overwrite Configuration File" HorizontalAlignment="Left" Margin="51,204,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Foreground="#FF1F52A1" BorderBrush="#FF707070" FontSize="14"/>
+                    <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="51,95,0,0" TextWrapping="Wrap" Text=" Hive Location" VerticalAlignment="Top" Grid.ColumnSpan="2" Height="20" Width="454" Foreground="white" Background="#292525"/>
+                    <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="51,225,0,0" TextWrapping="Wrap" Text=" Configuration File Location" VerticalAlignment="Top" Grid.ColumnSpan="2" Height="20" Width="454" Foreground="white" Background="#292525"/>
+                    <StackPanel Margin="51,120,0,0">
+                        <ComboBox x:Name="Operating_Systems" Margin="0,0,-101.333,0" SelectionChanged="Operating_Systems_SelectionChanged">
+                            <ComboBox.Background>
+                                <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                                    <GradientStop Color="#FFF0F0F0" Offset="0"/>
+                                    <GradientStop Color="#FFE63636" Offset="1"/>
+                                </LinearGradientBrush>
+                            </ComboBox.Background>
+                            <ComboBoxItem>Windows 10</ComboBoxItem>
+                            <ComboBoxItem>Windows 8</ComboBoxItem>
+                            <ComboBoxItem>Windows 7</ComboBoxItem>
+                        </ComboBox>
+                    </StackPanel>
+                    <Button x:Name="button" Content="Browse" Grid.Column="1" HorizontalAlignment="Left" Margin="440.667,88,0,0" VerticalAlignment="Top" Width="83" Background="#292525" BorderBrush="#FF1F52A1" Foreground="#FF1F52A1" Height="31"/>
+                    <Button x:Name="button_Copy" Content="Browse" Grid.Column="1" HorizontalAlignment="Left" Margin="440.667,220,0,0" VerticalAlignment="Top" Width="83" Background="#292525" BorderBrush="#FF1F52A1" Foreground="#FF1F52A1" Height="31" Click="button_Copy_Click"/>
+                    <Button x:Name="button_Copy1" Content="Parse" Grid.Column="1" HorizontalAlignment="Left" Margin="579.667,325,0,0" VerticalAlignment="Top" Width="83" Background="#292525" BorderBrush="#FF1F52A1" Foreground="#FF1F52A1" Height="31" Click="button_Copy_Click"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Timeline" Height="24" Margin="-2,-2,-2.333,0" VerticalAlignment="Bottom">
+                <Grid Background="#FFE5E5E5" Margin="0,0,-3.333,-0.333">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="77*"/>
+                        <ColumnDefinition Width="20*"/>
+                        <ColumnDefinition Width="704*"/>
+                    </Grid.ColumnDefinitions>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Help">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="77*"/>
+                        <ColumnDefinition Width="20*"/>
+                        <ColumnDefinition Width="40*"/>
+                        <ColumnDefinition Width="664*"/>
+                    </Grid.ColumnDefinitions>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
