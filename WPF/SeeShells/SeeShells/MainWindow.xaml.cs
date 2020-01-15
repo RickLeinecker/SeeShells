@@ -42,5 +42,20 @@ namespace SeeShells
         {
 
         }
+
+        private void Download_Copy_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void checkBox2_Copy4_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Download_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
