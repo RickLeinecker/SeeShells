@@ -17,7 +17,6 @@ function hashAndSaltPassword(password, callback) {
     });
 };
 
-// this function is in progress
 function verifyPassword(hash, salt, enteredPassword, callback) {
     var hashedSalt = crypto.createHmac('sha512', salt);
     hashedSalt.update(enteredPassword);
@@ -29,8 +28,8 @@ function verifyPassword(hash, salt, enteredPassword, callback) {
         callback(0);
 };
 
-function generateSessionKey(callback) {
-    callback(crypto.randomBytes(16).toString('base64'));
+function generateSessionKey() {
+    return crypto.randomBytes(16).toString('base64');
 }
 
 module.exports = {

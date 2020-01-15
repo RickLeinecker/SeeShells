@@ -1,4 +1,7 @@
-const { Pool, Client } = require('pg');
+require('dotenv').config();
+const { Pool, Client } = require('pg'),
+    session = require('express-session'),
+    pgSession = require('connect-pg-simple')(session);
 
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
@@ -35,6 +38,10 @@ function registerUser(username, password, salt) {
     });
 }
 
+function createSession() {
+
+}
+
 function getGUIDS() {
     pool.query('SELECT guid, name FROM guids;', (err, res) => {
         if (err) throw err;
@@ -45,7 +52,11 @@ function getGUIDS() {
 }
 
 module.exports = {
+    pool,
+    session,
+    pgSession,
     userExists,
-    registerUser
+    registerUser,
+    createSession
 }
 
