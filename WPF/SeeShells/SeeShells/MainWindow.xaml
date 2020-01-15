@@ -11,14 +11,16 @@
             <TabItem Header="Home" Height="22" VerticalAlignment="Top" Foreground="White" Background="#FF343030" BorderBrush="#FF1A70B0">
                 <Grid Background="#FF343030" Margin="0,0,-0.333,-2.333">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="81*"/>
-                        <ColumnDefinition Width="721*"/>
+                        <ColumnDefinition Width="68*"/>
+                        <ColumnDefinition Width="12*"/>
+                        <ColumnDefinition Width="37*"/>
+                        <ColumnDefinition Width="670*"/>
                     </Grid.ColumnDefinitions>
-                    <CheckBox x:Name="checkBox" Content="Offline" HorizontalAlignment="Left" Margin="51,74,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Checked="checkBox_Checked" Foreground="#FF1F52A1" FontSize="14"/>
-                    <CheckBox x:Name="checkBox1" Content="Overwrite Configuration File" HorizontalAlignment="Left" Margin="51,204,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Foreground="#FF1F52A1" BorderBrush="#FF707070" FontSize="14"/>
-                    <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="51,95,0,0" TextWrapping="Wrap" Text=" Hive Location" VerticalAlignment="Top" Grid.ColumnSpan="2" Height="20" Width="454" Foreground="white" Background="#292525"/>
-                    <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="51,225,0,0" TextWrapping="Wrap" Text=" Configuration File Location" VerticalAlignment="Top" Grid.ColumnSpan="2" Height="20" Width="454" Foreground="white" Background="#292525"/>
-                    <StackPanel Margin="51,120,0,0">
+                    <CheckBox x:Name="checkBox" Content="Offline" HorizontalAlignment="Left" Margin="51,74,0,0" VerticalAlignment="Top" Grid.ColumnSpan="3" Checked="checkBox_Checked" Foreground="#FF1F52A1" FontSize="14"/>
+                    <CheckBox x:Name="checkBox1" Content="Overwrite Configuration File" HorizontalAlignment="Left" Margin="51,204,0,0" VerticalAlignment="Top" Grid.ColumnSpan="4" Foreground="#FF1F52A1" BorderBrush="#FF707070" FontSize="14"/>
+                    <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="51,95,0,0" TextWrapping="Wrap" Text=" Hive Location" VerticalAlignment="Top" Grid.ColumnSpan="4" Height="20" Width="454" Foreground="white" Background="#292525"/>
+                    <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="51,225,0,0" TextWrapping="Wrap" Text=" Configuration File Location" VerticalAlignment="Top" Grid.ColumnSpan="4" Height="20" Width="454" Foreground="white" Background="#292525"/>
+                    <StackPanel Margin="51,120,0,0" Grid.ColumnSpan="2">
                         <ComboBox x:Name="Operating_Systems" Margin="0,0,-101.333,0" SelectionChanged="Operating_Systems_SelectionChanged">
                             <ComboBox.Background>
                                 <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
@@ -31,28 +33,69 @@
                             <ComboBoxItem>Windows 7</ComboBoxItem>
                         </ComboBox>
                     </StackPanel>
-                    <Button x:Name="button" Content="Browse" Grid.Column="1" HorizontalAlignment="Left" Margin="440.667,88,0,0" VerticalAlignment="Top" Width="83" Background="#292525" BorderBrush="#FF1F52A1" Foreground="#FF1F52A1" Height="31"/>
-                    <Button x:Name="button_Copy" Content="Browse" Grid.Column="1" HorizontalAlignment="Left" Margin="440.667,220,0,0" VerticalAlignment="Top" Width="83" Background="#292525" BorderBrush="#FF1F52A1" Foreground="#FF1F52A1" Height="31" Click="button_Copy_Click"/>
-                    <Button x:Name="button_Copy1" Content="Parse" Grid.Column="1" HorizontalAlignment="Left" Margin="579.667,325,0,0" VerticalAlignment="Top" Width="83" Background="#292525" BorderBrush="#FF1F52A1" Foreground="#FF1F52A1" Height="31" Click="button_Copy_Click"/>
+                    <Button x:Name="button" Content="Browse" Grid.Column="3" HorizontalAlignment="Left" Margin="404.333,88,0,0" VerticalAlignment="Top" Width="83" Background="#292525" BorderBrush="#FF1F52A1" Foreground="#FF1F52A1" Height="31"/>
+                    <Button x:Name="button_Copy" Content="Browse" Grid.Column="3" HorizontalAlignment="Left" Margin="404.333,220,0,0" VerticalAlignment="Top" Width="83" Background="#292525" BorderBrush="#FF1F52A1" Foreground="#FF1F52A1" Height="31" Click="button_Copy_Click"/>
+                    <Button x:Name="button_Copy1" Content="Parse" Grid.Column="3" HorizontalAlignment="Left" Margin="543.333,325,0,0" VerticalAlignment="Top" Width="83" Background="#292525" BorderBrush="#FF1F52A1" Foreground="#FF1F52A1" Height="31" Click="button_Copy_Click"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Timeline" Height="24" Margin="-2,-2,-2.333,0" VerticalAlignment="Bottom">
-                <Grid Background="#FFE5E5E5" Margin="0,0,-3.333,-0.333">
+            <TabItem Header="Timeline" Height="24" Margin="-2,0,-2.333,0" VerticalAlignment="Top" Foreground="White" Background="#FF343030" BorderBrush="#FF1A70B0">
+                <Grid Background="#FF343030" Margin="0,0,-3.333,-0.333">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="77*"/>
-                        <ColumnDefinition Width="20*"/>
-                        <ColumnDefinition Width="704*"/>
+                        <ColumnDefinition Width="0*"/>
+                        <ColumnDefinition Width="0*"/>
+                        <ColumnDefinition Width="48*"/>
+                        <ColumnDefinition Width="347*"/>
                     </Grid.ColumnDefinitions>
+                    <Rectangle Fill="#FF292525" HorizontalAlignment="Left" Height="389" Margin="-3,0,0,0" Stroke="Black" VerticalAlignment="Top" Width="198" Grid.ColumnSpan="4"/>
+                    <Canvas Grid.Column="3" HorizontalAlignment="Left" Height="210" Margin="104,10,0,0" VerticalAlignment="Top" Width="580" Background="#FF292525">
+                        <Slider x:Name="slider1" Canvas.Top="209" Width="580"/>
+                    </Canvas>
+                    <Button x:Name="Download" Content="Download" Grid.Column="3" HorizontalAlignment="Left" Margin="576,328,0,0" VerticalAlignment="Top" Width="83" Background="#292525" BorderBrush="#FF1F52A1" Foreground="#FF1F52A1" Height="31" Click="Download_Click"/>
+                    <Rectangle Grid.Column="2" Fill="#FF343030" HorizontalAlignment="Left" Margin="24,21,0,0" Stroke="#FF1F52A1" VerticalAlignment="Top" Width="145" Grid.ColumnSpan="2" Height="35"/>
+                    <TextBlock x:Name="Filter" Grid.Column="2" HorizontalAlignment="Left" Margin="24,21,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Grid.ColumnSpan="2" Height="35" Width="145" Foreground="#FF1F52A1" FontSize="23" TextAlignment="Center"><Run Text="Filter"/><LineBreak/><Run/></TextBlock>
+                    <TextBlock x:Name="textBlock2" Grid.Column="2" HorizontalAlignment="Left" Margin="24,82,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="20" Width="62" Background="#FF343030"/>
+                    <TextBlock x:Name="textBlock2_Copy" Grid.Column="3" HorizontalAlignment="Left" Margin="11,82,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="20" Width="62" Background="#FF343030"/>
+                    <TextBlock x:Name="textBlock3" Grid.Column="2" HorizontalAlignment="Left" Margin="30,107,0,0" TextWrapping="Wrap" Text="Start Date" VerticalAlignment="Top" Foreground="#FF1F52A1"/>
+                    <TextBlock x:Name="textBlock3_Copy" Grid.Column="3" HorizontalAlignment="Left" Margin="18,107,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Foreground="#FF1F52A1"><Run Text="End"/><Run Text=" Date"/></TextBlock>
+                    <CheckBox x:Name="checkBox2" Grid.ColumnSpan="4" Content="Full Day Report" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="23,141,0,0" Foreground="#FF1F52A1" Width="138" FontSize="15"/>
+                    <TextBlock x:Name="textBlock2_Copy1" Grid.Column="2" HorizontalAlignment="Left" Margin="24,169,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="20" Width="62" Background="#FF343030"/>
+                    <TextBlock x:Name="textBlock2_Copy2" Grid.Column="3" HorizontalAlignment="Left" Margin="11,169,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="20" Width="62" Background="#FF343030"/>
+                    <TextBlock x:Name="textBlock3_Copy1" Grid.Column="2" HorizontalAlignment="Left" Margin="30,194,0,0" TextWrapping="Wrap" Text="Start Time" VerticalAlignment="Top" Foreground="#FF1F52A1"/>
+                    <TextBlock x:Name="textBlock3_Copy2" Grid.Column="3" HorizontalAlignment="Left" Margin="17,194,0,0" TextWrapping="Wrap" Text="End Time" VerticalAlignment="Top" Foreground="#FF1F52A1"/>
+                    <CheckBox x:Name="checkBox2_Copy" Grid.ColumnSpan="4" Content="Only Hidden Files" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="22,228,0,0" Foreground="#FF1F52A1" Width="138" FontSize="15"/>
+                    <CheckBox x:Name="checkBox2_Copy1" Grid.ColumnSpan="4" Content="Only Setting Changes" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="23,252,0,0" Foreground="#FF1F52A1" Width="172" FontSize="15"/>
+                    <CheckBox x:Name="checkBox2_Copy2" Grid.ColumnSpan="4" Content="Only Admin Actions" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="23,276,0,0" Foreground="#FF1F52A1" Width="159" FontSize="15"/>
+                    <CheckBox x:Name="checkBox2_Copy3" Grid.ColumnSpan="4" Content="Actions on:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="23,300,0,0" Foreground="#FF1F52A1" Width="138" FontSize="15"/>
+                    <TextBlock x:Name="textBlock4" Grid.ColumnSpan="4" HorizontalAlignment="Left" TextWrapping="Wrap" Text=" File Name" VerticalAlignment="Top" Margin="24,328,0,0" Width="139" Background="#FF343030" Height="20"/>
+                    <Button x:Name="Download_Copy" Content="" Grid.Column="3" HorizontalAlignment="Left" Margin="45,328,0,0" VerticalAlignment="Top" Width="28" Background="#292525" BorderBrush="#FF1F52A1" Foreground="#FF1F52A1" Height="20" FontSize="20" Click="Download_Copy_Click"/>
+                    <TextBlock x:Name="textBlock5" Grid.Column="2" HorizontalAlignment="Left" Margin="53,353,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Grid.ColumnSpan="2" Foreground="#FF1F52A1" FontSize="15" Width="116" Text="Add Another File"/>
+                    <CheckBox x:Name="checkBox2_Copy4" Content="Timeline PDF" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="113,252,0,0" Foreground="White" Width="138" FontSize="15" Grid.Column="3" Checked="checkBox2_Copy4_Checked"/>
+                    <CheckBox x:Name="checkBox2_Copy5" Content="Raw Data (CSV)" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="113,280,0,0" Foreground="White" Width="138" FontSize="15" Grid.Column="3"/>
+                    <Rectangle Grid.Column="2" Fill="#FF1F52A1" HorizontalAlignment="Left" Height="4" Margin="23,362,0,0" Stroke="#FF1F52A1" VerticalAlignment="Top" Width="22"/>
+                    <Rectangle Grid.Column="2" Fill="#FF1F52A1" HorizontalAlignment="Left" Height="4" Margin="23,362,0,0" Stroke="#FF1F52A1" VerticalAlignment="Top" Width="22" RenderTransformOrigin="0.5,0.5">
+                        <Rectangle.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleY="-1"/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="-90.144"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </Rectangle.RenderTransform>
+                    </Rectangle>
                 </Grid>
             </TabItem>
-            <TabItem Header="Help">
-                <Grid Background="#FFE5E5E5">
+            <TabItem Header="Help" Foreground="White" Background="#FF343030" BorderBrush="#FF1A70B0">
+                <Grid Background="#FF343030">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="77*"/>
+                        <ColumnDefinition Width="75*"/>
+                        <ColumnDefinition Width="0*"/>
                         <ColumnDefinition Width="20*"/>
-                        <ColumnDefinition Width="40*"/>
-                        <ColumnDefinition Width="664*"/>
+                        <ColumnDefinition Width="692*"/>
                     </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="textBlock6" HorizontalAlignment="Left" Margin="46,25,0,0" TextWrapping="Wrap" Text=" Search..." VerticalAlignment="Top" Grid.ColumnSpan="4" Width="434" Height="23" Background="#FF292525" Foreground="White" FontSize="14"/>
+                    <Button x:Name="Search" Content="Search" Grid.Column="3" HorizontalAlignment="Left" Margin="345.333,21,0,0" VerticalAlignment="Top" Width="83" Background="#292525" BorderBrush="#FF1F52A1" Foreground="#FF1F52A1" Height="31" Click="Download_Click"/>
+                    <TextBlock x:Name="textBlock7" HorizontalAlignment="Left" Margin="46,71,0,0" TextWrapping="Wrap" Text="Running the Parser" VerticalAlignment="Top" Grid.ColumnSpan="4" Height="24" Width="353" Foreground="#FF1F52A1" FontSize="15"/>
+                    <TextBlock x:Name="textBlock8" HorizontalAlignment="Left" Margin="46,100,0,0" TextWrapping="Wrap" Text=" Insert Information " VerticalAlignment="Top" Grid.ColumnSpan="4" Height="110" Width="656" Background="#FF292525" Foreground="White"/>
                 </Grid>
             </TabItem>
         </TabControl>
