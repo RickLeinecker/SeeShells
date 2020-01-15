@@ -3,24 +3,25 @@ using System.Collections.Generic;
 using System.Text;
 
 
-namespace SeeShells.ShellParser
+namespace SeeShells.ShellParser.ShellItems
 {
+    [Obsolete("Legacy Code meant for diff baseline checking only.")]
     class SHITEMLIST : Block
     {
         public SHITEMLIST(byte[] buf, int offset, object parent)
-            : base(buf, offset, parent)
+            : base(buf, offset)
         {
         }
 
-        SHITEM get_item(int off)
+        ShellItem get_item(int off)
         {
-            SHITEM item = null;
+            ShellItem item = null;
             int _type = unpack_byte(off + 2);
             if ((_type & 0x70) == (int)SHITEMTYPE.FILE_ENTRY)
             {
                 try
                 {
-                    item = new SHITEM_FILEENTRY(buf, off, this);
+                    item = new ShellItem0x30(buf);
                 }
                 catch (Exception ex)
                 {
@@ -29,7 +30,7 @@ namespace SeeShells.ShellParser
             }
             else if (_type == (int)SHITEMTYPE.FOLDER_ENTRY)
             {
-                item = new SHITEM_FOLERENTRY(buf, off, this);
+                item = new ShellItem0x1F(buf);
             }
             else if (_type == (int)SHITEMTYPE.UNKNOWN2)
             {
@@ -37,37 +38,37 @@ namespace SeeShells.ShellParser
             }
             else if ((_type & 0x70) == (int)SHITEMTYPE.VOLUME_NAME)
             {
-                item = new SHITEM_VOLUMEENTRY(buf, off, this);
+                item = new ShellItem0x20(buf);
             }
             else if ((_type & 0x70) == (int)SHITEMTYPE.NETWORK_LOCATION)
             {
-                item = new SHITEM_NETWORKLOCATIONENTRY(buf, off, this);
+                item = new ShellItem0x40(buf);
             }
             else if (_type == (int)SHITEMTYPE.URI)
             {
-                item = new SHITEM_URIENTRY(buf, off, this);
+                item = new ShellItem0x61(buf);
             }
             else if (_type == (int)SHITEMTYPE.CONTROL_PANEL)
             {
-                item = new SHITEM_CONTROLPANELENTRY(buf, off, this);
+                item = new ShellItem0x71(buf);
             }
             else if (_type == (int)SHITEMTYPE.UNKNOWN0)
             {
-                item = new SHITEM_UNKNOWNENTRY0(buf, off, this);
+                item = new ShellItem0x00(buf);
             }
             else if (_type == (int)SHITEMTYPE.DELETEGATE_ITEM)
             {
-                item = new SHITEM_DELEGATE(buf, off, this);
+                item = new ShellItem0x74(buf);
             }
             else
             {
-                item = new SHITEM(buf, off, this);
+                item = new ShellItem(buf, off);
             }
 
             return item;
         }
 
-        public IEnumerable<SHITEM> items()
+        public IEnumerable<ShellItem> items()
         {
             int off = offset;
             int size = 0;
@@ -78,9 +79,9 @@ namespace SeeShells.ShellParser
                 if (size == 0)
                     break;
 
-                SHITEM item = get_item(off);
+                ShellItem item = get_item(off);
 
-                size = item.size;
+                size = item.Size;
 
                 if (size > 0)
                 {
