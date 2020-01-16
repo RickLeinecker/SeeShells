@@ -12,19 +12,20 @@ namespace SeeShellsTests.ShellParser
     public class ShellBagParserTests
     {
         /// <summary>
-        /// 
+        /// Tests if shell itmes can be obtained from a live registry.
         /// </summary>
         [TestMethod()]
         public void GetShellItemsOnlineTest()
         {
             ShellBagParser shellBagParser = new ShellBagParser(new OnlineRegistryReader(new MockConfigParser()));
-            //String registryFilePath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\TestResource\NTUSER.DAT";
-            //ShellBagParser shellBagParser = new ShellBagParser(new OfflineRegistryReader(new OfflineMockConfigParser(), registryFilePath));
             List<IShellItem> shellItems = shellBagParser.GetShellItems();
 
             Assert.AreNotEqual(shellItems.Count, 0);
         }
 
+        /// <summary>
+        /// Tests if shell itmes can be obtained from an offline hive.
+        /// </summary>
         [TestMethod()]
         public void GetShellItemsOfflineTest()
         {
@@ -33,11 +34,6 @@ namespace SeeShellsTests.ShellParser
             List<IShellItem> shellItems = shellBagParser.GetShellItems();
 
             Assert.AreNotEqual(shellItems.Count, 0);
-
-            foreach(IShellItem shellItem in shellItems)
-            {
-                Console.WriteLine(shellItem.AccessedDate);
-            }
         }
     }
 }
