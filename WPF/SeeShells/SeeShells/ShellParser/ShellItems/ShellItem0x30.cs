@@ -78,6 +78,7 @@ namespace SeeShells.ShellParser.ShellItems
                 ShortName = unpack_wstring(off, ExtensionOffset - off);
             else
                 ShortName = unpack_string(off, ExtensionOffset - off);
+
             ExtensionBlockBEEF0004 ExtensionBlock = new ExtensionBlockBEEF0004(buf, ExtensionOffset + offset);
             ExtensionBlocks.Add(ExtensionBlock);
 

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-
 
 namespace SeeShells.ShellParser.ShellItems
 {
@@ -35,7 +33,15 @@ namespace SeeShells.ShellParser.ShellItems
                 // TODO Embedded Scripting
             }
 
-            return (IShellItem)Activator.CreateInstance(type, buf);
+            try
+            {
+                return (IShellItem)Activator.CreateInstance(type, buf);
+            }
+            catch(Exception ex)
+            {
+                logger.Error(ex, "ShellItem0x" + postfix + " Failed to create\n" + "ShellItem Byte array:\n" + BitConverter.ToString(buf) + "\n" + ex.ToString());
+            }
+            return new ShellItem(buf);
         }
 
         public IEnumerable<IShellItem> Items()
@@ -44,6 +50,10 @@ namespace SeeShells.ShellParser.ShellItems
             int size = 0;
             while (true)
             {
+                //prevent out of bounds reading when the exact size of an item meets the next expected offset
+                if (size == off && off != 0)
+                    break;
+
                 size = unpack_word(off);
 
                 if (size == 0)

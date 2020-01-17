@@ -24,7 +24,7 @@ namespace SeeShells.ShellParser
             List<IShellItem> shellItems = new List<IShellItem>();
             foreach (RegistryKeyWrapper keyWrapper in registryReader.GetRegistryKeys())
             {
-                if(keyWrapper.getValue() != null && keyWrapper.getValue().Length > 6) // Some Registry Keys are null
+                if(keyWrapper.getValue() != null) // Some Registry Keys are null
                 {
                     ShellItemList shellItemList = new ShellItemList(keyWrapper.getValue());
                     foreach (IShellItem shellItem in shellItemList.Items())

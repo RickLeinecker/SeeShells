@@ -6,7 +6,6 @@ namespace SeeShells.ShellParser.ShellItems
 {
     public class Block
     {
-        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         protected byte[] buf { get; set; }
         public int offset { get; protected set; }
         protected object parent { get; set; }
@@ -82,15 +81,7 @@ namespace SeeShells.ShellParser.ShellItems
                     length = end - offset - off;
                 }
                 while (buf[offset + off + length - 2] == 0 && buf[offset + off + length - 1] == 0) length -= 2;
-                try
-                {
-                    return Encoding.Unicode.GetString(buf, offset + off, length);
-                }
-                catch(Exception ex)
-                {
-                    logger.Error(ex, "Could not resolve dir name\n" + ex.ToString());
-                }
-                return "";
+                return Encoding.Unicode.GetString(buf, offset + off, length);
             }
             catch (IndexOutOfRangeException ex)
             {
@@ -159,12 +150,6 @@ namespace SeeShells.ShellParser.ShellItems
                 ushort dosdate = (ushort)(buf[offset + off + 1] << 8 | buf[offset + off]);
                 ushort dostime = (ushort)(buf[offset + off + 3] << 8 | buf[offset + off + 2]);
 
-                //check if the bytes contained no data
-                if ((dosdate == 0  || dosdate == 1) && dostime == 0)
-                {
-                    return DateTime.MinValue; //same thing as invalid. (minvalue goes below the epoch)
-                }
-
                 int day = dosdate & 0x1F;
                 int month = (dosdate & 0x1E0) >> 5;
                 int year = (dosdate & 0xFE00) >> 9;
@@ -173,15 +158,8 @@ namespace SeeShells.ShellParser.ShellItems
                 int sec = (dostime & 0x1F) * 2;
                 int minute = (dostime & 0x7E0) >> 5;
                 int hour = (dostime & 0xF800) >> 11;
-                try
-                {
-                    return new DateTime(year, month, day, hour, minute, sec);
-                }
-                catch(Exception ex)
-                {
-                    logger.Error(ex, "Could not resolve DateTime\n" + ex.ToString());
-                }
-                return DateTime.MinValue; ;
+
+                return new DateTime(year, month, day, hour, minute, sec);
             }
             catch (IndexOutOfRangeException ex)
             {
