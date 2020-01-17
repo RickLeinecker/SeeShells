@@ -99,6 +99,12 @@ app.post('/login', function (req, res) {
     });
 });
 
+app.get('/getGUIDs', function (req, res) {
+    database.getGUIDs(function (guids) {
+        res.send(guids);
+    });
+});
+
 app.get('/logout', function (req, res) {
     req.session.destroy(function (err) {
         if (err) {

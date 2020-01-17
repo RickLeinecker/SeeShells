@@ -38,16 +38,14 @@ function registerUser(username, password, salt) {
     });
 }
 
-function createSession() {
-
-}
-
-function getGUIDS() {
+function getGUIDs(callback) {
     pool.query('SELECT guid, name FROM guids;', (err, res) => {
-        if (err) throw err;
-        for (let row of res.rows) {
-            console.log(JSON.stringify(row));
+        if (err) {
+            callback({});
+            throw err;
         }
+
+        callback(JSON.stringify(res.rows));
     });
 }
 
@@ -57,6 +55,6 @@ module.exports = {
     pgSession,
     userExists,
     registerUser,
-    createSession
+    getGUIDs
 }
 
