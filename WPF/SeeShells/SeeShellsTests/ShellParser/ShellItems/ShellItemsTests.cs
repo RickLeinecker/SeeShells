@@ -204,10 +204,5 @@ namespace SeeShellsTests.ShellParser.ShellItems
 
             //Test passes by throwing no Exceptions.
         }
-
-
-
-
-
     }
 }
