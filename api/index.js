@@ -36,7 +36,6 @@ app.post('/register', function (req, res) {;
     let promise = database.userExists(username);
     promise.then(
         function (value) {
-
             if (value.result == 0) {
                 let pwPromise = security.hashAndSaltPassword(password);
                 pwPromise.then(
@@ -57,7 +56,7 @@ app.post('/register', function (req, res) {;
 
         },
         function (err) {
-            res.send({ "success": 0, "error": "Failure checking the database for exisiting users." });
+            res.send({ "success": 0, "error": "Failure checking the database for existing users." });
         }
     );
 });
@@ -66,39 +65,38 @@ app.post('/login', function (req, res) {
     var username = String(req.body.username);
     var password = String(req.body.password);
 
-    database.userExists(username, function (exists) {
-        var success = false;
-        var message = "Unexpected error.";
+    let promise = database.userExists(username);
+    promise.then(
+        function (value) {
+            if (value.result == 1) {
+                var compare = value.password;
+                var salt = value.salt;
 
-        if (exists.result == 1) {
-            var compare = exists.password;
-            var salt = exists.salt;
+                let verifyPromise = security.verifyPassword(compare, salt, password);
+                verifyPromise.then(
+                    function (result) {
 
-            security.verifyPassword(compare, salt, password, function (result) {
+                        req.session.user = {
+                            name: username
+                        };
 
-                if (result == 1) {
-                    req.session.user = {
-                        name: username
-                    };
+                        res.send({ "success": 1, "session": req.session });
 
-                    success = true;
-                }
-                else {
-                    message = 'Incorrect password.';
-                }
-            });
+                    },
+                    function (fail) {
+                        res.send({ "success": 0, "error": "Incorrect password." });
+                    }
+                );
+            }
+            else {
+                res.send({ "success": 0, "error": "User does not exist." });
+            }
+
+        },
+        function (err) {
+            res.send({ "success": 0, "error": "Failure checking the database for existing users." });
         }
-        else {
-            message = 'User does not exist.';
-        }
-
-        if (success) {
-            res.send({ "success": 1, "session": req.session });
-        }
-        else {
-            res.send({ "success": 0, "error": message });
-        }
-    });
+    );
 });
 
 app.get('/getGUIDs', function (req, res) {
