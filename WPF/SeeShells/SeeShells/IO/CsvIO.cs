@@ -23,9 +23,9 @@ namespace SeeShells.IO
         /// <summary>
         /// Creates a ShellItem list from ShellBag data parsed from a CSV.
         /// </summary>
-        /// <param name="dir">The directory of a source CSV file</param>
+        /// <param name="filePath">The path to a source CSV file</param>
         /// <returns>A list of ShellItems</returns>
-        public static List<IShellItem> ImportCSVFile(String dir)
+        public static List<IShellItem> ImportCSVFile(String filePath)
         {
             return new List<IShellItem>();
         }
