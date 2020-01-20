@@ -33,70 +33,99 @@ app.post('/register', function (req, res) {;
     var username = String(req.body.username);
     var password = String(req.body.password);
 
-    database.userExists(username, function (exists) {
-        var success = false;
-        var message = "Unexpected error.";
-
-        if (exists.result == 0) {
-            security.hashAndSaltPassword(password, function (saltandhash) {
-                database.registerUser(username, saltandhash.passwordHash, saltandhash.salt, (err) => {
-                    if (err) {
-                        message = 'Failed to register the new user.';
+    let promise = database.userExists(username);
+    promise.then(
+        function (value) {
+            if (value.result == 0) {
+                let pwPromise = security.hashAndSaltPassword(password);
+                pwPromise.then(
+                    function (saltandhash) {
+                        try {
+                            database.registerUser(username, saltandhash.passwordHash, saltandhash.salt);
+                            res.send({ "success": 1 });
+                        }
+                        catch {
+                            res.send({ "success": 0, "error": "Failed to register the new user." });
+                        }
                     }
-                });
-                success = true;
-            });
-        }
-        else {
-            message = 'User already exists.';
-        }
+                );
+            }
+            else {
+                res.send({ "success": 0, "error": "User already exists." });
+            }
 
-        if (success) {
-            res.send({ "success": 1 });
+        },
+        function (err) {
+            res.send({ "success": 0, "error": "Failure checking the database for existing users." });
         }
-        else {
-            res.send({ "success": 0, "error": message });
-        }
-    });
+    );
 });
 
 app.post('/login', function (req, res) {
     var username = String(req.body.username);
     var password = String(req.body.password);
 
-    database.userExists(username, function (exists) {
-        var success = false;
-        var message = "Unexpected error.";
+    let promise = database.userExists(username);
+    promise.then(
+        function (value) {
+            if (value.result == 1) {
+                var compare = value.password;
+                var salt = value.salt;
 
-        if (exists.result == 1) {
-            var compare = exists.password;
-            var salt = exists.salt;
+                let verifyPromise = security.verifyPassword(compare, salt, password);
+                verifyPromise.then(
+                    function (result) {
 
-            security.verifyPassword(compare, salt, password, function (result) {
+                        req.session.user = {
+                            name: username
+                        };
 
-                if (result == 1) {
-                    req.session.user = {
-                        name: username
-                    };
+                        res.send({ "success": 1, "session": req.session });
 
-                    success = true;
-                }
-                else {
-                    message = 'Incorrect password.';
-                }
-            });
+                    },
+                    function (fail) {
+                        res.send({ "success": 0, "error": "Incorrect password." });
+                    }
+                );
+            }
+            else {
+                res.send({ "success": 0, "error": "User does not exist." });
+            }
+
+        },
+        function (err) {
+            res.send({ "success": 0, "error": "Failure checking the database for existing users." });
         }
-        else {
-            message = 'User does not exist.';
-        }
+    );
+});
 
-        if (success) {
-            res.send({ "success": 1, "session": req.session });
-        }
-        else {
-            res.send({ "success": 0, "error": message });
-        }
+app.get('/getGUIDs', function (req, res) {
+    database.getGUIDs(function (guids) {
+        res.send(guids);
     });
+});
+
+app.post('/addGUID', function (req, res) {
+    var guid = String(req.body.guid);
+    var name = String(req.body.name);
+
+    let promise = database.GUIDDoesNotExist(guid);
+    promise.then(
+        function (value) {
+            let addPromise = database.addGUID(guid, name);
+            addPromise.then(
+                function (value) {
+                    res.send({ "success": 1 });
+                },
+                function (err) {
+                    res.send({ "success": 0, "error": "Failed to add new GUID." });
+                }
+            );
+        },
+        function (err) {
+            res.send({ "success": 0, "error": "GUID exists in the database already."});
+        }
+    );
 });
 
 app.get('/logout', function (req, res) {

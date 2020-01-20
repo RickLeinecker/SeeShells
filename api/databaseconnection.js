@@ -10,23 +10,25 @@ const pool = new Pool({
 pool.connect();
 
 
-function userExists(username, callback) {
-    pool.query('SELECT * FROM logininfo WHERE username=$1;', [username], (err, res) => {
-        if (err) {
-            console.log(err);
-            throw err;
-        }
-        
-        if (res.rowCount > 0) {
-            callback ({
-                result: 1,
-                password: res.rows[0].password,
-                salt: res.rows[0].salt
-            });
-            return;
-        }
+function userExists(username) {
+    return new Promise(function (resolve, reject) {
+        pool.query('SELECT * FROM logininfo WHERE username=$1;', [username], (err, res) => {
+            if (err) {
+                reject(err);
+                return;
+            }
 
-        callback({result:0});
+            if (res.rowCount > 0) {
+                resolve({
+                    result: 1,
+                    password: res.rows[0].password,
+                    salt: res.rows[0].salt
+                });
+                return;
+            }
+
+            resolve({ result: 0 });
+        });
     });
 }
 
@@ -38,16 +40,46 @@ function registerUser(username, password, salt) {
     });
 }
 
-function createSession() {
+function getGUIDs(callback) {
+    pool.query('SELECT guid, name FROM guids;', (err, res) => {
+        if (err) {
+            callback({});
+            throw err;
+        }
 
+        callback(JSON.stringify(res.rows));
+    });
 }
 
-function getGUIDS() {
-    pool.query('SELECT guid, name FROM guids;', (err, res) => {
-        if (err) throw err;
-        for (let row of res.rows) {
-            console.log(JSON.stringify(row));
-        }
+function addGUID(guid, name) {
+    return new Promise(function (resolve, reject) {
+        pool.query('INSERT INTO guids(guid, name) values($1, $2);', [guid, name], (err, res) => {
+            if (err) {
+                reject(err);
+            }
+
+            resolve({ "message": "Success" });
+        });
+    });
+}
+
+function GUIDDoesNotExist(guid) {
+    return new Promise(function (resolve, reject) {
+        pool.query('SELECT name FROM guids WHERE guid=$1;', [guid], (err, res) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+
+            if (res.rowCount > 0) {
+                reject({
+                    result: res.rowCount
+                });
+                return;
+            }
+
+            resolve({ result: "Not exisiting GUID" });
+        });
     });
 }
 
@@ -57,6 +89,8 @@ module.exports = {
     pgSession,
     userExists,
     registerUser,
-    createSession
+    getGUIDs,
+    addGUID,
+    GUIDDoesNotExist
 }
 
