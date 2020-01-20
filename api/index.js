@@ -39,12 +39,13 @@ app.post('/register', function (req, res) {;
 
         if (exists.result == 0) {
             security.hashAndSaltPassword(password, function (saltandhash) {
-                database.registerUser(username, saltandhash.passwordHash, saltandhash.salt, (err) => {
-                    if (err) {
-                        message = 'Failed to register the new user.';
-                    }
-                });
-                success = true;
+                try {
+                    database.registerUser(username, saltandhash.passwordHash, saltandhash.salt);
+                    success = true;
+                }
+                catch {
+                    message = 'Failed to register the new user.';
+                }
             });
         }
         else {
@@ -103,6 +104,29 @@ app.get('/getGUIDs', function (req, res) {
     database.getGUIDs(function (guids) {
         res.send(guids);
     });
+});
+
+app.post('/addGUID', function (req, res) {
+    var guid = String(req.body.guid);
+    var name = String(req.body.name);
+
+    let promise = database.GUIDDoesNotExist(guid);
+    promise.then(
+        function (value) {
+            let addPromise = database.addGUID(guid, name);
+            addPromise.then(
+                function (value) {
+                    res.send({ "success": 1 });
+                },
+                function (err) {
+                    res.send({ "success": 0, "error": "Failed to add new GUID." });
+                }
+            );
+        },
+        function (err) {
+            res.send({ "success": 0, "error": "GUID exists in the database already."});
+        }
+    );
 });
 
 app.get('/logout', function (req, res) {

@@ -49,12 +49,46 @@ function getGUIDs(callback) {
     });
 }
 
+function addGUID(guid, name) {
+    return new Promise(function (resolve, reject) {
+        pool.query('INSERT INTO guids(guid, name) values($1, $2);', [guid, name], (err, res) => {
+            if (err) {
+                reject(err);
+            }
+
+            resolve({ "message": "Success" });
+        });
+    });
+}
+
+function GUIDDoesNotExist(guid) {
+    return new Promise(function (resolve, reject) {
+        pool.query('SELECT name FROM guids WHERE guid=$1;', [guid], (err, res) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+
+            if (res.rowCount > 0) {
+                reject({
+                    result: res.rowCount
+                });
+                return;
+            }
+
+            resolve({ result: "Not exisiting GUID" });
+        });
+    });
+}
+
 module.exports = {
     pool,
     session,
     pgSession,
     userExists,
     registerUser,
-    getGUIDs
+    getGUIDs,
+    addGUID,
+    GUIDDoesNotExist
 }
 
