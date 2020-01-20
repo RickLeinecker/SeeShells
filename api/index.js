@@ -33,32 +33,33 @@ app.post('/register', function (req, res) {;
     var username = String(req.body.username);
     var password = String(req.body.password);
 
-    database.userExists(username, function (exists) {
-        var success = false;
-        var message = "Unexpected error.";
+    let promise = database.userExists(username);
+    promise.then(
+        function (value) {
 
-        if (exists.result == 0) {
-            security.hashAndSaltPassword(password, function (saltandhash) {
-                try {
-                    database.registerUser(username, saltandhash.passwordHash, saltandhash.salt);
-                    success = true;
-                }
-                catch {
-                    message = 'Failed to register the new user.';
-                }
-            });
-        }
-        else {
-            message = 'User already exists.';
-        }
+            if (value.result == 0) {
+                let pwPromise = security.hashAndSaltPassword(password);
+                pwPromise.then(
+                    function (saltandhash) {
+                        try {
+                            database.registerUser(username, saltandhash.passwordHash, saltandhash.salt);
+                            res.send({ "success": 1 });
+                        }
+                        catch {
+                            res.send({ "success": 0, "error": "Failed to register the new user." });
+                        }
+                    }
+                );
+            }
+            else {
+                res.send({ "success": 0, "error": "User already exists." });
+            }
 
-        if (success) {
-            res.send({ "success": 1 });
+        },
+        function (err) {
+            res.send({ "success": 0, "error": "Failure checking the database for exisiting users." });
         }
-        else {
-            res.send({ "success": 0, "error": message });
-        }
-    });
+    );
 });
 
 app.post('/login', function (req, res) {

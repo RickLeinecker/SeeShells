@@ -10,23 +10,25 @@ const pool = new Pool({
 pool.connect();
 
 
-function userExists(username, callback) {
-    pool.query('SELECT * FROM logininfo WHERE username=$1;', [username], (err, res) => {
-        if (err) {
-            console.log(err);
-            throw err;
-        }
-        
-        if (res.rowCount > 0) {
-            callback ({
-                result: 1,
-                password: res.rows[0].password,
-                salt: res.rows[0].salt
-            });
-            return;
-        }
+function userExists(username) {
+    return new Promise(function (resolve, reject) {
+        pool.query('SELECT * FROM logininfo WHERE username=$1;', [username], (err, res) => {
+            if (err) {
+                reject(err);
+                return;
+            }
 
-        callback({result:0});
+            if (res.rowCount > 0) {
+                resolve({
+                    result: 1,
+                    password: res.rows[0].password,
+                    salt: res.rows[0].salt
+                });
+                return;
+            }
+
+            resolve({ result: 0 });
+        });
     });
 }
 

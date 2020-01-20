@@ -6,13 +6,15 @@ function getSalt(callback) {
 };
 
 function hashAndSaltPassword(password, callback) {
-    getSalt(function (salt) {
-        var hash = crypto.createHmac('sha512', salt);
-        hash.update(password);
-        var value = hash.digest('hex');
-        callback({
-            salt: salt,
-            passwordHash: value
+    return new Promise(function (resolve, reject) {
+        getSalt(function (salt) {
+            var hash = crypto.createHmac('sha512', salt);
+            hash.update(password);
+            var value = hash.digest('hex');
+            resolve({
+                salt: salt,
+                passwordHash: value
+            });
         });
     });
 };
