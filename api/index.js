@@ -118,7 +118,6 @@ app.get('/getOSandRegistryLocations', function (req, res) {
 
 app.get('/getGUIDs', function (req, res) {
     database.getGUIDs(function (guids) {
-        console.log(guids);
         if (Object.keys(guids).length > 0)
             res.send({ "success": 1, "json": guids});
         else

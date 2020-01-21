@@ -47,7 +47,6 @@ function getOSandRegistryLocations() {
         pool.query('SELECT osversion.osname, keys.location FROM osversion INNER JOIN mainshellkeys ON osversion.mainkeysid = mainshellkeys.mainkeysid INNER JOIN keys ON keys.mainkeysid = mainshellkeys.mainkeysid ORDER BY osversion.osid ASC;', (err, res) => {
             if (err) {
                 reject({});
-                throw err;
             }
 
             let promise = JSONhelper.buildOSFileJSON(res.rows);
@@ -67,7 +66,6 @@ function getGUIDs(callback) {
     pool.query('SELECT guid, name FROM guids;', (err, res) => {
         if (err) {
             callback({});
-            throw err;
         }
 
         callback(res.rows);
