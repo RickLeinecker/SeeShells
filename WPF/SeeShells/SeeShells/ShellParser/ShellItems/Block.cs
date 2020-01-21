@@ -191,5 +191,12 @@ namespace SeeShells.ShellParser.ShellItems
                 return off;
             return off + (alignment - off % alignment);
         }
+
+        protected void AddPairIfNotNull(IDictionary<string, string> dict, string key, object value)
+        {
+            if (key != null && value != null)
+                dict.Add(key, value.ToString());
+        }
+
     }
 }

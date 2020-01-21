@@ -24,7 +24,7 @@ namespace SeeShells.ShellParser.ShellItems
                 var props = block.GetAllProperties();
                 //TODO how do we populate Extension Blocks in addition to the shell Item Key-Value Pairs?
             }
-            ret.Add("ExtensionBlockCount", ExtensionBlocks.Count.ToString()); //TODO REMOVE ME WHEN THE ABOVE IS ANSWERED.
+            AddPairIfNotNull(ret, "ExtensionBlockCount", ExtensionBlocks.Count); //TODO REMOVE ME WHEN THE ABOVE IS ANSWERED.
             return ret;
         }
     }
