@@ -99,9 +99,30 @@ app.post('/login', function (req, res) {
     );
 });
 
+app.get('/getOSandRegistryLocations', function (req, res) {
+    let promise = database.getOSandRegistryLocations();
+    promise.then(
+        function (results) {
+            console.log(results);
+            if(Object.keys(results).length > 0)
+                res.send({ "success": 1, "json": results });
+            else
+                res.send({ "success": 0, "error": "No files to fetch" });
+        },
+        function (err) {
+            res.send({ "success": 0, "error": "Failed to get any OS versions and corresponding shellbag registry locations" });
+
+        }
+    );
+});
+
 app.get('/getGUIDs', function (req, res) {
     database.getGUIDs(function (guids) {
-        res.send(guids);
+        console.log(guids);
+        if (Object.keys(guids).length > 0)
+            res.send({ "success": 1, "json": guids});
+        else
+            res.send({ "success": 0, "error":"Failed to get any GUIDs" });
     });
 });
 
