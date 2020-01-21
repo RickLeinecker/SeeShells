@@ -64,6 +64,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="IO\CsvIOTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShellParser\ShellBagParserTests.cs" />
     <Compile Include="ShellParser\OnlineRegistryReaderTests.cs" />
