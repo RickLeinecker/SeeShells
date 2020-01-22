@@ -10,7 +10,7 @@ namespace SeeShells.UI
     /// <summary>
     /// A Discrete time-based event that is derived from a ShellBag.
     /// </summary>
-    interface IEvent
+    public interface IEvent
     {
         /// <summary>
         /// Identifier for the entity which was modified at this particular <see cref="EventTime"/>
