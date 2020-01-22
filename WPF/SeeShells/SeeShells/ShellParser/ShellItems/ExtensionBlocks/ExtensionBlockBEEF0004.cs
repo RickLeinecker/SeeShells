@@ -69,10 +69,10 @@ namespace SeeShells.ShellParser.ShellItems.ExtensionBlocks
         public override IDictionary<string, string> GetAllProperties()
         {
             var ret = base.GetAllProperties();
-            ret.Add("CreationDate", CreationDate.ToString());
-            ret.Add("AccessedDate", AccessedDate.ToString());
-            ret.Add("LongName", LongName.ToString());
-            ret.Add("LocalizedName", LocalizedName.ToString());
+            AddPairIfNotNull(ret, "CreationDate", CreationDate);
+            AddPairIfNotNull(ret, "AccessedDate", AccessedDate);
+            AddPairIfNotNull(ret, "LongName", LongName);
+            AddPairIfNotNull(ret, "LocalizedName", LocalizedName);
             return ret;
         }
     }

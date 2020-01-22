@@ -87,11 +87,11 @@ namespace SeeShells.ShellParser.ShellItems
         public override IDictionary<string, string> GetAllProperties()
         {
             var ret = base.GetAllProperties();
-            ret.Add("Flags", Flags.ToString());
-            ret.Add("FileSize", FileSize.ToString());
-            ret.Add("FileAttributes", FileAttributes.ToString());
-            ret.Add("ExtensionOffset", ExtensionOffset.ToString());
-            ret.Add("ShortName", ShortName.ToString());
+            AddPairIfNotNull(ret, "Flags", Flags);
+            AddPairIfNotNull(ret, "FileSize", FileSize);
+            AddPairIfNotNull(ret, "FileAttributes", FileAttributes);
+            AddPairIfNotNull(ret, "ExtensionOffset", ExtensionOffset);
+            AddPairIfNotNull(ret, "ShortName", ShortName);
             return ret;
         }
     }
