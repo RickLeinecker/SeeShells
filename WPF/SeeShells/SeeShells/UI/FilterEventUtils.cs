@@ -177,7 +177,6 @@ namespace SeeShells.UI
                 } 
                 else 
                 { //grab all values from the parent's properties
-                    HashSet<string> searchValues = new HashSet<string>();
                     //add all properties names and values to the searchable strings
                     var keyValues = ievent.Parent.GetAllProperties();
                     bool foundMatch = false;
