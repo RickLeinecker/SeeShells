@@ -389,6 +389,8 @@ namespace SeeShells.ShellParser
                 {"fdd39ad0-238f-46af-adb4-6c85480369c7", "Documents"},
                 {"fe1290f0-cfbd-11cf-a330-00aa00c16e65", "Directory"},
                 {"ff393560-c2a7-11cf-bff4-444553540000", "History"},
+                {"088e3905-0323-4b02-9826-5d99428e115f", "Downloads" }
+
             };
             }
         }
