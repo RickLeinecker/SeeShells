@@ -72,5 +72,15 @@ namespace SeeShells
         {
 
         }
+
+        private void TabControl_SelectionChanged_2(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void TabControl_SelectionChanged_3(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }
