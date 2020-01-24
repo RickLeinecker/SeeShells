@@ -1,6 +1,8 @@
 ﻿using SeeShells.ShellParser.ShellItems;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 namespace SeeShells.IO
 {
@@ -12,12 +14,52 @@ namespace SeeShells.IO
         /// <summary>
         /// Creates a CSV file with ShellBag data in a given location.
         /// </summary>
-        /// <param name="ShellItems">A list of ShellItems containg the data to be exported in the CSV file</param>
-        /// <param name="dir">The directory in which to output the CSV file</param>
+        /// <param name="shellItems">A list of ShellItems containg the data to be exported in the CSV file</param>
+        /// <param name="filePath">The directory in which to output the CSV file including the CSV file name</param>
         /// <returns></returns>
-        public static void OutputCSVFile(List<IShellItem> ShellItems, String dir)
+        public static void OutputCSVFile(List<IShellItem> shellItems, String filePath)
         {
+            // Reads each propery key of each ShellItem in order to determine the headers of the CSV.
+            HashSet<String> keys = new HashSet<String>();
+            foreach (IShellItem shellItem in shellItems)
+            {
+                foreach (KeyValuePair<string, string> property in shellItem.GetAllProperties())
+                {
+                    keys.Add(property.Key);
+                } 
+            }
 
+            // Converts the HashSet of CSV headers to an array in order to alphabetize the headers and
+            // establish indexes to be used to track the columns in which the property values should go.
+            String[] keysArray = new String[keys.Count];
+            keys.CopyTo(keysArray);
+            Array.Sort(keysArray);
+
+            // Converts the array of alphabetized headers to a Map with the array indexes as values.
+            Dictionary<string, int> keysMap = new Dictionary<string, int>();
+            for(int i = 0; i < keysArray.Length; i++)
+            {
+                keysMap.Add(keysArray[i], i);
+            }
+
+            // Writes the headers to the CSV and parses over the properties of each ShellItem again in oder to obtain the values
+            // for each property, which are then placed in an array acording to the index that they map to and written to the CSV.
+            using (var writer = new StreamWriter(filePath, true))
+            {
+                writer.WriteLine(string.Join(",", keysArray));
+                writer.Flush();
+
+                foreach (IShellItem shellItem in shellItems)
+                {
+                    String[] line = new String[keysArray.Length];
+                    foreach (KeyValuePair<string, string> property in shellItem.GetAllProperties())
+                    {
+                        line[keysMap[property.Key]] = property.Value;
+                    }
+                    writer.WriteLine(string.Join(",", line));
+                    writer.Flush();
+                }
+            }
         }
 
         /// <summary>
