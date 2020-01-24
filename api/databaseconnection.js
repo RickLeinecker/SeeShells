@@ -1,3 +1,5 @@
+var JSONhelper = require('./JSONhelper.js');
+
 require('dotenv').config();
 const { Pool, Client } = require('pg'),
     session = require('express-session'),
@@ -40,14 +42,33 @@ function registerUser(username, password, salt) {
     });
 }
 
+function getOSandRegistryLocations() {
+    return new Promise(function (resolve, reject) {
+        pool.query('SELECT osversion.osname, keys.location FROM osversion INNER JOIN mainshellkeys ON osversion.mainkeysid = mainshellkeys.mainkeysid INNER JOIN keys ON keys.mainkeysid = mainshellkeys.mainkeysid ORDER BY osversion.osid ASC;', (err, res) => {
+            if (err) {
+                reject({});
+            }
+
+            let promise = JSONhelper.buildOSFileJSON(res.rows);
+            promise.then(
+                function (value) {
+                    resolve(value);
+                },
+                function (err) {
+                    reject({});
+                }
+            )
+        });
+    });
+}
+
 function getGUIDs(callback) {
     pool.query('SELECT guid, name FROM guids;', (err, res) => {
         if (err) {
             callback({});
-            throw err;
         }
 
-        callback(JSON.stringify(res.rows));
+        callback(res.rows);
     });
 }
 
@@ -89,6 +110,7 @@ module.exports = {
     pgSession,
     userExists,
     registerUser,
+    getOSandRegistryLocations,
     getGUIDs,
     addGUID,
     GUIDDoesNotExist
