@@ -6,8 +6,8 @@ on:
       - master
 
 jobs:
-  build:
-
+  WPF:
+    name: Unit Tests
     runs-on: [windows-latest]
 
     steps:
