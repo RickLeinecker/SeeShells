@@ -1,6 +1,5 @@
 ﻿using SeeShells.ShellParser.ShellItems;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
@@ -54,9 +53,9 @@ namespace SeeShells.IO
                     String[] line = new String[keysArray.Length];
                     foreach (KeyValuePair<string, string> property in shellItem.GetAllProperties())
                     {
-                        line[keysMap[property.Key]] = property.Value;
+                        line[keysMap[property.Key]] = property.Value.Replace("," , ""); // Any commas are filtered from the output
                     }
-                    writer.WriteLine(string.Join(",", line));
+                    writer.WriteLine((string.Join(",", line)));
                     writer.Flush();
                 }
             }
@@ -69,7 +68,33 @@ namespace SeeShells.IO
         /// <returns>A list of ShellItems</returns>
         public static List<IShellItem> ImportCSVFile(String filePath)
         {
-            return new List<IShellItem>();
+            List<IShellItem> retList = new List<IShellItem>();
+            using (var reader = new StreamReader(filePath))
+            {
+                // Red the header which contains the property values
+                String headerLine = reader.ReadLine();
+                String[] propertyValues = headerLine.Split(',');
+                int propertyValuesCurrIndex = 0;
+
+                while (!reader.EndOfStream)
+                {
+                    String shellItemLine = reader.ReadLine();
+                    String[] shellItemPropertyValues = shellItemLine.Split(',');
+                    
+                    IDictionary<string, string> properties = new Dictionary<string, string>();
+                    foreach (String property in shellItemPropertyValues)
+                    {
+                        if(property != "")
+                        {
+                            properties.Add(propertyValues[propertyValuesCurrIndex], property);
+                        }
+                        propertyValuesCurrIndex++;
+                    }
+                    propertyValuesCurrIndex = 0;
+                    retList.Add(new CsvParsedShellItem(properties));
+                }
+            }
+                return retList;
         }
     }
 }

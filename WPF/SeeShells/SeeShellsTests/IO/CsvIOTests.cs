@@ -3,8 +3,8 @@ using SeeShells.IO;
 using SeeShells.ShellParser;
 using SeeShells.ShellParser.ShellItems;
 using SeeShellsTests.ShellParser.ShellParserMocks;
-using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace SeeShellsTests.IO
 {
@@ -20,7 +20,10 @@ namespace SeeShellsTests.IO
             ShellBagParser shellBagParser = new ShellBagParser(new OnlineRegistryReader(new MockConfigParser()));
             List<IShellItem> shellItems = shellBagParser.GetShellItems();
 
+            if (File.Exists("raw.csv"))
+                File.Delete("raw.csv");
             CsvIO.OutputCSVFile(shellItems, "raw.csv");
+            Assert.IsTrue(File.Exists("raw.csv"));
         }
 
         /// <summary>
@@ -29,7 +32,13 @@ namespace SeeShellsTests.IO
         [TestMethod()]
         public void ImportCSVFileTest()
         {
+            if (!File.Exists("raw.csv"))
+            {
+                Assert.Fail("No CSV file to be parsed");
+            }
 
+            List<IShellItem> shellItems = CsvIO.ImportCSVFile("raw.csv");
+            Assert.AreNotEqual(shellItems.Count, 0);
         }
     }
 }
