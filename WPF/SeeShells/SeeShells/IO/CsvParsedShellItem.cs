@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SeeShells.IO
 {
-    class CsvParsedShellItem : IShellItem
+    public class CsvParsedShellItem : IShellItem
     {
         public virtual ushort Size { get => Convert.ToUInt16(allProperties["Size"], 16); }
         public virtual byte Type { get => Convert.ToByte(allProperties["Type"], 16); }
