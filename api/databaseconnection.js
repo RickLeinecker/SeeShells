@@ -42,6 +42,18 @@ function registerUser(username, password, salt) {
     });
 }
 
+function addOS(num, name, keysid) {
+    return new Promise(function (resolve, reject) {
+        pool.query('INSERT INTO osversions(osnum, osname, mainkeysid) values($1, $2, $3);', [num, name, keysid], (err, res) => {
+            if (err) {
+                reject(err);
+            }
+
+            resolve({ "message": "Success" });
+        });
+    });
+}
+
 function getOSandRegistryLocations() {
     return new Promise(function (resolve, reject) {
         pool.query('SELECT osversion.osname, keys.location FROM osversion INNER JOIN mainshellkeys ON osversion.mainkeysid = mainshellkeys.mainkeysid INNER JOIN keys ON keys.mainkeysid = mainshellkeys.mainkeysid ORDER BY osversion.osid ASC;', (err, res) => {
@@ -110,6 +122,7 @@ module.exports = {
     pgSession,
     userExists,
     registerUser,
+    addOS,
     getOSandRegistryLocations,
     getGUIDs,
     addGUID,

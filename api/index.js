@@ -148,6 +148,23 @@ app.post('/addGUID', function (req, res) {
     );
 });
 
+app.post('/addOS', function (req, res) {
+    var num = String(req.body.osnum);
+    var name = String(req.body.osname);
+    var mainkeysid = String(req.body.mainkeysid);
+
+    let addPromise = database.addGUID(guid, name);
+    addPromise.then(
+        function (value) {
+            res.send({ "success": 1 });
+        },
+        function (err) {
+            res.send({ "success": 0, "error": "Failed to add new OS." });
+        }
+    );
+        
+});
+
 app.get('/logout', function (req, res) {
     req.session.destroy(function (err) {
         if (err) {
