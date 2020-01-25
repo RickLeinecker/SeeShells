@@ -15,6 +15,7 @@ namespace SeeShellsTests.ShellParser
         /// Tests if shell itmes can be obtained from a live registry.
         /// </summary>
         [TestMethod()]
+        [TestCategory("OnlineTest")]
         public void GetShellItemsOnlineTest()
         {
             ShellBagParser shellBagParser = new ShellBagParser(new OnlineRegistryReader(new MockConfigParser()));
