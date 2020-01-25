@@ -70,7 +70,7 @@ namespace SeeShells.IO.Networking
         public static async Task<string> GetGuids(string outputFilePath, IRestClient apiClient = null)
         {
             RestRequest guidRequest = new RestRequest(GUID_ENDPOINT, DataFormat.Json);
-            return  await PerformGET(guidRequest, outputFilePath, DEFAULT_GUID_FILENAME, apiClient);
+            return  await PerformGET<IList<GUIDPair>>(guidRequest, outputFilePath, DEFAULT_GUID_FILENAME, apiClient);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace SeeShells.IO.Networking
         public static async Task<string> GetOSRegistryLocations(string outputFilePath, IRestClient apiClient = null)
         {
             RestRequest guidRequest = new RestRequest(OS_REGISTRY_ENDPOINT, DataFormat.Json);
-            return await PerformGET(guidRequest, outputFilePath, DEFAULT_OS_REGISTRY_FILENAME, apiClient);
+            return await PerformGET<IList<RegistryLocations>>(guidRequest, outputFilePath, DEFAULT_OS_REGISTRY_FILENAME, apiClient);
         }
 
 
@@ -95,8 +95,8 @@ namespace SeeShells.IO.Networking
         /// <param name="apiClient">The client to use for the GET operation.</param>
         /// <returns>An absolute filepath of the written file</returns>
         /// <exception cref="IOException"> When any networking or file error occurs during the operation.</exception>
-
-        private static async Task<string> PerformGET(RestRequest restRequest, string outputFilePath, string defaultFileName, IRestClient apiClient)
+        /// <typeparam name="T">A Object which can be serialized from json for validty checking.</typeparam>
+        private static async Task<string> PerformGET<T>(RestRequest restRequest, string outputFilePath, string defaultFileName, IRestClient apiClient)
         {
             if (apiClient == null)
             {
@@ -107,7 +107,8 @@ namespace SeeShells.IO.Networking
             if (response.ErrorException == null)
             {
                 CheckAPIError(response);
-                return WriteToFile(UnwrapJSONContainer(response), outputFilePath, defaultFileName);
+                T jsonObj = JsonConvert.DeserializeObject<T>(UnwrapJSONContainer(response));
+                return WriteToFile<T>(jsonObj, outputFilePath, defaultFileName);
             }
             else
             { 
@@ -124,19 +125,20 @@ namespace SeeShells.IO.Networking
         /// <param name="defaultFileName">filename to be used if outputFilePath isnt defined</param>
         /// <returns>An absolute filepath of the written file.</returns>
         /// <exception cref="IOException"></exception>
-        private static string WriteToFile(string content, string outputFilePath, string defaultFileName)
+        private static string WriteToFile<T>(T content, string outputFilePath, string defaultFileName)
         {
+            string strJson = JsonConvert.SerializeObject(content, Formatting.Indented);
             if (string.IsNullOrWhiteSpace(outputFilePath))
             {
                 //write the contents to the current directory with a default filename
                 string curDirFilepath = Directory.GetCurrentDirectory() + "/" + defaultFileName;
-                File.WriteAllText(curDirFilepath, content);
-
+                File.WriteAllText(curDirFilepath, strJson);
+                
                 return Path.GetFullPath(curDirFilepath);
                 
             } else
             {
-                File.WriteAllText(outputFilePath, content);
+                File.WriteAllText(outputFilePath, strJson);
                 return Path.GetFullPath(outputFilePath);
             }
         }
