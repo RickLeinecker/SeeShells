@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace SeeShells.IO.Networking.JSON
 {
+    /// <summary>
+    /// A GUID seen in Shellbags that has been correlated to a specific title when it appears in a Windows system.
+    /// </summary>
     public class GUIDPair
     {
 

@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace SeeShells.IO.Networking.JSON
 {
+    /// <summary>
+    /// C# object representation of an API Call which returned error information instead of it's intended information.
+    /// </summary>
     public class APIError
     {
         [JsonProperty(propertyName:"success", Required = Required.Always)]

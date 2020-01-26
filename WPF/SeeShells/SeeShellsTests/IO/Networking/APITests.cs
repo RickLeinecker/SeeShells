@@ -11,13 +11,19 @@ using System.Threading.Tasks;
 
 namespace SeeShellsTests.IO.Networking
 {
+    /// <summary>
+    /// Testing class for various API method calls. 
+    /// All test should use <see cref="MockServer"/> to emulate the server calls without the need of external dependencies. 
+    /// </summary>
     [TestClass()]
     public class APITests
     {
         static readonly int TEST_PORT = 4935; //dont use port 80 because the testing system might already have a webserver
         static readonly string TEST_URL = $"http://localhost:{TEST_PORT}";
 
-
+        /// <summary>
+        /// Test the ability to resolve an API location with <see cref="API.GetAPIClient(string, string)"/>
+        /// </summary>
         [TestMethod()]
         public void GetAPIClientTest()
         {
@@ -32,6 +38,9 @@ namespace SeeShellsTests.IO.Networking
             }
         }
 
+        /// <summary>
+        /// Tests the exception throwing when <see cref="API.GetAPIClient(string, string)"/> fails 
+        /// </summary>
         [TestMethod()]
         public void GetAPIClient_ServerErrorTest()
         {
@@ -49,7 +58,9 @@ namespace SeeShellsTests.IO.Networking
 
         }
 
-
+        /// <summary>
+        /// Checks the functionality of the <see cref="API.GetGuids(string, IRestClient)"/> function
+        /// </summary>
         [TestMethod()]
         public void GetGuidsTest()
         {
@@ -69,7 +80,9 @@ namespace SeeShellsTests.IO.Networking
                 File.Delete(testOutputPath);
             }
         }
-
+        /// <summary>
+        /// Tests the exception throwing when <see cref="API.GetGuids(string, IRestClient)"/> fails 
+        /// </summary>
         [TestMethod()]
         public void GetGuids_ServerErrorTest()
         {
@@ -95,8 +108,9 @@ namespace SeeShellsTests.IO.Networking
 
         }
 
-
-
+        /// <summary>
+        /// Checks the functionality of the <see cref="API.GetOSRegistryLocations(string, IRestClient)"/> function
+        /// </summary>
         [TestMethod()]
         public void GetOSRegistryLocationsTest()
         {
@@ -116,6 +130,9 @@ namespace SeeShellsTests.IO.Networking
             }
         }
 
+        /// <summary>
+        /// Tests the exception throwing when <see cref="API.GetOSRegistryLocations(string, IRestClient)"/> fails.
+        /// </summary>
         [TestMethod()]
         public void GetOSRegistryLocations_ServerErrorTest()
         {

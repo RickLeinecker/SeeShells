@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace SeeShells.IO.Networking.JSON
 {
+    /// <summary>
+    /// Holds a one-to-many resolution of an Operating System's Registry files and registry key path to Shellbags.
+    /// </summary>
     public class RegistryLocations
     {
 

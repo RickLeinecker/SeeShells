@@ -65,6 +65,7 @@ namespace SeeShells.IO.Networking
         /// Obtains a list of Shellbag GUIDS from the SeeShells API in JSON format and writes to a file
         /// </summary>
         /// <param name="outputFilePath">Specific file path in which to save the results. If it doesnt exist it will be created.</param>
+        /// <param name="apiClient">A custom client to use for the GET operation.</param>
         /// <returns>the filepath in which the data was saved.</returns>
         /// <exception cref="IOException"> When any networking or file error occurs during the operation.</exception>
         public static async Task<string> GetGuids(string outputFilePath, IRestClient apiClient = null)
@@ -74,9 +75,10 @@ namespace SeeShells.IO.Networking
         }
 
         /// <summary>
-        /// Obtains a list of Shellbag GUIDS from the SeeShells API in JSON format and writes to a file
+        /// Obtains a list of Operating Systems and their respective Registry file key paths for Shellbag information from the SeeShells API in JSON format and writes to a file.
         /// </summary>
         /// <param name="outputFilePath">Specific file path in which to save the results. If it doesnt exist it will be created.</param>
+        /// <param name="apiClient">A custom client to use for the GET operation.</param>
         /// <returns>the filepath in which the data was saved.</returns>
         /// <exception cref="IOException"> When any networking or file error occurs during the operation.</exception>
         public static async Task<string> GetOSRegistryLocations(string outputFilePath, IRestClient apiClient = null)
