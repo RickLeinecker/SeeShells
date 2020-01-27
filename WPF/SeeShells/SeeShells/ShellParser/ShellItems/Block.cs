@@ -151,7 +151,7 @@ namespace SeeShells.ShellParser.ShellItems
                 ushort dostime = (ushort)(buf[offset + off + 3] << 8 | buf[offset + off + 2]);
 
                 //check if the bytes contained no data
-                if (dosdate == 0 && dostime == 0)
+                if ((dosdate == 0 || dosdate == 1) && dostime == 0)
                 {
                     return DateTime.MinValue; //same thing as invalid. (minvalue goes below the epoch)
                 }
@@ -164,6 +164,7 @@ namespace SeeShells.ShellParser.ShellItems
                 int sec = (dostime & 0x1F) * 2;
                 int minute = (dostime & 0x7E0) >> 5;
                 int hour = (dostime & 0xF800) >> 11;
+
                 return new DateTime(year, month, day, hour, minute, sec);
             }
             catch (IndexOutOfRangeException ex)
@@ -190,5 +191,12 @@ namespace SeeShells.ShellParser.ShellItems
                 return off;
             return off + (alignment - off % alignment);
         }
+
+        protected void AddPairIfNotNull(IDictionary<string, string> dict, string key, object value)
+        {
+            if (key != null && value != null)
+                dict.Add(key, value.ToString());
+        }
+
     }
 }

@@ -184,6 +184,8 @@ namespace SeeShellsTests.ShellParser.ShellItems
             Assert.AreEqual("2227a280-3aea-1069-a2de-08002b30309d", shell.Guid.ToString());
         }
 
+
+
         /// <summary>
         /// Checks that invalid Modified datestamp times (e.g. 4 0x00 bytes) is correctly parsed.
         /// If it isnt, the DateTime specification with thrown an exception. (DateTime cant take 00 for year,month, or day)
@@ -204,10 +206,5 @@ namespace SeeShellsTests.ShellParser.ShellItems
 
             //Test passes by throwing no Exceptions.
         }
-
-
-
-
-
     }
 }

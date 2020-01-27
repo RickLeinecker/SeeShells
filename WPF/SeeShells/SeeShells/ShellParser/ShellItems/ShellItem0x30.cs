@@ -78,6 +78,7 @@ namespace SeeShells.ShellParser.ShellItems
                 ShortName = unpack_wstring(off, ExtensionOffset - off);
             else
                 ShortName = unpack_string(off, ExtensionOffset - off);
+
             ExtensionBlockBEEF0004 ExtensionBlock = new ExtensionBlockBEEF0004(buf, ExtensionOffset + offset);
             ExtensionBlocks.Add(ExtensionBlock);
 
@@ -86,11 +87,11 @@ namespace SeeShells.ShellParser.ShellItems
         public override IDictionary<string, string> GetAllProperties()
         {
             var ret = base.GetAllProperties();
-            ret.Add("Flags", Flags.ToString());
-            ret.Add("FileSize", FileSize.ToString());
-            ret.Add("FileAttributes", FileAttributes.ToString());
-            ret.Add("ExtensionOffset", ExtensionOffset.ToString());
-            ret.Add("ShortName", ShortName.ToString());
+            AddPairIfNotNull(ret, "Flags", Flags);
+            AddPairIfNotNull(ret, "FileSize", FileSize);
+            AddPairIfNotNull(ret, "FileAttributes", FileAttributes);
+            AddPairIfNotNull(ret, "ExtensionOffset", ExtensionOffset);
+            AddPairIfNotNull(ret, "ShortName", ShortName);
             return ret;
         }
     }
