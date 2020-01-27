@@ -105,6 +105,7 @@
                         <Viewbox Grid.Column="1" HorizontalAlignment="Left" Height="53" Margin="0.667,73.667,0,0" Grid.Row="14" VerticalAlignment="Top" Width="137" Grid.ColumnSpan="2">
                             <Button x:Name="button6" Content="Parse" Width="79" Height="29" Background="#292525" BorderBrush="#FF1F52A1" Foreground="#FF1F52A1"/>
                         </Viewbox>
+                        <TextBlock x:Name="Operating_Systems1" Grid.Column="1" HorizontalAlignment="Left" Margin="4.333,10,0,0" Grid.Row="5" TextWrapping="Wrap" Text="Operating System" VerticalAlignment="Top" Height="27" Width="132" FontSize="15"/>
 
                     </Grid>
                 </TabItem>
@@ -175,7 +176,7 @@
                                 <TextBox x:Name="textBox5" Height="23" TextWrapping="Wrap" Text="TextBox" Width="161"/>
                             </Viewbox>
                             <Viewbox Grid.Column="1" HorizontalAlignment="Left" Height="54" Margin="83.333,0.333,0,0" Grid.Row="11" VerticalAlignment="Top" Width="231" Grid.ColumnSpan="3">
-                                <TextBlock x:Name="textBlock5" TextWrapping="Wrap" Text="Add Another File" Width="90" Height="19"/>
+                                <TextBlock x:Name="textBlock5" TextWrapping="Wrap" Text="Add Another File" Width="90" Height="19" Foreground="White"/>
                             </Viewbox>
                             <Viewbox Grid.Column="3" HorizontalAlignment="Left" Height="35" Margin="77.667,10,0,0" Grid.Row="10" VerticalAlignment="Top" Width="64">
                                 <Button x:Name="button7" Content="Button" Width="75" Height="43"/>
@@ -215,7 +216,7 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="Help">
-                    
+
                 </TabItem>
             </TabControl>
         </Viewbox>
