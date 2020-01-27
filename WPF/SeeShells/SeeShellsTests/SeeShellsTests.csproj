@@ -65,9 +65,6 @@
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\WindowsBase.4.6.1055.0\lib\WindowsBase.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -89,6 +86,7 @@
     <Compile Include="ShellParser\ShellParserMocks\MockConfigParser.cs" />
     <Compile Include="ShellParser\OfflineRegistryReaderTests.cs" />
     <Compile Include="ShellParser\ShellParserMocks\OfflineMockConfigParser.cs" />
+    <Compile Include="UI\EventCollectionTest.cs" />
     <Compile Include="UI\FilterEventUtilsTests.cs" />
     <Compile Include="UI\Mocks\MockEvent.cs" />
     <Compile Include="UI\Mocks\MockShellItem.cs" />
