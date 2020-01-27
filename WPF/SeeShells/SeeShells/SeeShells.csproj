@@ -43,6 +43,9 @@
       <HintPath>resources\CommandLine.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NFluent">
       <HintPath>resources\NFluent.dll</HintPath>
     </Reference>
@@ -52,6 +55,9 @@
     <Reference Include="Registry">
       <HintPath>resources\Registry.dll</HintPath>
     </Reference>
+    <Reference Include="RestSharp, Version=106.0.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.106.10.1\lib\net452\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
@@ -59,6 +65,7 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
@@ -72,6 +79,11 @@
     </ApplicationDefinition>
     <Compile Include="IO\CsvIO.cs" />
     <Compile Include="IO\CsvParsedShellItem.cs" />
+    <Compile Include="IO\Networking\API.cs" />
+    <Compile Include="IO\Networking\APIException.cs" />
+    <Compile Include="IO\Networking\JSON\APIError.cs" />
+    <Compile Include="IO\Networking\JSON\GUIDPair.cs" />
+    <Compile Include="IO\Networking\JSON\RegistryLocations.cs" />
     <Compile Include="ShellParser\ShellBagParser.cs" />
     <Compile Include="ShellParser\IRegistryReader.cs" />
     <Compile Include="ShellParser\ShellItems\Block.cs" />
