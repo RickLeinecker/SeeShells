@@ -11,5 +11,6 @@ namespace SeeShells
     /// </summary>
     public partial class App : Application
     {
+        EventCollection eventCollection = new EventCollection();
     }
 }
