@@ -12,6 +12,10 @@ namespace SeeShellsTests.UI
     [TestClass()]
     class EventCollectionTest
     {
+        /// <summary>
+        /// Unit test to ensure that the list of IEvents created in the EventCollection class
+        /// can be accessed through an instance of the class created in App.xaml.cs 
+        /// </summary>
         [TestMethod()]
         public void EventCollectionTests()
         {
