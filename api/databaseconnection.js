@@ -115,9 +115,31 @@ function getOSandRegistryLocations() {
         pool.query('SELECT osversion.osname, keys.location FROM osversion INNER JOIN mainshellkeys ON osversion.mainkeysid = mainshellkeys.mainkeysid INNER JOIN keys ON keys.mainkeysid = mainshellkeys.mainkeysid ORDER BY osversion.osid ASC;', (err, res) => {
             if (err) {
                 reject({});
+                return;
             }
 
             let promise = JSONhelper.buildOSFileJSON(res.rows);
+            promise.then(
+                function (value) {
+                    resolve(value);
+                },
+                function (err) {
+                    reject({});
+                }
+            )
+        });
+    });
+}
+
+function getRegistryLocations() {
+    return new Promise(function (resolve, reject) {
+        pool.query('SELECT mainshellkeys.mainkeysid, keys.location FROM keys INNER JOIN mainshellkeys ON keys.mainkeysid = mainshellkeys.mainkeysid ORDER BY mainshellkeys.mainkeysid ASC;', (err, res) => {
+            if (err) {
+                reject({});
+                return;
+            }
+
+            let promise = JSONhelper.buildFileLocationJSON(res.rows);
             promise.then(
                 function (value) {
                     resolve(value);
@@ -182,6 +204,7 @@ module.exports = {
     registerUser,
     addOS,
     getOSandRegistryLocations,
+    getRegistryLocations,
     getGUIDs,
     addGUID,
     GUIDDoesNotExist

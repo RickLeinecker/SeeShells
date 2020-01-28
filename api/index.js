@@ -203,6 +203,22 @@ app.post('/addOSWithFileLocations', function (req, res) {
 
 });
 
+app.get('/getRegistryLocations', function (req, res) {
+    let promise = database.getRegistryLocations();
+    promise.then(
+        function (results) {
+            if (Object.keys(results).length > 0)
+                res.send({ "success": 1, "json": results });
+            else
+                res.send({ "success": 0, "error": "No file locations to fetch" });
+        },
+        function (err) {
+            res.send({ "success": 0, "error": "Failed to get any shellbag registry locations" });
+
+        }
+    );
+});
+
 app.get('/logout', function (req, res) {
     req.session.destroy(function (err) {
         if (err) {
