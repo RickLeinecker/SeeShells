@@ -74,6 +74,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="IO\HtmlIOTest.cs" />
     <Compile Include="IO\CsvIOTests.cs" />
     <Compile Include="IO\Networking\APITests.cs" />
     <Compile Include="IO\Networking\JSONTests.cs" />
