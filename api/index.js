@@ -103,7 +103,6 @@ app.get('/getOSandRegistryLocations', function (req, res) {
     let promise = database.getOSandRegistryLocations();
     promise.then(
         function (results) {
-            console.log(results);
             if(Object.keys(results).length > 0)
                 res.send({ "success": 1, "json": results });
             else
@@ -144,6 +143,78 @@ app.post('/addGUID', function (req, res) {
         },
         function (err) {
             res.send({ "success": 0, "error": "GUID exists in the database already."});
+        }
+    );
+});
+
+app.post('/addOS', function (req, res) {
+    var num = String(req.body.osnum);
+    var name = String(req.body.osname);
+    var mainkeysid = String(req.body.mainkeysid);
+
+    let keysExist = database.keysIDExists(mainkeysid);
+    keysExist.then(
+        function (value) {
+            if (value == true) {
+                let addPromise = database.addOS(num, name, mainkeysid);
+                addPromise.then(
+                    function (value) {
+                        res.send({ "success": 1 });
+                    },
+                    function (err) {
+                        res.send({ "success": 0, "error": "Failed to add new OS." });
+                    }
+                );
+            }
+            else {
+                res.send({ "success": 0, "error": "The keys ID selected does not exist." });
+            }
+        },
+        function (err) {
+            res.send({ "success": 0, "error": "Error with database connection." });
+        }
+    );
+        
+});
+
+app.post('/addOSWithFileLocations', function (req, res) {
+    var num = String(req.body.osnum);
+    var name = String(req.body.osname);
+    var keysArray = req.body.keys;
+
+    let keysAdded = database.addKeys(keysArray);
+    keysAdded.then(
+        function (mainkeysid) {
+            let addPromise = database.addOS(num, name, mainkeysid);
+            addPromise.then(
+                function (value) {
+                    res.send({ "success": 1 });
+                },
+                function (err) {
+                    res.send({ "success": 0, "error": "Failed to add new OS." });
+                }
+            );
+
+        },
+        function (err) {
+            res.send({ "success": 0, "error": "Failed to add the new registry key locations." });
+        }
+    );
+
+});
+
+app.get('/getRegistryLocations', function (req, res) {
+    let promise = database.getRegistryLocations();
+    promise.then(
+        function (results) {
+            if (Object.keys(results).length > 0)
+                res.send({ "success": 1, "json": results });
+            else
+                res.send({ "success": 0, "error": "No file locations to fetch" });
+        },
+        function (err) {
+            res.send({ "success": 0, "error": "Failed to get any shellbag registry locations" });
+
         }
     );
 });
