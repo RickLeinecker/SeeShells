@@ -137,6 +137,8 @@
     <Compile Include="ShellParser\ShellItems\ShellItemWithExtensions.cs" />
     <Compile Include="ShellParser\ShellItems\ShellItem0x00.cs" />
     <Compile Include="ShellParser\ShellItems\SHITEM_UNKNOWNENTRY2.cs" />
+    <Compile Include="UI\Event.cs" />
+    <Compile Include="UI\EventCollection.cs" />
     <Compile Include="UI\FilterEventUtils.cs" />
     <Compile Include="UI\IEvent.cs" />
     <Page Include="UI\MainWindow.xaml">

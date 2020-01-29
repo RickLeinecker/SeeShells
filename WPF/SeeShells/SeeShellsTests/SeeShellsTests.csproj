@@ -46,6 +46,7 @@
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\MSTest.TestFramework.1.3.2\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="MockHttpServer, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MockHttpServer.1.4.0.0\lib\net45\MockHttpServer.dll</HintPath>
     </Reference>
@@ -85,6 +86,7 @@
     <Compile Include="ShellParser\ShellParserMocks\MockConfigParser.cs" />
     <Compile Include="ShellParser\OfflineRegistryReaderTests.cs" />
     <Compile Include="ShellParser\ShellParserMocks\OfflineMockConfigParser.cs" />
+    <Compile Include="UI\EventCollectionTest.cs" />
     <Compile Include="UI\FilterEventUtilsTests.cs" />
     <Compile Include="UI\Mocks\MockEvent.cs" />
     <Compile Include="UI\Mocks\MockShellItem.cs" />
