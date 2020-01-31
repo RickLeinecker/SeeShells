@@ -1,4 +1,5 @@
 ﻿using SeeShells.UI;
+using SeeShells.UI.Node;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -13,8 +14,13 @@ namespace SeeShells
     public partial class App : Application
     {
         /// <summary>
-        /// creates an instance of the EventCollection class so that the whole program can access the list of events. 
+        /// Creates an instance of the EventCollection class so that the whole program can access the list of events. 
         /// </summary>
-       public static EventCollection eventCollection = new EventCollection();
+        public static EventCollection eventCollection = new EventCollection();
+
+        /// <summary>
+        /// Creates an instance of the NodeCollection class so that the whole program can access the list of nodes. 
+        /// </summary>
+        public static NodeCollection nodeCollection = new NodeCollection();
     }
 }
