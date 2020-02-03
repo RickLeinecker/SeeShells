@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Shapes;
 
 namespace SeeShells.UI.Node
 {
@@ -19,9 +20,12 @@ namespace SeeShells.UI.Node
             
             foreach(IEvent aEvent in eventList)
             {
-                Node node = new Node(aEvent);
-                //TODO:
-                // Node needs a Dot and Box added
+                /// TODO:
+                /// Customize dot and block objects
+                Ellipse dot = new Ellipse();
+                Rectangle block = new Rectangle();
+
+                Node node = new Node(aEvent, dot, block);
 
                 nodeList.Add(node);
             }
