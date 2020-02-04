@@ -1,0 +1,47 @@
+name: API Build Test
+
+on: 
+  pull_request:
+    branches: 
+      - master
+    paths: 
+      - api/**
+
+jobs:
+  build:
+    name: "API Test"
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Update PR Label
+      uses: actions/github-script@0.4.0
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          github.issues.addLabels({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            labels: ['API']
+          })
+          
+    - name: Checkout Branch
+      uses: actions/checkout@v2
+      
+    - name: Setup Node 
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+        
+    - name: NPM Install
+      run: cd $GITHUB_WORKSPACE/api && npm install
+  
+#     Nothing to build/compile on API
+#     - name: NPM Build
+#       run: cd $GITHUB_WORKSPACE/api && npm run build
+
+    - name: NPM Audit
+      run: cd $GITHUB_WORKSPACE/api && npm audit --audit-level=moderate
+      env:
+        CI: true

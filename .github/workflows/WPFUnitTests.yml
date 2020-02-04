@@ -4,6 +4,9 @@ on:
   pull_request:
     branches: 
       - master
+    paths:
+      - WPF/**
+
 
 jobs:
   WPF:
@@ -11,6 +14,18 @@ jobs:
     runs-on: [windows-latest]
 
     steps:
+      - name: Update PR Label
+        uses: actions/github-script@0.4.0
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.addLabels({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            labels: ['WPF']
+            })
+
       - name: Checkout Repo
         uses: actions/checkout@v2
       - name: Setup Nuget.exe

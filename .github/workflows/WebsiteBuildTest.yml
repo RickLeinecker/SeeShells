@@ -1,0 +1,46 @@
+name: Website Build Test
+
+on: 
+  pull_request:
+    branches: 
+      - master
+    paths: 
+      - docs/**
+
+jobs:
+  build:
+    name: "Website Test"
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Update PR Label
+      uses: actions/github-script@0.4.0
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          github.issues.addLabels({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            labels: ['Website']
+          })
+          
+    - name: Checkout Branch
+      uses: actions/checkout@v2
+      
+    - name: Setup Node 
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+        
+    - name: NPM Install
+      run: cd $GITHUB_WORKSPACE/docs && npm install
+  
+    - name: NPM Build
+      run: cd $GITHUB_WORKSPACE/docs && npm run build
+
+    - name: NPM Audit
+      run: cd $GITHUB_WORKSPACE/docs && npm audit --audit-level=moderate
+      env:
+        CI: true
