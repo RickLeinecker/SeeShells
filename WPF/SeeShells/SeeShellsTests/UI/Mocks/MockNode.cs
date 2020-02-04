@@ -11,8 +11,21 @@ namespace SeeShellsTests.UI.Mocks
 {
     class MockNode : Node
     {
-        public MockNode(IEvent aEvent, Ellipse dot = null, Rectangle block= null) : base(aEvent, dot, block)
+        public MockNode(IEvent aEvent) : this(aEvent, new Ellipse(), new Rectangle())
         {
         }
+        public MockNode(IEvent aEvent, Ellipse dot, Rectangle block) : base(aEvent, dot, block)
+        {
+            AEvent = aEvent;
+            Dot = dot;
+            Block = block;
+
+            dot.Visibility = System.Windows.Visibility.Visible;
+        }
+
+        public IEvent AEvent { get; }
+        public Ellipse Dot { get; }
+        public Rectangle Block { get; }
     }
+
 }

@@ -12,8 +12,24 @@ using System.Threading.Tasks;
 namespace SeeShellsTests.UI.Tests
 {
     [TestClass()]
-    public class FilterEventUtilsTests
+    public class NodeFilterTests
     {
+
+        private int countVisible(List<Node> nodes)
+        {
+            return (from node in nodes
+                    where node.dot.Visibility == System.Windows.Visibility.Visible
+                    select node).Count();
+        }
+
+        private void resetVisibility(List<Node> nodes)
+        {
+            foreach (var node in nodes)
+            {
+                node.dot.Visibility = System.Windows.Visibility.Visible;
+            }
+        }
+
         [TestMethod()]
         public void FilterDateRangeTest()
         {
@@ -38,24 +54,29 @@ namespace SeeShellsTests.UI.Tests
             DateTime endLimit = new DateTime(DateTime.MaxValue.Ticks - 10000, DateTimeKind.Utc);
 
             //test set startdate and enddate
+            resetVisibility(testList);
             testListCopy = new List<Node>(testList);
             new DateRangeFilter(startLimit, endLimit).Apply(ref testListCopy);
-            Assert.AreEqual(1, testListCopy.Count());
+            Assert.AreEqual(1, countVisible(testListCopy));
+            
 
             //test the startdate limit
+            resetVisibility(testList);
             testListCopy = new List<Node>(testList);
             new DateRangeFilter(startLimit, null).Apply(ref testListCopy);
-            Assert.AreEqual(2, testListCopy.Count());
+            Assert.AreEqual(2, countVisible(testListCopy));
 
             //test enddate limit
+            resetVisibility(testList);
             testListCopy = new List<Node>(testList);
             new DateRangeFilter(null, endLimit).Apply(ref testListCopy);
-            Assert.AreEqual(2, testListCopy.Count());
+            Assert.AreEqual(2, countVisible(testListCopy));
 
             //test full range (aka pointless filter)
+            resetVisibility(testList);
             testListCopy = new List<Node>(testList);
             new DateRangeFilter(null, null).Apply(ref testListCopy);
-            Assert.AreEqual(3, testListCopy.Count());
+            Assert.AreEqual(3, countVisible(testListCopy));
         }
 
         [TestMethod()]
@@ -79,19 +100,22 @@ namespace SeeShellsTests.UI.Tests
 
 
             //basic filter
+            resetVisibility(testList);
             testListCopy = new List<Node>(testList);
             new EventTypeFilter("Access").Apply(ref testListCopy);
-            Assert.AreEqual(1, testListCopy.Count());
+            Assert.AreEqual(1, countVisible(testListCopy));
 
             //test multifilter
+            resetVisibility(testList);
             testListCopy = new List<Node>(testList);
             new EventTypeFilter("Access", "Create").Apply(ref testListCopy);
-            Assert.AreEqual(2, testListCopy.Count());
+            Assert.AreEqual(2, countVisible(testListCopy));
 
             //test no filter
+            resetVisibility(testList);
             testListCopy = new List<Node>(testList);
             new EventTypeFilter("").Apply(ref testListCopy);
-            Assert.AreEqual(0, testListCopy.Count());
+            Assert.AreEqual(0, countVisible(testListCopy));
         }
 
         [TestMethod()]
@@ -117,19 +141,22 @@ namespace SeeShellsTests.UI.Tests
 
 
             //check same parent
+            resetVisibility(testList);
             testListCopy = new List<Node>(testList);
             new EventParentFilter(parent1).Apply(ref testListCopy);
-            Assert.AreEqual(2, testListCopy.Count());
+            Assert.AreEqual(2, countVisible(testListCopy));
 
             //check diff parent
+            resetVisibility(testList);
             testListCopy = new List<Node>(testList);
             new EventParentFilter(parent2).Apply(ref testListCopy);
-            Assert.AreEqual(1, testListCopy.Count());
+            Assert.AreEqual(1, countVisible(testListCopy));
 
             //check unknown parent
+            resetVisibility(testList);
             testListCopy = new List<Node>(testList);
             new EventParentFilter(new MockShellItem()).Apply(ref testListCopy);
-            Assert.AreEqual(0, testListCopy.Count());
+            Assert.AreEqual(0, countVisible(testListCopy));
         }
 
         [TestMethod()]
@@ -153,19 +180,22 @@ namespace SeeShellsTests.UI.Tests
 
 
             //check same name
+            resetVisibility(testList);
             testListCopy = new List<Node>(testList);
             new EventNameFilter("item1").Apply(ref testListCopy);
-            Assert.AreEqual(2, testListCopy.Count());
+            Assert.AreEqual(2, countVisible(testListCopy));
 
             //check no name
+            resetVisibility(testList);
             testListCopy = new List<Node>(testList);
             new EventNameFilter("item2").Apply(ref testListCopy);
-            Assert.AreEqual(0, testListCopy.Count());
+            Assert.AreEqual(0, countVisible(testListCopy));
 
             //check multi names
+            resetVisibility(testList);
             testListCopy = new List<Node>(testList);
             new EventNameFilter("item1", "item3").Apply(ref testListCopy);
-            Assert.AreEqual(3, testListCopy.Count());
+            Assert.AreEqual(3, countVisible(testListCopy));
 
         }
 
@@ -194,32 +224,38 @@ namespace SeeShellsTests.UI.Tests
 
 
             //check for unique attribute to some items
+            resetVisibility(testList);
             testListCopy = new List<Node>(testList);
             new AnyStringFilter("item1",false).Apply(ref testListCopy);
-            Assert.AreEqual(2, testListCopy.Count());
+            Assert.AreEqual(2, countVisible(testListCopy));
 
             //check for partial match to all items
+            resetVisibility(testList);
             testListCopy = new List<Node>(testList);
             new AnyStringFilter("item", false).Apply(ref testListCopy);
-            Assert.AreEqual(3, testListCopy.Count());
+            Assert.AreEqual(3, countVisible(testListCopy));
 
             //check for regex expression ( .* = match all)
+            resetVisibility(testList);
             testListCopy = new List<Node>(testList);
             new AnyStringFilter(".*", true).Apply(ref testListCopy);
-            Assert.AreEqual(3, testListCopy.Count());
+            Assert.AreEqual(3, countVisible(testListCopy));
 
             //check for external attribute matching outside of IEvent (test type byte value)
+            resetVisibility(testList);
             testListCopy = new List<Node>(testList);
             new AnyStringFilter("02", false).Apply(ref testListCopy);
-            Assert.AreEqual(3, testListCopy.Count());
+            Assert.AreEqual(3, countVisible(testListCopy));
 
             //test for no results
+            resetVisibility(testList);
             testListCopy = new List<Node>(testList);
             new AnyStringFilter("SeeShell", false).Apply(ref testListCopy);
-            Assert.AreEqual(0, testListCopy.Count());
+            Assert.AreEqual(0, countVisible(testListCopy));
 
             //test for regex timeout 
             //TODO Find hard enough regex that actually takes time no matter the PC?
         }
+
     }
 }
