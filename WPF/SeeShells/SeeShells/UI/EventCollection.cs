@@ -9,5 +9,6 @@ namespace SeeShells.UI
         /// creates a global list of IEvents to be accessed through an Instance of the class created in App.xaml.cs
         /// </summary>
         public List<IEvent> eventList;
+
     }
 }

@@ -139,7 +139,11 @@
     <Compile Include="ShellParser\ShellItems\SHITEM_UNKNOWNENTRY2.cs" />
     <Compile Include="UI\Event.cs" />
     <Compile Include="UI\EventCollection.cs" />
-    <Compile Include="UI\FilterEventUtils.cs" />
+    <Compile Include="UI\EventFilters\AnyStringFilter.cs" />
+    <Compile Include="UI\EventFilters\EventNameFilter.cs" />
+    <Compile Include="UI\EventFilters\EventParentFilter.cs" />
+    <Compile Include="UI\EventFilters\EventTypeFilter.cs" />
+    <Compile Include="UI\EventFilters\DateRangeFilter.cs" />
     <Compile Include="UI\IEvent.cs" />
     <Compile Include="UI\Node\Node.cs" />
     <Compile Include="UI\Node\NodeCollection.cs" />
@@ -152,6 +156,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UI\EventFilters\INodeFilter.cs" />
     <Compile Include="UI\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
