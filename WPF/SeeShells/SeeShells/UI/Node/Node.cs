@@ -9,8 +9,8 @@ namespace SeeShells.UI.Node
 {
     public class Node
     {
-        IEvent aEvent;
-        Ellipse dot;
+        public IEvent aEvent;
+        public Ellipse dot;
         Rectangle block;
 
         /// <summary>
