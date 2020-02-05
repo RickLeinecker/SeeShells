@@ -141,6 +141,9 @@
     <Compile Include="UI\EventCollection.cs" />
     <Compile Include="UI\FilterEventUtils.cs" />
     <Compile Include="UI\IEvent.cs" />
+    <Compile Include="UI\Node\Node.cs" />
+    <Compile Include="UI\Node\NodeCollection.cs" />
+    <Compile Include="UI\Node\NodeParser.cs" />
     <Page Include="UI\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

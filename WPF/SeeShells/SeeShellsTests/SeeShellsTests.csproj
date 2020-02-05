@@ -90,6 +90,7 @@
     <Compile Include="UI\FilterEventUtilsTests.cs" />
     <Compile Include="UI\Mocks\MockEvent.cs" />
     <Compile Include="UI\Mocks\MockShellItem.cs" />
+    <Compile Include="UI\NodeCollectionTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
