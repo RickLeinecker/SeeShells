@@ -93,7 +93,6 @@
     <Compile Include="IO\Networking\JSON\APIError.cs" />
     <Compile Include="IO\Networking\JSON\GUIDPair.cs" />
     <Compile Include="IO\Networking\JSON\RegistryLocations.cs" />
-    <Compile Include="ShellParser\Script.cs" />
     <Compile Include="ShellParser\ShellBagParser.cs" />
     <Compile Include="ShellParser\IRegistryReader.cs" />
     <Compile Include="ShellParser\ShellItems\Block.cs" />
