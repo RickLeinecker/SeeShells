@@ -64,5 +64,10 @@ namespace SeeShells.UI.Pages
         {
             NavigationService.Navigate(new TimelinePage());
         }
+
+        private void HelpButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

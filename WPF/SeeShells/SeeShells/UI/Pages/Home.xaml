@@ -26,6 +26,10 @@
 
         <template:CheckBoxWithLabel Grid.Row="0" LabelContent="Offline" />
 
+        <Viewbox Grid.Row="0" Stretch="Uniform" HorizontalAlignment="Right" Margin="5">
+            <Button x:Name="HelpButton" Content="HELP" Click="HelpButton_Click"  Margin="5,0"/>
+        </Viewbox>
+
         <Viewbox Grid.Row="1" Stretch="Uniform" HorizontalAlignment="Left" Margin="5">
             <StackPanel Orientation="Vertical">
                 <Label Content="Offline hive location:" Foreground="LightGray" />
