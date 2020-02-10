@@ -112,14 +112,12 @@
                                     <Button x:Name="button8" Content="Download" Width="75" Background="#292525" BorderBrush="#FF1F52A1" Foreground="#FF1F52A1" Height="26"/>
                                 </Viewbox>
                             </Grid>
-                            <Grid x:Name="Timeline" Margin="10,0,4.333,175" Background="#292525">
-                                <xctk:TimelinePanel x:Name="ello" BeginDate="01/01/2007" EndDate="12/31/2007" CanHorizontallyScroll="True">
-                                    <Button xctk:TimelinePanel.Date="02/01/2007">Feburary Event</Button>
-                                    <Button xctk:TimelinePanel.Date="02/01/2007">Feburary Event 2</Button>
-                                    <Button xctk:TimelinePanel.Date="05/01/2007">May Event</Button>
-                                    <Button xctk:TimelinePanel.Date="09/01/2007">Septemeber Event</Button>
-                                </xctk:TimelinePanel>
-                            </Grid>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                                <Grid x:Name="Timeline" Margin="10,0,4.333,175" Background="#292525">
+                                    <xctk:TimelinePanel x:Name="Nodeline" CanHorizontallyScroll="True">
+                                    </xctk:TimelinePanel>
+                                </Grid>
+                            </ScrollViewer>
                         </Grid>
                     </Grid>
                 </TabItem>

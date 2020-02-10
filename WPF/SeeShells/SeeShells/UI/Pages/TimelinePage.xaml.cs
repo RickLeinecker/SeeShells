@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SeeShells.UI.Node;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Xceed.Wpf.Toolkit;
 
 namespace SeeShells.UI.Pages
 {
@@ -23,6 +25,32 @@ namespace SeeShells.UI.Pages
         public TimelinePage()
         {
             InitializeComponent();
+
+            BuildTimeline();
+        }
+
+        public void BuildTimeline()
+        {
+            List<IEvent> eventList = new List<IEvent>();
+            Event Event1 = new Event("item1", new DateTime(2007, 1, 1), null, "Access");
+            Event Event2 = new Event("item1", new DateTime(2007, 2, 1), null, "Access");
+            Event Event3 = new Event("item1", new DateTime(2007, 3, 1), null, "Access");
+            Event Event4 = new Event("item1", new DateTime(2007, 4, 1), null, "Access");
+            eventList.Add(Event1);
+            eventList.Add(Event2);
+            eventList.Add(Event3);
+            eventList.Add(Event4);
+
+            NodeCollection nodeCollection = new NodeCollection();
+            nodeCollection.nodeList = NodeParser.GetNodes(eventList);
+
+            Nodeline.BeginDate = new DateTime(2007, 1, 1);
+            Nodeline.EndDate = new DateTime(2007, 12, 31);
+            foreach (Node.Node node in nodeCollection.nodeList)
+            {
+                TimelinePanel.SetDate(node.dot, node.aEvent.EventTime);
+                Nodeline.Children.Add(node.dot);
+            }
         }
     }
 }
