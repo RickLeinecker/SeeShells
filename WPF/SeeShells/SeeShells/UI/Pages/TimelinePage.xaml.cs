@@ -32,22 +32,24 @@ namespace SeeShells.UI.Pages
         public void BuildTimeline()
         {
             List<IEvent> eventList = new List<IEvent>();
-            Event Event1 = new Event("item1", new DateTime(2007, 1, 1, 0, 0, 1), null, "Access");
-            Event Event2 = new Event("item1", new DateTime(2007, 1, 1, 0, 0, 2), null, "Access");
-            //Event Event3 = new Event("item1", new DateTime(2007, 1, 1, 0, 1, 30), null, "Access");
-            //Event Event4 = new Event("item1", new DateTime(2017, 12, 1), null, "Access");
+            Event Event1 = new Event("item1", new DateTime(2007, 1, 1, 0, 0, 0), null, "Access");
+            Event Event2 = new Event("item1", new DateTime(2007, 1, 2, 0, 0, 0), null, "Access");
+            Event Event3 = new Event("item1", new DateTime(2007, 1, 2, 12, 0, 0), null, "Access");
+            Event Event4 = new Event("item1", new DateTime(2007, 1, 2, 23, 0, 0), null, "Access");
+            Event Event5 = new Event("item1", new DateTime(2007, 12, 31, 0, 0, 0), null, "Access");
             eventList.Add(Event1);
             eventList.Add(Event2);
-            //eventList.Add(Event3);
-            //eventList.Add(Event4);
+            eventList.Add(Event3);
+            eventList.Add(Event4);
+            eventList.Add(Event5);
 
             NodeCollection nodeCollection = new NodeCollection();
             nodeCollection.nodeList = NodeParser.GetNodes(eventList);
 
-            Nodeline.BeginDate = new DateTime(2007, 1, 1);
-            Nodeline.EndDate = new DateTime(2017, 12, 31);
+            Nodeline.BeginDate = new DateTime(2007, 1, 1, 0, 0, 0);
+            Nodeline.EndDate = new DateTime(2007, 12, 31, 12, 0, 0); // Should be one UnitTimeSpan more than the max value from the data
             Nodeline.UnitSize = 10.0;
-            Nodeline.UnitTimeSpan = new TimeSpan(0, 0, 0, 1);
+            Nodeline.UnitTimeSpan = new TimeSpan(0, 12, 0, 0);
 
             foreach (Node.Node node in nodeCollection.nodeList)
             {
