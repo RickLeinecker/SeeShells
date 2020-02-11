@@ -112,9 +112,9 @@
                                     <Button x:Name="button8" Content="Download" Width="75" Background="#292525" BorderBrush="#FF1F52A1" Foreground="#FF1F52A1" Height="26"/>
                                 </Viewbox>
                             </Grid>
-                            <ScrollViewer x:Name="TimelineScroll" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Auto"  Margin="0,0,0.333,163.667">
+                            <ScrollViewer x:Name="TimelineScroll" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  Margin="0,0,0.333,163.667">
                                 <Grid x:Name="Timeline" Background="#292525" Height="364">
-                                    <xctk:TimelinePanel x:Name="Nodeline">
+                                    <xctk:TimelinePanel x:Name="Nodeline" BeginDate="1/1/1" EndDate="1/1/1">
                                     </xctk:TimelinePanel>
                                 </Grid>
                             </ScrollViewer>
