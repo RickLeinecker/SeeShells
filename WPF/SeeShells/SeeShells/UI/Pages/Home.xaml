@@ -26,12 +26,16 @@
 
         <template:CheckBoxWithLabel Grid.Row="0" LabelContent="Offline" />
 
+        <Viewbox Grid.Row="0" Stretch="Uniform" HorizontalAlignment="Right" Margin="5">
+            <Button x:Name="HelpButton" Content="HELP" Click="HelpButton_Click"  Margin="5,0"/>
+        </Viewbox>
+
         <Viewbox Grid.Row="1" Stretch="Uniform" HorizontalAlignment="Left" Margin="5">
             <StackPanel Orientation="Vertical">
                 <Label Content="Offline hive location:" Foreground="LightGray" />
                 <StackPanel Orientation="Horizontal">
-                    <TextBox x:Name="offlineHiveLocation" MinWidth="300" Text="{Binding OfflineFileLocation}"/>
-                    <Button x:Name="OfflineBrowseButton" Content="Browse" Click="OfflineBrowseButton_Click" Margin="20,0"/>
+                    <TextBox x:Name="offlineHiveLocation" MinWidth="300" Text="{Binding OfflineFileLocation}" IsEnabled="False"/>
+                    <Button x:Name="OfflineBrowseButton" Content="Browse" Click="OfflineBrowseButton_Click" IsEnabled="False" Margin="20,0"/>
                 </StackPanel>
             </StackPanel>
         </Viewbox>
@@ -39,7 +43,7 @@
         <Viewbox Grid.Row="2" Stretch="Uniform" HorizontalAlignment="Left" Margin="5">
             <StackPanel Orientation="Vertical">
                 <Label Content="Select the OS Version of the offline hive:" Foreground="LightGray" />
-                <ComboBox Grid.Row="2" x:Name="OSVersion" ItemsSource="{Binding OSVersions}" DisplayMemberPath="{Binding Name}" MinWidth="300" />
+                <ComboBox Grid.Row="2" x:Name="OSVersion" ItemsSource="{Binding OSVersions}" DisplayMemberPath="{Binding Name}" IsEnabled="False" MinWidth="300" />
             </StackPanel>
         </Viewbox>
 
@@ -47,7 +51,7 @@
             <StackPanel Orientation="Vertical">
                 <Label Content="OS Configuration File" Foreground="LightGray" />
                 <StackPanel Orientation="Horizontal">
-                    <TextBox x:Name="OSFileLocation" MinWidth="300" Text="{Binding OSFileLocation}"/>
+                    <TextBox x:Name="OSFileLocationTextBox" MinWidth="300" Text="{Binding OSFileLocation, Mode=OneWay}" VerticalContentAlignment="Center" IsEnabled="False"/>
                     <Button x:Name="OSBrowseButton" Content="Browse for Different File Location" Click="OSBrowseButton_Click" Margin="20,0"/>
                     <Button x:Name="OSUpdateButton" Content="Update the Configuration File in the Specified Location" Click="OSUpdateButton_Click"  Margin="20,0"/>
                 </StackPanel>
@@ -58,7 +62,7 @@
             <StackPanel Orientation="Vertical">
                 <Label Content="GUID Configuration File" Foreground="LightGray" />
                 <StackPanel Orientation="Horizontal">
-                    <TextBox x:Name="GUIDFileLocation" MinWidth="300" Text="{Binding GUIDFileLocation}"/>
+                    <TextBox x:Name="GUIDFileLocationTextBox" MinWidth="300" Text="{Binding GUIDFileLocation, Mode=OneWay}" VerticalContentAlignment="Center" IsEnabled="False"/>
                     <Button x:Name="GUIDBrowseButton" Content="Browse for Different File Location" Click="GUIDBrowseButton_Click"  Margin="20,0"/>
                     <Button x:Name="GUIUpdateButton" Content="Update the Configuration File in the Specified Location" Click="GUIUpdateButton_Click"  Margin="20,0"/>
 
@@ -70,7 +74,7 @@
             <StackPanel Orientation="Vertical">
                 <Label Content="ShellItem Script Configuration File" Foreground="LightGray" />
                 <StackPanel Orientation="Horizontal">
-                    <TextBox x:Name="ScriptFileLocation" MinWidth="300" Text="{Binding ScriptFileLocation}"/>
+                    <TextBox x:Name="ScriptFileLocationTextBox" MinWidth="300" Text="{Binding ScriptFileLocation, Mode=OneWay}" VerticalContentAlignment="Center" IsEnabled="False"/>
                     <Button x:Name="ScriptBrowseButton" Content="Browse for Different File Location" Click="ScriptBrowseButton_Click"  Margin="20,0"/>
                     <Button x:Name="ScriptUpdateButton" Content="Update the Configuration File in the Specified Location" Click="ScriptUpdateButton_Click"  Margin="20,0"/>
                 </StackPanel>
