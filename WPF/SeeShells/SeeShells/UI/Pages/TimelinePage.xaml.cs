@@ -32,20 +32,23 @@ namespace SeeShells.UI.Pages
         public void BuildTimeline()
         {
             List<IEvent> eventList = new List<IEvent>();
-            Event Event1 = new Event("item1", new DateTime(2007, 1, 1), null, "Access");
-            Event Event2 = new Event("item1", new DateTime(2007, 2, 1), null, "Access");
-            Event Event3 = new Event("item1", new DateTime(2007, 3, 1), null, "Access");
-            Event Event4 = new Event("item1", new DateTime(2007, 4, 1), null, "Access");
+            Event Event1 = new Event("item1", new DateTime(2007, 1, 1, 0, 0, 1), null, "Access");
+            Event Event2 = new Event("item1", new DateTime(2007, 1, 1, 0, 0, 2), null, "Access");
+            //Event Event3 = new Event("item1", new DateTime(2007, 1, 1, 0, 1, 30), null, "Access");
+            //Event Event4 = new Event("item1", new DateTime(2017, 12, 1), null, "Access");
             eventList.Add(Event1);
             eventList.Add(Event2);
-            eventList.Add(Event3);
-            eventList.Add(Event4);
+            //eventList.Add(Event3);
+            //eventList.Add(Event4);
 
             NodeCollection nodeCollection = new NodeCollection();
             nodeCollection.nodeList = NodeParser.GetNodes(eventList);
 
             Nodeline.BeginDate = new DateTime(2007, 1, 1);
-            Nodeline.EndDate = new DateTime(2007, 12, 31);
+            Nodeline.EndDate = new DateTime(2017, 12, 31);
+            Nodeline.UnitSize = 10.0;
+            Nodeline.UnitTimeSpan = new TimeSpan(0, 0, 0, 1);
+
             foreach (Node.Node node in nodeCollection.nodeList)
             {
                 TimelinePanel.SetDate(node.dot, node.aEvent.EventTime);
