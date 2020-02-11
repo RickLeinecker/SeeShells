@@ -1,6 +1,9 @@
-﻿using SeeShells.UI.Node;
+﻿using SeeShells.UI.EventFilters;
+using SeeShells.UI.Node;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using Xceed.Wpf.Toolkit;
 
@@ -11,6 +14,10 @@ namespace SeeShells.UI.Pages
     /// </summary>
     public partial class TimelinePage : Page
     {
+        private const string EVENT_PARENT_IDENTIFER = "EventParent";
+        private Dictionary<string, string> eventTypeFilterList = new Dictionary<string, string>();
+        private HashSet<string> eventTypeList = new HashSet<string>();
+
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public double UnitSize = 10;
@@ -21,6 +28,116 @@ namespace SeeShells.UI.Pages
             InitializeComponent();
 
             BuildTimeline();
+            eventTypeList.Add(""); //default blank entry
+        }
+
+        private void AllStringFilter_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (RegexCheckBox != null) //null check to stop initalization NPEs
+            {
+                TextBox emitter = (TextBox)sender;
+                bool useRegex = RegexCheckBox.IsChecked.GetValueOrDefault(false);
+                UpdateFilter("AnyString", new AnyStringFilter(emitter.Text, useRegex));
+            }
+        }
+
+        private void UpdateDateFilter(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateFilter("DateFilter", new DateRangeFilter(startDatePicker.SelectedDate, endDatePicker.SelectedDate));
+
+        }
+
+        private void UpdateFilter(string filterIdentifer, INodeFilter newFilter)
+        {
+            //remove the current filter that exists
+            App.nodeCollection.RemoveEventFilter(filterIdentifer);
+
+            //add a new filter with our date restrictions
+            App.nodeCollection.AddEventFilter(filterIdentifer, newFilter);
+
+        }
+
+        private void EventTypeFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox emitter = (ComboBox)sender;
+
+            EventTypeFilter_ListChanged(emitter.Name, emitter.SelectedItem.ToString());
+
+        }
+
+        /// <summary>
+        /// Updates the list of <seealso cref="EventFilters.EventTypeFilter"/>s when a change occurs
+        /// This assumes you dont have two
+        /// </summary>
+        /// <param name="emitterName">Name of object that is specifying the filter. used for keep track of updates</param>
+        /// <param name="typeValue">the name of the type to be filtered</param>
+        private void EventTypeFilter_ListChanged(string emitterName,  string typeValue)
+        {
+            if (typeValue.Trim().Length == 0) //handle blank filters
+            {
+                eventTypeFilterList.Remove(emitterName);
+            }
+            else
+            {
+                eventTypeFilterList.Add(emitterName, typeValue); //also replaces existing values
+            }
+
+            UpdateFilter("EventType", new EventTypeFilter(eventTypeFilterList.Values.ToArray()));
+        }
+
+        private void EventTypeFilter_DropDownOpened(object sender, EventArgs e)
+        {
+            //show only the options that havent been selected yet
+            ComboBox emitter = (ComboBox)sender;
+            if (eventTypeList.Count == 1) { //obtain all eventTypes found if the list isnt populated
+                foreach (Node.Node node in App.nodeCollection.nodeList)
+                {
+                    eventTypeList.Add(node.aEvent.EventType);
+                }
+            }
+
+            //add all types to the lsit that arent already selected as filters
+            foreach (string eventType in eventTypeList)
+            {
+                if (!eventTypeFilterList.Values.Contains(eventType))
+                {
+                    //dont let mutiple blanks be put into the list
+                    if (eventType.Equals(string.Empty) && emitter.Items.Contains(string.Empty))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                    emitter.Items.Add(eventType);
+                    }
+                }
+            }
+        }
+
+        private void EventParentTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            //TODO can only be implememented from a context menu option (e.g. right click) which allows us to get the actual event
+            TextBox emitter = (TextBox)sender;
+            UpdateFilter(EVENT_PARENT_IDENTIFER, new EventParentFilter());
+        }
+
+        private void RegexCheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            //force fire a text changed event for the textbox so that the filter gets updated
+            AllStringFilter_TextChanged(AllStringFilterTextBlock, new TextChangedEventArgs(e.RoutedEvent, UndoAction.None));
+        }
+
+        private void EventParentClearButton_Click(object sender, RoutedEventArgs e)
+        {
+            App.nodeCollection.RemoveEventFilter(EVENT_PARENT_IDENTIFER);
+            EventParentTextBox.Text = string.Empty;
+        }
+
+        private void EventNameFilter_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBox emitter = (TextBox)sender;
+            UpdateFilter("EventName", new EventNameFilter(emitter.Text));
+
         }
         /// <summary>
         /// Builds a timeline dynamically
