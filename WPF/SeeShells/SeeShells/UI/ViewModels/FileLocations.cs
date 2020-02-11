@@ -12,6 +12,7 @@ namespace SeeShells.UI.ViewModels
         private string osLocation = string.Empty;
         private string guidLocation = string.Empty;
         private string scriptLocation = string.Empty;
+        private string offlineLocation = string.Empty;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -50,6 +51,19 @@ namespace SeeShells.UI.ViewModels
                 {
                     scriptLocation = value;
                     OnPropertyChanged("ScriptFileLocation");
+                }
+            }
+        }
+
+        public string OfflineFileLocation
+        {
+            get { return offlineLocation; }
+            set
+            {
+                if (offlineLocation != value)
+                {
+                    offlineLocation = value;
+                    OnPropertyChanged("OfflineFileLocation");
                 }
             }
         }

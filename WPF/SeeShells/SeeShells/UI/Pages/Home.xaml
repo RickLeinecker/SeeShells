@@ -11,73 +11,86 @@
 
     <Grid Background="#FF343030">
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"/>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Name="OfflineLocationRow" Height="2*"/>
+            <RowDefinition Name="OSVersionRow" Height="2*"/>
+            <RowDefinition Height=".5*"/>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
 
-        <template:CheckBoxWithLabel Grid.Row="0" LabelContent="Offline" />
+        <template:CheckBoxWithLabel x:Name="OfflineCheck" Grid.Row="0" LabelContent="Offline" CheckClicked="OfflineChecked" CheckUnclicked="OfflineUnchecked"/>
 
-        <Viewbox Grid.Row="0" Stretch="Uniform" HorizontalAlignment="Right" Margin="5">
+        <Viewbox Grid.Row="0" Grid.Column="1" Stretch="Uniform" HorizontalAlignment="Right" Margin="5">
             <Button x:Name="HelpButton" Content="HELP" Click="HelpButton_Click"  Margin="5,0"/>
         </Viewbox>
 
-        <Viewbox Grid.Row="1" Stretch="Uniform" HorizontalAlignment="Left" Margin="5">
+        <Viewbox Grid.Row="1" Grid.ColumnSpan="2" Stretch="Uniform" HorizontalAlignment="Left" Margin="5">
             <StackPanel Orientation="Vertical">
                 <Label Content="Offline hive location:" Foreground="LightGray" />
                 <StackPanel Orientation="Horizontal">
                     <TextBox x:Name="offlineHiveLocation" MinWidth="300" Text="{Binding OfflineFileLocation}" IsEnabled="False"/>
-                    <Button x:Name="OfflineBrowseButton" Content="Browse" Click="OfflineBrowseButton_Click" IsEnabled="False" Margin="20,0"/>
+                    <Button x:Name="OfflineBrowseButton" Content="Browse" Click="OfflineBrowseButton_Click" Margin="20,0"/>
                 </StackPanel>
             </StackPanel>
         </Viewbox>
 
-        <Viewbox Grid.Row="2" Stretch="Uniform" HorizontalAlignment="Left" Margin="5">
+        <Viewbox Grid.Row="2" Grid.ColumnSpan="2" Stretch="Uniform" HorizontalAlignment="Left" Margin="5">
             <StackPanel Orientation="Vertical">
                 <Label Content="Select the OS Version of the offline hive:" Foreground="LightGray" />
-                <ComboBox Grid.Row="2" x:Name="OSVersion" ItemsSource="{Binding OSVersions}" DisplayMemberPath="{Binding Name}" IsEnabled="False" MinWidth="300" />
+                <ComboBox Grid.Row="2" x:Name="OSVersion" VerticalContentAlignment="Center" MinWidth="200" />
             </StackPanel>
         </Viewbox>
 
-        <Viewbox Grid.Row="4" Stretch="Uniform" HorizontalAlignment="Left" Margin="5">
+        <Viewbox Grid.Row="4" Stretch="Uniform" HorizontalAlignment="Left" Margin="5,0,5,5">
             <StackPanel Orientation="Vertical">
                 <Label Content="OS Configuration File" Foreground="LightGray" />
-                <StackPanel Orientation="Horizontal">
-                    <TextBox x:Name="OSFileLocationTextBox" MinWidth="300" Text="{Binding OSFileLocation, Mode=OneWay}" VerticalContentAlignment="Center" IsEnabled="False"/>
-                    <Button x:Name="OSBrowseButton" Content="Browse for Different File Location" Click="OSBrowseButton_Click" Margin="20,0"/>
-                    <Button x:Name="OSUpdateButton" Content="Update the Configuration File in the Specified Location" Click="OSUpdateButton_Click"  Margin="20,0"/>
-                </StackPanel>
+                <TextBox x:Name="OSFileLocationTextBox" MinWidth="200" Text="{Binding OSFileLocation, Mode=OneWay}" VerticalContentAlignment="Center" IsEnabled="False"/>
             </StackPanel>
         </Viewbox>
 
-        <Viewbox Grid.Row="5" Stretch="Uniform" HorizontalAlignment="Left" Margin="5">
+        <Viewbox Grid.Row="4" Grid.Column="1" Stretch="Uniform" HorizontalAlignment="Left"  Margin="5">
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="OSBrowseButton" Content="Browse" Click="OSBrowseButton_Click" Margin="10,0"/>
+                <Button x:Name="OSUpdateButton" Content="Update File" Click="OSUpdateButton_Click"  Margin="10,0"/>
+            </StackPanel>
+        </Viewbox>
+
+        <Viewbox Grid.Row="5" Stretch="Uniform" HorizontalAlignment="Left" Margin="5,0,5,5">
             <StackPanel Orientation="Vertical">
                 <Label Content="GUID Configuration File" Foreground="LightGray" />
                 <StackPanel Orientation="Horizontal">
-                    <TextBox x:Name="GUIDFileLocationTextBox" MinWidth="300" Text="{Binding GUIDFileLocation, Mode=OneWay}" VerticalContentAlignment="Center" IsEnabled="False"/>
-                    <Button x:Name="GUIDBrowseButton" Content="Browse for Different File Location" Click="GUIDBrowseButton_Click"  Margin="20,0"/>
-                    <Button x:Name="GUIUpdateButton" Content="Update the Configuration File in the Specified Location" Click="GUIUpdateButton_Click"  Margin="20,0"/>
+                    <TextBox x:Name="GUIDFileLocationTextBox" MinWidth="200" Text="{Binding GUIDFileLocation, Mode=OneWay}" VerticalContentAlignment="Center" IsEnabled="False"/>
+                 </StackPanel>
+            </StackPanel>
+        </Viewbox>
 
+        <Viewbox Grid.Row="5" Grid.Column="1" Stretch="Uniform" HorizontalAlignment="Left" Margin="5">
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="GUIDBrowseButton" Content="Browse" Click="GUIDBrowseButton_Click"  Margin="10,0"/>
+                <Button x:Name="GUIUpdateButton" Content="Update File" Click="GUIUpdateButton_Click"  Margin="10,0"/>
+            </StackPanel>
+        </Viewbox>
+
+        <Viewbox Grid.Row="6" Stretch="Uniform" HorizontalAlignment="Left" Margin="5,0,5,5">
+            <StackPanel Orientation="Vertical">
+                <Label Content="ShellItem Script Configuration File" Foreground="LightGray" />
+                <StackPanel Orientation="Horizontal">
+                    <TextBox x:Name="ScriptFileLocationTextBox" MinWidth="200" Text="{Binding ScriptFileLocation, Mode=OneWay}" VerticalContentAlignment="Center" IsEnabled="False"/>
                 </StackPanel>
             </StackPanel>
         </Viewbox>
 
-        <Viewbox Grid.Row="6" Stretch="Uniform" HorizontalAlignment="Left" Margin="5">
-            <StackPanel Orientation="Vertical">
-                <Label Content="ShellItem Script Configuration File" Foreground="LightGray" />
-                <StackPanel Orientation="Horizontal">
-                    <TextBox x:Name="ScriptFileLocationTextBox" MinWidth="300" Text="{Binding ScriptFileLocation, Mode=OneWay}" VerticalContentAlignment="Center" IsEnabled="False"/>
-                    <Button x:Name="ScriptBrowseButton" Content="Browse for Different File Location" Click="ScriptBrowseButton_Click"  Margin="20,0"/>
-                    <Button x:Name="ScriptUpdateButton" Content="Update the Configuration File in the Specified Location" Click="ScriptUpdateButton_Click"  Margin="20,0"/>
-                </StackPanel>
+        <Viewbox Grid.Row="6" Grid.Column="1" Stretch="Uniform" HorizontalAlignment="Left" Margin="5">
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="ScriptBrowseButton" Content="Browse" Click="ScriptBrowseButton_Click"  Margin="10,0"/>
+                <Button x:Name="ScriptUpdateButton" Content="Update File" Click="ScriptUpdateButton_Click"  Margin="10,0"/>
             </StackPanel>
         </Viewbox>
 

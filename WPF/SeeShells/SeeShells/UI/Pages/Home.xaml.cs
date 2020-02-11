@@ -1,21 +1,16 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using SeeShells.IO.Networking;
 using Microsoft.Win32;
 using SeeShells.UI.ViewModels;
+using Newtonsoft.Json;
+using SeeShells.IO.Networking.JSON;
 
 namespace SeeShells.UI.Pages
 {
@@ -24,7 +19,9 @@ namespace SeeShells.UI.Pages
     /// </summary>
     public partial class Home : Page
     {
-        private FileLocations locations;
+        private readonly FileLocations locations;
+        private GridLength visibleRow = new GridLength(2, GridUnitType.Star);
+        private GridLength hiddenRow = new GridLength(0);
 
         public Home()
         {
@@ -37,14 +34,48 @@ namespace SeeShells.UI.Pages
                 script: currentDirectory + @"\Scripts.json"
             );
 
-            OSFileLocationTextBox.DataContext = locations;
-            GUIDFileLocationTextBox.DataContext = locations;
-            ScriptFileLocationTextBox.DataContext = locations;
+            this.DataContext = locations;
+            UpdateOSVersionList();
+            HideOfflineRows();
         }
 
         private void OfflineBrowseButton_Click(object sender, RoutedEventArgs e)
         {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Registry files (*.reg)|*.reg",
+                InitialDirectory = Directory.GetCurrentDirectory()
+            };
 
+            if (openFileDialog.ShowDialog() != true)
+                return;
+
+            locations.OfflineFileLocation = openFileDialog.FileName;
+        }
+
+        private void UpdateOSVersionList()
+        {
+            OSVersion.SelectedIndex = -1;
+            OSVersion.Items.Clear();
+            OSVersion.Items.Add("Generic Windows");
+
+            if (!File.Exists(locations.OSFileLocation))
+                return;
+
+            string json = File.ReadAllText(locations.OSFileLocation);
+            try
+            {
+                IList<RegistryLocations> registryLocations = JsonConvert.DeserializeObject<IList<RegistryLocations>>(json);
+                foreach (RegistryLocations location in registryLocations)
+                {
+                    if (!OSVersion.Items.Contains(location.OperatingSystem))
+                        OSVersion.Items.Add(location.OperatingSystem);
+                }
+            }
+            catch (JsonSerializationException)
+            {
+                MessageBox.Show("The OS file you selected is not formatted properly.", "Incorrect OS Configuration File Format", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void OSBrowseButton_Click(object sender, RoutedEventArgs e)
@@ -53,6 +84,8 @@ namespace SeeShells.UI.Pages
             if(UserSelectedFile(location))
             {
                locations.OSFileLocation = location;
+
+                UpdateOSVersionList();
             }
         }
 
@@ -164,6 +197,7 @@ namespace SeeShells.UI.Pages
 
         }
 
+
         private bool UserSelectedFile(string result)
         {
             if (result == string.Empty)
@@ -189,29 +223,79 @@ namespace SeeShells.UI.Pages
 
         private void ParseButton_Click(object sender, RoutedEventArgs e)
         {
+            if (!ConfigurationFilesAreValid())
+                return;
+
+            if (OfflineCheck.IsChecked == true)
+                if (!OfflineSelectionsAreValid())
+                    return;
+
+            NavigationService.Navigate(new TimelinePage());
+        }
+
+        private bool ConfigurationFilesAreValid()
+        {
             if (!File.Exists(locations.OSFileLocation))
             {
                 MessageBox.Show("Select a proper OS configuration file or create a new one.", "Missing OS File", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                return false;
             }
             if (!File.Exists(locations.GUIDFileLocation))
             {
                 MessageBox.Show("Select a proper GUID configuration file or create a new one.", "Missing GUID File", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                return false;
             }
             if (!File.Exists(locations.ScriptFileLocation))
             {
                 MessageBox.Show("Select a proper script configuration file or create a new one.", "Missing Script File", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                return false;
             }
 
+            return true;
+        }
 
-            NavigationService.Navigate(new TimelinePage());
+        private bool OfflineSelectionsAreValid()
+        {
+            if(!File.Exists(locations.OfflineFileLocation))
+            {
+                MessageBox.Show("Select a registry hive file.", "Missing Hive", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+
+            if (OSVersion.SelectedItem is null)
+            {
+                MessageBox.Show("Select what OS Version the offline hive is.", "No OS Version selected.", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+
+            return true;
         }
 
         private void HelpButton_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new HelpPage());
+        }
+
+        private void OfflineChecked(object sender, EventArgs e)
+        {
+            ShowOfflineRows();
+        }
+
+        private void OfflineUnchecked(object sender, EventArgs e)
+        {
+            HideOfflineRows();
+        }
+
+        private void HideOfflineRows()
+        {
+            OfflineLocationRow.Height = hiddenRow;
+            OSVersionRow.Height = hiddenRow;
+        }
+
+        private void ShowOfflineRows()
+        {
+            OfflineLocationRow.Height = visibleRow;
+            OSVersionRow.Height = visibleRow;
         }
     }
 }
