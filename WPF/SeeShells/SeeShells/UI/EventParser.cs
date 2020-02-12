@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SeeShells.UI
 {
-    class EventParser
+    public class EventParser
     {
         /// <summary>
         /// creates the eventList that will be returned full of events based on ShellItems
@@ -18,7 +18,7 @@ namespace SeeShells.UI
         /// for each Modified,Accessed and Creation date for that shellItem.
         /// </summary>
         /// <param name="shells"></param>
-        public EventParser(List<IShellItem> shells)
+        public List<IEvent> EventParser(List<IShellItem> shells)
         {
             foreach (IShellItem item in shells)
             {
@@ -29,17 +29,9 @@ namespace SeeShells.UI
                 eventList.Add(eA);
                 eventList.Add(eC);
             }
-            ReturnList(eventList);
+            return eventList;
         }
-        /// <summary>
-        /// Helper function to return the list of IEvents created by the constructor
-        /// </summary>
-        /// <param name="events"></param>
-        /// <returns></returns>
-        public List<IEvent> ReturnList(List<IEvent> events)
-        {
-            return events;
-        }
+
         /// <summary>
         /// Creates an Event for the ShellItem based on its modified date
         /// </summary>
