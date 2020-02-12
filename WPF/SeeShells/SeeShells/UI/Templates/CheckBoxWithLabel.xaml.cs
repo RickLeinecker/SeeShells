@@ -20,6 +20,9 @@ namespace SeeShells.UI.Templates
     /// </summary>
     public partial class CheckBoxWithLabel : UserControl
     {
+
+        public event EventHandler CheckClicked;
+        public event EventHandler CheckUnclicked;
         public CheckBoxWithLabel()
         {
             InitializeComponent();
@@ -39,5 +42,14 @@ namespace SeeShells.UI.Templates
             get { return box.IsChecked; }
         }
 
+        private void box_Checked(object sender, RoutedEventArgs e)
+        {
+            CheckClicked?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void box_Unchecked(object sender, RoutedEventArgs e)
+        {
+            CheckUnclicked?.Invoke(this, EventArgs.Empty);
+        }
     }
 }
