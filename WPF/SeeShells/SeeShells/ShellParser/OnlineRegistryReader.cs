@@ -36,7 +36,7 @@ namespace SeeShells.ShellParser
             {
                 Console.WriteLine("NEW USER SID: " + userStore.Name);
 
-                foreach (string location in Parser.GetLocations())
+                foreach (string location in Parser.GetRegistryLocations())
                 {
                     foreach (byte[] keyValue in IterateRegistry(userStore.OpenSubKey(location), location, 0, ""))
                     {
