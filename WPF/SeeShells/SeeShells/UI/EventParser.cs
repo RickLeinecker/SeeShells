@@ -21,7 +21,7 @@ namespace SeeShells.UI
         public List<IEvent> EventParser(List<IShellItem> shells)
         {
             foreach (IShellItem item in shells)
-            {
+            { 
                 Event eM = createModifiedEvent(item);
                 Event eA = createAccessedEvent(item);
                 Event eC = createCreationEvent(item);
