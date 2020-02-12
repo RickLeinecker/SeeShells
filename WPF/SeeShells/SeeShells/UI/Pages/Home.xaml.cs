@@ -43,7 +43,7 @@ namespace SeeShells.UI.Pages
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
-                Filter = "Registry files (*.reg)|*.reg",
+                Filter = "Registry files (*.reg)|*.reg|Dat files (*.dat)|*.dat|All files|*.*",
                 InitialDirectory = Directory.GetCurrentDirectory()
             };
 
