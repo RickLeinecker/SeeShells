@@ -11,6 +11,11 @@ using Microsoft.Win32;
 using SeeShells.UI.ViewModels;
 using Newtonsoft.Json;
 using SeeShells.IO.Networking.JSON;
+using SeeShells.ShellParser.ShellItems;
+using System.Threading;
+using SeeShells.ShellParser;
+using SeeShells.UI.Node;
+using System.Diagnostics;
 
 namespace SeeShells.UI.Pages
 {
@@ -221,7 +226,7 @@ namespace SeeShells.UI.Pages
         }
 
 
-        private void ParseButton_Click(object sender, RoutedEventArgs e)
+        private async void ParseButton_Click(object sender, RoutedEventArgs e)
         {
             if (!ConfigurationFilesAreValid())
                 return;
@@ -230,7 +235,66 @@ namespace SeeShells.UI.Pages
                 if (!OfflineSelectionsAreValid())
                     return;
 
+            //cover UI
+            Mouse.OverrideCursor = Cursors.Wait;
+            //TODO spinner over screen to show operation in progress?
+            ParseButton.Content = "Parsing...";
+            ParseButton.IsEnabled = false;
+
+            //begin the parsing process
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            App.ShellItems = await ParseShellBags();
+            List<IEvent> events = new List<IEvent>(); //FIXME EventParser.getEvents(shellItems);
+            App.nodeCollection.nodeList = new List<Node.Node>(); //TODO REMOVE ME once merged with filtering code, unneccesarly NPE stopping
+            App.nodeCollection.nodeList.AddRange(NodeParser.GetNodes(events));
+            stopwatch.Stop();
+
+            //Restore UI
+            ParseButton.Content = "Parse";
+            ParseButton.IsEnabled = true;
+
+            //Go to Timeline
+            //TODO REMOVE ME ONCE TIMELINE IS READY FOR INTERGRATION
+            MessageBox.Show("ShellItems Parsed: " + App.ShellItems.Count + "\n Time Elapsed: " + stopwatch.ElapsedMilliseconds/1000 + " seconds"); 
+            
+            Mouse.OverrideCursor = Cursors.Arrow;
             NavigationService.Navigate(new TimelinePage());
+
+        }
+
+        private async Task<List<IShellItem>> ParseShellBags()
+        {
+            bool useRegistryHiveFiles = OfflineCheck.IsChecked.GetValueOrDefault(false);
+            string osVersion = OSVersion.SelectedItem.ToString();
+            //potentially long running operation, operate in another thread.
+            return await Task.Run(() => 
+            { 
+
+                List<IShellItem> retList = new List<IShellItem>();
+                ConfigParser parser = new ConfigParser(locations.GUIDFileLocation, locations.OSFileLocation);
+
+                //perform offline shellbag parsing
+                if (useRegistryHiveFiles)
+                {
+                    parser.OsVersion = osVersion;
+                    List<string> registryFilePaths = new List<string>() { locations.OfflineFileLocation };
+                    //TODO handle multiple offline registry files (locations only serves one so far)
+                    foreach (string registryFile in registryFilePaths)
+                    {
+                        OfflineRegistryReader offlineReader = new OfflineRegistryReader(parser, registryFile);
+                        retList.AddRange(ShellBagParser.GetShellItems(offlineReader));
+                    }
+
+                }
+                else //perform online shellbag parsing
+                {
+                    OnlineRegistryReader onlineReader = new OnlineRegistryReader(parser);
+                    retList.AddRange(ShellBagParser.GetShellItems(onlineReader));
+                }
+
+                return retList;
+            });
         }
 
         private bool ConfigurationFilesAreValid()
