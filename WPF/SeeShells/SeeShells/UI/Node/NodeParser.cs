@@ -20,17 +20,38 @@ namespace SeeShells.UI.Node
             
             foreach(IEvent aEvent in eventList)
             {
-                /// TODO:
-                /// Customize dot and block objects
                 Ellipse dot = new Ellipse();
+                SetDotProperties(dot);
                 Rectangle block = new Rectangle();
+                SetBlockProperties(block);
 
                 Node node = new Node(aEvent, dot, block);
-
                 nodeList.Add(node);
             }
             
             return nodeList;
+        }
+
+        /// <summary>
+        /// Sets up initial properties for a graphical dot object
+        /// </summary>
+        /// <param name="dot">graphical object that represents events on a timeline</param>
+        private static void SetDotProperties(Ellipse dot)
+        {
+            dot.Stroke = System.Windows.Media.Brushes.Black;
+            dot.Fill = System.Windows.Media.Brushes.DarkBlue;
+            dot.Width = 10;
+            dot.Height = 10;
+        }
+
+        /// <summary>
+        /// Sets up initial properties for a graphical block object
+        /// </summary>
+        /// <param name="block">graphical object that contains event details on a timeline</param>
+        private static void SetBlockProperties(Rectangle block)
+        {
+            /// TODO:
+            /// Set Properties.
         }
     }
 }

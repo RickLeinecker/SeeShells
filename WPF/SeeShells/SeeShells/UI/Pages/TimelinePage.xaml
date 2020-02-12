@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:SeeShells.UI.Pages"
+      xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="TimelinePage">
@@ -111,9 +112,12 @@
                                     <Button x:Name="button8" Content="Download" Width="75" Background="#292525" BorderBrush="#FF1F52A1" Foreground="#FF1F52A1" Height="26"/>
                                 </Viewbox>
                             </Grid>
-                            <Grid x:Name="Timeline" Margin="10,0,4.333,175" Background="#292525">
-
-                            </Grid>
+                            <ScrollViewer x:Name="TimelineScroll" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  Margin="0,0,0.333,163.667">
+                                <Grid x:Name="Timeline" Background="#292525" Height="364">
+                                    <xctk:TimelinePanel x:Name="Nodeline" BeginDate="1/1/1" EndDate="1/1/1">
+                                    </xctk:TimelinePanel>
+                                </Grid>
+                            </ScrollViewer>
                         </Grid>
                     </Grid>
                 </TabItem>
