@@ -1,13 +1,24 @@
-﻿using System;
+﻿using SeeShells.UI;
+using SeeShellsTests.UI.Mocks;
+using SeeShells.ShellParser;
+using SeeShells.ShellParser.ShellItems;
+using System.IO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using SeeShells.IO;
 
-namespace SeeShells.UI
+namespace SeeShellsTests.UI
 {
     [TestClass]
-    public class EventParserTest
+    class EventParserTest
     {
         [TestMethod]
-	    public EventParserTest()
-	    {
+        public void EventListOutput()
+        {
             List<IShellItem> shellItems = new List<IShellItem>();
             Dictionary<string, string> shellItemProperties = new Dictionary<string, string>();
             shellItemProperties.Add("Size", "0");
@@ -17,10 +28,12 @@ namespace SeeShells.UI
             shellItemProperties.Add("ModifiedDate", "1/1/0001 12:00:00 AM");
             shellItemProperties.Add("AccessedDate", "1/1/0001 12:00:00 AM");
             shellItemProperties.Add("CreationDate", "1/1/0001 12:00:00 AM");
+            CsvParsedShellItem ShellItem = new CsvParsedShellItem(shellItemProperties);
             shellItems.Add(ShellItem);
-            List<IEvent> events = EventParserTest(shellItems);
-            assertThat(events.size()).is(3);
+            EventParser eventParser = new EventParser(shellItems);
+            List<IEvent> newList = eventParser.Parser();
+            Assert.IsNotNull(newList);
+            
         }
     }
-
 }

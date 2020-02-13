@@ -85,6 +85,7 @@
     <Compile Include="ShellParser\ShellParserMocks\MockConfigParser.cs" />
     <Compile Include="ShellParser\OfflineRegistryReaderTests.cs" />
     <Compile Include="ShellParser\ShellParserMocks\OfflineMockConfigParser.cs" />
+    <Compile Include="UI\EventParserTest.cs" />
     <Compile Include="UI\FilterEventUtilsTests.cs" />
     <Compile Include="UI\Mocks\MockEvent.cs" />
     <Compile Include="UI\Mocks\MockShellItem.cs" />
