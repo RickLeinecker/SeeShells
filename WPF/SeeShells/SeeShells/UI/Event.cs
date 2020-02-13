@@ -1,4 +1,3 @@
-﻿
 using SeeShells.ShellParser.ShellItems;
 using System;
 using System.Collections.Generic;

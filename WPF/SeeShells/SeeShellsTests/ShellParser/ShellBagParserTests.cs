@@ -18,8 +18,7 @@ namespace SeeShellsTests.ShellParser
         [TestCategory("OnlineTest")]
         public void GetShellItemsOnlineTest()
         {
-            ShellBagParser shellBagParser = new ShellBagParser(new OnlineRegistryReader(new MockConfigParser()));
-            List<IShellItem> shellItems = shellBagParser.GetShellItems();
+            List<IShellItem> shellItems = ShellBagParser.GetShellItems(new OnlineRegistryReader(new MockConfigParser()));
 
             Assert.AreNotEqual(shellItems.Count, 0);
         }
@@ -31,8 +30,7 @@ namespace SeeShellsTests.ShellParser
         public void GetShellItemsOfflineTest()
         {
             String registryFilePath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\TestResource\NTUSER.DAT";
-            ShellBagParser shellBagParser = new ShellBagParser(new OfflineRegistryReader(new OfflineMockConfigParser(), registryFilePath));
-            List<IShellItem> shellItems = shellBagParser.GetShellItems();
+            List<IShellItem> shellItems = ShellBagParser.GetShellItems(new OfflineRegistryReader(new OfflineMockConfigParser(), registryFilePath));
 
             Assert.AreNotEqual(shellItems.Count, 0);
         }
