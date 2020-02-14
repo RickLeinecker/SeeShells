@@ -25,10 +25,10 @@ namespace SeeShellsTests.UI
             shellItemProperties.Add("Type", "31");
             shellItemProperties.Add("TypeName", "Some Type Name");
             shellItemProperties.Add("Name", "Some Name");
-            shellItemProperties.Add("ModifiedDate", "1/1/0001 12:00:00 AM");
-            shellItemProperties.Add("AccessedDate", "1/1/0001 12:00:00 AM");
-            shellItemProperties.Add("CreationDate", "1/1/0001 12:00:00 AM");
-            shellItemProperties.Add("LastAccessedDate", "1/1/001 12:00:00 AM");
+            shellItemProperties.Add("ModifiedDate", "1/1/2010 12:00:00 AM");
+            shellItemProperties.Add("AccessedDate", "2/1/2000 12:00:00 AM");
+            shellItemProperties.Add("CreationDate", "1/1/2019 12:00:00 AM");
+            shellItemProperties.Add("LastAccessedDate", "1/1/2016 12:00:00 AM");
             CsvParsedShellItem ShellItem = new CsvParsedShellItem(shellItemProperties);
             shellItems.Add(ShellItem);
             EventParser eventParser = new EventParser(shellItems);
