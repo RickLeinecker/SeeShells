@@ -32,7 +32,7 @@ namespace SeeShells.UI
                 {
                     String check = el.Key;
                     String date = "Date";
-                    if (check.Contains(date) && el.Value != DateTime.MinValue)
+                    if (check.Contains(date) && Convert.ToDateTime(el.Value) != DateTime.MinValue)
                     {
                         String name = item.Name;
                         String typename = item.TypeName;
