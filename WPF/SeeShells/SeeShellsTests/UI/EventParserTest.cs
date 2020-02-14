@@ -28,11 +28,17 @@ namespace SeeShellsTests.UI
             shellItemProperties.Add("ModifiedDate", "1/1/0001 12:00:00 AM");
             shellItemProperties.Add("AccessedDate", "1/1/0001 12:00:00 AM");
             shellItemProperties.Add("CreationDate", "1/1/0001 12:00:00 AM");
+            shellItemProperties.Add("LastAccessedDate", "1/1/001 12:00:00 AM");
             CsvParsedShellItem ShellItem = new CsvParsedShellItem(shellItemProperties);
             shellItems.Add(ShellItem);
             EventParser eventParser = new EventParser(shellItems);
             List<IEvent> newList = eventParser.Parser();
             Assert.IsNotNull(newList);
+            foreach(var el in newList)
+            {
+                Assert.AreSame(el.Parent, ShellItem);
+            }
+
             
         }
     }
