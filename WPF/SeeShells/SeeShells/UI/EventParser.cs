@@ -25,11 +25,9 @@ namespace SeeShells.UI
                     if (el.Key.Contains("Date") && Convert.ToDateTime(el.Value) != DateTime.MinValue)
                     {
                         String name = item.Name;
-                        String typename = item.TypeName;
                         DateTime eventDate = Convert.ToDateTime(el.Value);
                         String[] type = el.Key.Split('D');
-                        String eventType = type[0];
-                        Event e = new Event(name, eventDate, item, eventType);
+                        Event e = new Event(name, eventDate, item, type[0]);
                         eventList.Add(e);
                     }
                 }
