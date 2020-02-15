@@ -9,18 +9,14 @@ namespace SeeShells.UI
 {
     public static class EventParser
     {
-        /// <summary>
-        /// creates the eventList that will be returned full of events based on ShellItems
+        /// <summary> 
+        /// Parses a list of IShellItems and creates events based on each date of a shellitem
         /// </summary>
-        List<IEvent> eventList = new List<IEvent>();
-       
-        /// <summary>
-        /// parses through a list of shellitems to create a list of IEvents that consists of events created based
-        /// on date information from each ShellItem 
-        /// <param name="shells">List of IShellItems</param>
+        /// <param name="shells">the list of IShellitems to be parsed</param>
         /// <returns>A list of IEvents</returns>
-        public static List<IEvent> Parser(List<IShellItem> shells)
+        public static List<IEvent> GetEvents(List<IShellItem> shells)
         {
+            List<IEvent> eventList = new List<IEvent>();
             foreach (IShellItem item in shells)
             {
                 IDictionary<String, String> parser = item.GetAllProperties();

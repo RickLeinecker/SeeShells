@@ -31,7 +31,7 @@ namespace SeeShellsTests.UI
             shellItemProperties.Add("LastAccessedDate", "1/1/2016 12:00:00 AM");
             CsvParsedShellItem ShellItem = new CsvParsedShellItem(shellItemProperties);
             shellItems.Add(ShellItem);
-            List<IEvent> newList = EventParser.Parser(shellItems);
+            List<IEvent> newList = EventParser.GetEvents(shellItems);
             Assert.IsNotNull(newList);
             foreach(var el in newList)
             {
