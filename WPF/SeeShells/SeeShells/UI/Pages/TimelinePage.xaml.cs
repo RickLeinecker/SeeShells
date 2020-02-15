@@ -3,6 +3,7 @@ using SeeShells.UI.Node;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using Xceed.Wpf.Toolkit;
@@ -71,7 +72,7 @@ namespace SeeShells.UI.Pages
         /// </summary>
         /// <param name="emitterName">Name of object that is specifying the filter. used for keep track of updates</param>
         /// <param name="typeValue">the name of the type to be filtered</param>
-        private void EventTypeFilter_ListChanged(string emitterName,  string typeValue)
+        private void EventTypeFilter_ListChanged(string emitterName, string typeValue)
         {
             if (typeValue.Trim().Length == 0) //handle blank filters
             {
@@ -89,7 +90,8 @@ namespace SeeShells.UI.Pages
         {
             //show only the options that havent been selected yet
             ComboBox emitter = (ComboBox)sender;
-            if (eventTypeList.Count == 1) { //obtain all eventTypes found if the list isnt populated
+            if (eventTypeList.Count == 1)
+            { //obtain all eventTypes found if the list isnt populated
                 foreach (Node.Node node in App.nodeCollection.nodeList)
                 {
                     eventTypeList.Add(node.aEvent.EventType);
@@ -108,7 +110,7 @@ namespace SeeShells.UI.Pages
                     }
                     else
                     {
-                    emitter.Items.Add(eventType);
+                        emitter.Items.Add(eventType);
                     }
                 }
             }
@@ -139,6 +141,31 @@ namespace SeeShells.UI.Pages
             UpdateFilter("EventName", new EventNameFilter(emitter.Text));
 
         }
+
+        private void TimeSpanSliderControlTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ScaleTimeline();
+        }
+
+        private void TimeSpanSliderControlComboBox_KeyUp(object sender, EventArgs e)
+        {
+            ScaleTimeline();
+        }
+
+        private void TimeSpanSliderControlComboBox_DropDownClosed(object sender, EventArgs e)
+        {
+            ScaleTimeline();
+        }
+
+        private void TimeSpanSliderControl_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            var slider = sender as Slider;
+            this.UnitTimeSpan = TimeSpan.FromSeconds(slider.Value);
+            SetTimeSpanSliderControlTextBoxValue(slider.Value);
+            BuildTimeline();
+            TimeSpanSliderControl.Minimum = 1.0;
+        }
+
         /// <summary>
         /// Builds a timeline dynamically
         /// </summary>
@@ -146,18 +173,18 @@ namespace SeeShells.UI.Pages
         {
             /// Uncomment this to see a timeline draw (it builds the App.nodeCollection.nodeList)
             /// This will be removed when all aplication components are connected
-            //List<IEvent> eventList = new List<IEvent>();
-            //Event Event1 = new Event("item1", new DateTime(2007, 1, 1, 0, 0, 0), null, "Access");
-            //Event Event2 = new Event("item1", new DateTime(2007, 1, 2, 0, 0, 0), null, "Access");
-            //Event Event3 = new Event("item1", new DateTime(2007, 1, 2, 12, 0, 0), null, "Access");
-            //Event Event4 = new Event("item1", new DateTime(2007, 1, 2, 23, 0, 0), null, "Access");
-            //Event Event5 = new Event("item1", new DateTime(2007, 12, 31, 0, 0, 0), null, "Access");
-            //eventList.Add(Event1);
-            //eventList.Add(Event2);
-            //eventList.Add(Event3);
-            //eventList.Add(Event4);
-            //eventList.Add(Event5);
-            //App.nodeCollection.nodeList = NodeParser.GetNodes(eventList);
+            List<IEvent> eventList = new List<IEvent>();
+            Event Event1 = new Event("item1", new DateTime(2007, 1, 1, 0, 0, 0), null, "Access");
+            Event Event2 = new Event("item1", new DateTime(2007, 1, 2, 0, 0, 0), null, "Access");
+            Event Event3 = new Event("item1", new DateTime(2007, 1, 2, 12, 0, 0), null, "Access");
+            Event Event4 = new Event("item1", new DateTime(2007, 1, 2, 23, 0, 0), null, "Access");
+            Event Event5 = new Event("item1", new DateTime(2007, 12, 31, 0, 0, 0), null, "Access");
+            eventList.Add(Event1);
+            eventList.Add(Event2);
+            eventList.Add(Event3);
+            eventList.Add(Event4);
+            eventList.Add(Event5);
+            App.nodeCollection.nodeList = NodeParser.GetNodes(eventList);
 
             try
             {
@@ -166,6 +193,7 @@ namespace SeeShells.UI.Pages
                 Nodeline.BeginDate = GetBeginDate();
                 // EndDate should be one UnitTimeSpan more than the max value from the data to display properly
                 Nodeline.EndDate = GetEndDate() + this.UnitTimeSpan;
+                Nodeline.Children.Clear();
 
                 foreach (Node.Node node in App.nodeCollection.nodeList)
                 {
@@ -203,6 +231,71 @@ namespace SeeShells.UI.Pages
                 }
             }
             return maxDate;
+        }
+
+        private void ScaleTimeline()
+        {
+            if (double.TryParse(TimeSpanSliderControlTextBox.Text, out double num))
+            {
+                string unitOfTime = TimeSpanSliderControlComboBox.Text;
+
+
+                if (unitOfTime.Equals("Years"))
+                {
+                    double AmountOfSecondsInAYear = 31536000.0;
+                    TimeSpanSliderControl.Value = num * AmountOfSecondsInAYear;
+                }
+                else if (unitOfTime.Equals("Days"))
+                {
+                    double AmountOfSecondsInADay = 86400.0;
+                    TimeSpanSliderControl.Value = num * AmountOfSecondsInADay;
+                }
+                else if (unitOfTime.Equals("Hours"))
+                {
+                    double AmountOfSecondsInAnHour = 3600.0;
+                    TimeSpanSliderControl.Value = num * AmountOfSecondsInAnHour;
+                }
+                else if (unitOfTime.Equals("Minutes"))
+                {
+                    double AmountOfSecondsInAMinute = 60.0;
+                    TimeSpanSliderControl.Value = num * AmountOfSecondsInAMinute;
+                }
+                else if (unitOfTime.Equals("Seconds"))
+                {
+                    TimeSpanSliderControl.Value = num;
+                }
+            }
+        }
+
+        private void SetTimeSpanSliderControlTextBoxValue(double sliderValue)
+        {
+            string unitOfTime = TimeSpanSliderControlComboBox.Text;
+
+            if (unitOfTime.Equals("Years"))
+            {
+                decimal AmountOfSecondsInAYear = (decimal)31536000.0;
+                TimeSpanSliderControlTextBox.Text = ((decimal)sliderValue / AmountOfSecondsInAYear).ToString();
+            }
+            else if (unitOfTime.Equals("Days"))
+            {
+                decimal AmountOfSecondsInADay = (decimal)86400.0;
+                TimeSpanSliderControlTextBox.Text = ((decimal)sliderValue / AmountOfSecondsInADay).ToString();
+            }
+            else if (unitOfTime.Equals("Hours"))
+            {
+                double AmountOfSecondsInAnHour = 3600.0;
+                TimeSpanSliderControlTextBox.Text = (sliderValue / AmountOfSecondsInAnHour).ToString();
+            }
+            else if (unitOfTime.Equals("Minutes"))
+            {
+                double AmountOfSecondsInAMinute = 60.0;
+                TimeSpanSliderControlTextBox.Text = (sliderValue / AmountOfSecondsInAMinute).ToString();
+
+            }
+            else if (unitOfTime.Equals("Seconds"))
+            {
+                TimeSpanSliderControlTextBox.Text = sliderValue.ToString();
+            }
         }
     }
 }

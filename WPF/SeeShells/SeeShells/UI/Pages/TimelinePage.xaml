@@ -30,25 +30,25 @@
                                             <Setter Property="HorizontalAlignment" Value="Center" />
                                         </Style>
                                     </StackPanel.Resources>
-                                    
+
                                     <Border>
                                         <StackPanel x:Name="DateFilterPanel">
-                                        <Label Content="Event Date Filter"/>
-                                        <StackPanel Orientation="Horizontal">
-                                            <StackPanel Margin="0,0,5,0">
-                                                <Label Content="Start Date"/>
-                                                <!--TODO: set the start date to the first date in the node by default-->
-                                                <!--TODO: limit the user's date selection to the first event and last event-->
-                                                <DatePicker x:Name="startDatePicker" SelectedDateChanged="UpdateDateFilter" IsTodayHighlighted="False" />
-                                            </StackPanel>
-                                            <StackPanel Margin="5,0,0,0">
-                                                <Label Content="End Date"/>
-                                                <!--TODO: Dont let the user select a date eariler than startDate-->
-                                                <!--TODO: limit the user's date selection to the first event and last event-->
-                                                <DatePicker x:Name="endDatePicker" SelectedDateChanged="UpdateDateFilter" IsTodayHighlighted="False"  />
+                                            <Label Content="Event Date Filter"/>
+                                            <StackPanel Orientation="Horizontal">
+                                                <StackPanel Margin="0,0,5,0">
+                                                    <Label Content="Start Date"/>
+                                                    <!--TODO: set the start date to the first date in the node by default-->
+                                                    <!--TODO: limit the user's date selection to the first event and last event-->
+                                                    <DatePicker x:Name="startDatePicker" SelectedDateChanged="UpdateDateFilter" IsTodayHighlighted="False" />
+                                                </StackPanel>
+                                                <StackPanel Margin="5,0,0,0">
+                                                    <Label Content="End Date"/>
+                                                    <!--TODO: Dont let the user select a date eariler than startDate-->
+                                                    <!--TODO: limit the user's date selection to the first event and last event-->
+                                                    <DatePicker x:Name="endDatePicker" SelectedDateChanged="UpdateDateFilter" IsTodayHighlighted="False"  />
+                                                </StackPanel>
                                             </StackPanel>
                                         </StackPanel>
-                                    </StackPanel>
                                     </Border>
 
                                     <Border>
@@ -108,6 +108,25 @@
                                 <Viewbox Margin="0,5,0.333,61.667" Grid.RowSpan="2" Grid.Row="2">
                                     <CheckBox x:Name="checkBox7" Content="CSV Raw Data" Foreground="White" Width="108"/>
                                 </Viewbox>
+                                <StackPanel Grid.Column="1" Margin="5,34,182,26" Grid.RowSpan="2" Grid.Row="1">
+                                    <TextBox x:Name="TimeSpanSliderControlTextBox" TextChanged="TimeSpanSliderControlTextBox_TextChanged" Height="27"/>
+                                </StackPanel>
+                                <StackPanel Margin="77,34,54,26" Grid.RowSpan="2" Grid.Column="1" Grid.Row="1">
+                                    <ComboBox x:Name="TimeSpanSliderControlComboBox" DropDownClosed="TimeSpanSliderControlComboBox_DropDownClosed" KeyUp="TimeSpanSliderControlComboBox_KeyUp" Height="28" Margin="0,0,-25,0">
+                                        <ComboBoxItem Content="Years"/>
+                                        <ComboBoxItem Content="Days"/>
+                                        <ComboBoxItem Content="Hours"/>
+                                        <ComboBoxItem Content="Minutes"/>
+                                        <ComboBoxItem Content="Seconds"/>
+                                        <ComboBoxItem IsSelected="True" Content="Hours"/>
+                                    </ComboBox>
+                                </StackPanel>
+                                <Viewbox Grid.ColumnSpan="2" Margin="220,34,43,16" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2">
+                                    <Label Content="*Max 1 year" FontSize="10" Height="27" Width="108"/>
+                                </Viewbox>
+                                <StackPanel VerticalAlignment="Center" Margin="5,10,16,16" Grid.ColumnSpan="3" Grid.Column="1" Grid.Row="1" Height="19">
+                                    <Slider x:Name="TimeSpanSliderControl"  Minimum="1.0" Maximum="31536000.0" ValueChanged="TimeSpanSliderControl_ValueChanged"/>
+                                </StackPanel>
                                 <Viewbox Grid.ColumnSpan="2" Grid.Column="1" Margin="253.667,24,0.333,22.667" Grid.Row="2" Grid.RowSpan="2">
                                     <Button x:Name="button8" Content="Download" Width="75" Background="#292525" BorderBrush="#FF1F52A1" Foreground="#FF1F52A1" Height="26"/>
                                 </Viewbox>
