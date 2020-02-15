@@ -24,7 +24,7 @@ namespace SeeShells.ShellParser
         {
             List<RegistryKeyWrapper> retList = new List<RegistryKeyWrapper>();
 
-            foreach (string location in Parser.GetLocations())
+            foreach (string location in Parser.GetRegistryLocations())
             {
                 var hive = new RegistryHiveOnDemand(RegistryFilePath);
 

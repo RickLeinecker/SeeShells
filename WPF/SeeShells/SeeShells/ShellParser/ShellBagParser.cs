@@ -7,19 +7,14 @@ namespace SeeShells.ShellParser
     /// <summary>
     /// This class is used to obtain and identify ShellBag items. 
     /// </summary>
-    public class ShellBagParser
+    public static class ShellBagParser
     {
-        IRegistryReader registryReader;
-        public ShellBagParser(IRegistryReader registryReader)
-        {
-            this.registryReader = registryReader;
-        }
 
         /// <summary>
         /// Identifies and gathers ShellBag items from raw binary registry data.
         /// </summary>
         /// <returns>a list of different variety ShellBag items</returns>
-        public List<IShellItem> GetShellItems()
+        public static List<IShellItem> GetShellItems(IRegistryReader registryReader)
         {
             List<IShellItem> shellItems = new List<IShellItem>();
             foreach (RegistryKeyWrapper keyWrapper in registryReader.GetRegistryKeys())

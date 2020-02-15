@@ -9,21 +9,12 @@ namespace SeeShellsTests.ShellParser.ShellParserMocks
 {
     class OfflineMockConfigParser : IConfigParser
     {
-        public void GetConfig()
-        {
-            throw new NotImplementedException();
-        }
 
-        public List<string> GetLocations()
+        public List<string> GetRegistryLocations()
         {
             List<String> list = new List<String>();
             list.Add(@"Software\Microsoft\Windows\Shell");
             return list;
-        }
-
-        public void ParseConfig()
-        {
-            throw new NotImplementedException();
         }
     }
 }

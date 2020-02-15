@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SeeShells.UI.Node;
 
-namespace SeeShells.UI
+namespace SeeShells.UI.EventFilters
 {
     public interface INodeFilter
     {
