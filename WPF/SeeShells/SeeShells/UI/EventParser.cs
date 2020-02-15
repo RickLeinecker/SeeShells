@@ -13,7 +13,6 @@ namespace SeeShells.UI
         /// creates the eventList that will be returned full of events based on ShellItems
         /// </summary>
         List<IEvent> eventList = new List<IEvent>();
-        List<IShellItem> shells;
        
         /// <summary>
         /// parses through a list of shellitems to create a list of IEvents that consists of events created based
