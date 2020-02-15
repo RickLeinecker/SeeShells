@@ -203,16 +203,17 @@ namespace SeeShells.UI.Pages
         /// </summary>
         public void BuildTimeline()
         {
+            /// TO BE REMOVED
             /// Uncomment this to see a timeline draw (it builds the App.nodeCollection.nodeList)
             /// This will be removed when all aplication components are connected
-            List<IEvent> eventList = new List<IEvent>();
-            DateTime time = new DateTime(2007, 1, 1);
-            for(int i = 0; i < 100; i++)
-            {
-                eventList.Add(new Event("item1", time, null, "Access"));
-                time = time.AddHours(12);
-            }
-            App.nodeCollection.nodeList = NodeParser.GetNodes(eventList);
+            //List<IEvent> eventList = new List<IEvent>();
+            //DateTime time = new DateTime(2007, 1, 1);
+            //for(int i = 0; i < 100; i++)
+            //{
+            //    eventList.Add(new Event("item1", time, null, "Access"));
+            //    time = time.AddHours(12);
+            //}
+            //App.nodeCollection.nodeList = NodeParser.GetNodes(eventList);
 
             try
             {
