@@ -21,6 +21,12 @@ namespace SeeShells.UI.Pages
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
+        // This flag is used in order to prevent the time span slider from writing to the time span slider text box after the text box has been written to.
+        // Even though flags are not the best practice, it is necessary since there is no way to write to a text box without triggering a text change event.
+        // A potential alternative is to create a custom silent text box class that extends text box and allows for changing of text without triggering a
+        // a text change event.
+        private bool unitTimeSpanSliderCanWriteToTextBox = true;
+
         public double UnitSize = 10;
         public TimeSpan UnitTimeSpan = new TimeSpan(0, 12, 0, 0);
 
@@ -142,48 +148,70 @@ namespace SeeShells.UI.Pages
 
         }
 
-        private void TimeSpanSliderControlTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            ScaleTimeline();
-        }
-
-        private void TimeSpanSliderControlComboBox_KeyUp(object sender, EventArgs e)
-        {
-            ScaleTimeline();
-        }
-
-        private void TimeSpanSliderControlComboBox_DropDownClosed(object sender, EventArgs e)
-        {
-            ScaleTimeline();
-        }
-
+        /// <summary>
+        /// When the time span slider is moved, it sets a new UnitTimeSpan for the timeline, and rebuilds it.
+        /// </summary>
+        /// <param name="sender">Slider</param>
+        /// <param name="e">event args</param>
         private void TimeSpanSliderControl_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             var slider = sender as Slider;
             this.UnitTimeSpan = TimeSpan.FromSeconds(slider.Value);
-            SetTimeSpanSliderControlTextBoxValue(slider.Value);
+            if(unitTimeSpanSliderCanWriteToTextBox)
+            {
+                SetTimeSpanSliderControlTextBoxValue(slider.Value);
+            }
+            unitTimeSpanSliderCanWriteToTextBox = true;
             BuildTimeline();
-            TimeSpanSliderControl.Minimum = 1.0;
         }
 
         /// <summary>
-        /// Builds a timeline dynamically
+        /// When the time span slider text box text is changed, it moves the slider control to desired position, which in turn rebuilds the timeline.
+        /// </summary>
+        /// <param name="sender">TextBox</param>
+        /// <param name="e">event args</param>
+        private void TimeSpanSliderControlTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            unitTimeSpanSliderCanWriteToTextBox = false;
+            UnpdateTimeSpanSliderControl();
+        }
+
+        /// <summary>
+        /// When an item from the time span slider combo box is selected, it moves the slider control to desired position, which in turn rebuilds the timeline.
+        /// </summary>
+        /// <param name="sender">ComboBox</param>
+        /// <param name="e">event args</param>
+        private void TimeSpanSliderControlComboBox_DropDownClosed(object sender, EventArgs e)
+        {
+            unitTimeSpanSliderCanWriteToTextBox = false;
+            UnpdateTimeSpanSliderControl();
+        }
+
+        /// <summary>
+        /// When an item from the time span slider combo box is selected (with arrow keys), it moves the slider control to desired position, which in turn rebuilds the timeline.
+        /// </summary>
+        /// <param name="sender">ComboBox</param>
+        /// <param name="e">event args</param>
+        private void TimeSpanSliderControlComboBox_KeyUp(object sender, EventArgs e)
+        {
+            unitTimeSpanSliderCanWriteToTextBox = false;
+            UnpdateTimeSpanSliderControl();
+        }
+
+        /// <summary>
+        /// Builds a timeline dynamically.
         /// </summary>
         public void BuildTimeline()
         {
             /// Uncomment this to see a timeline draw (it builds the App.nodeCollection.nodeList)
             /// This will be removed when all aplication components are connected
             List<IEvent> eventList = new List<IEvent>();
-            Event Event1 = new Event("item1", new DateTime(2007, 1, 1, 0, 0, 0), null, "Access");
-            Event Event2 = new Event("item1", new DateTime(2007, 1, 2, 0, 0, 0), null, "Access");
-            Event Event3 = new Event("item1", new DateTime(2007, 1, 2, 12, 0, 0), null, "Access");
-            Event Event4 = new Event("item1", new DateTime(2007, 1, 2, 23, 0, 0), null, "Access");
-            Event Event5 = new Event("item1", new DateTime(2007, 12, 31, 0, 0, 0), null, "Access");
-            eventList.Add(Event1);
-            eventList.Add(Event2);
-            eventList.Add(Event3);
-            eventList.Add(Event4);
-            eventList.Add(Event5);
+            DateTime time = new DateTime(2007, 1, 1);
+            for(int i = 0; i < 100; i++)
+            {
+                eventList.Add(new Event("item1", time, null, "Access"));
+                time = time.AddHours(12);
+            }
             App.nodeCollection.nodeList = NodeParser.GetNodes(eventList);
 
             try
@@ -208,6 +236,10 @@ namespace SeeShells.UI.Pages
             }
         }
 
+        /// <summary>
+        /// Finds the earliest date from the list of events that is represented on the timeline.
+        /// </summary>
+        /// <returns>the earliest date</returns>
         private DateTime GetBeginDate()
         {
             DateTime minDate = DateTime.MaxValue;
@@ -220,6 +252,11 @@ namespace SeeShells.UI.Pages
             }
             return minDate;
         }
+
+        /// <summary>
+        /// Finds the latest date from the list of events that is represented on the timeline.
+        /// </summary>
+        /// <returns>the latest date</returns>
         private DateTime GetEndDate()
         {
             DateTime maxDate = DateTime.MinValue;
@@ -233,12 +270,14 @@ namespace SeeShells.UI.Pages
             return maxDate;
         }
 
-        private void ScaleTimeline()
+        /// <summary>
+        /// Move the time span slider control based on the value of the text box and the unit of time from the combo box.
+        /// </summary>
+        private void UnpdateTimeSpanSliderControl()
         {
             if (double.TryParse(TimeSpanSliderControlTextBox.Text, out double num))
             {
                 string unitOfTime = TimeSpanSliderControlComboBox.Text;
-
 
                 if (unitOfTime.Equals("Years"))
                 {
@@ -266,7 +305,11 @@ namespace SeeShells.UI.Pages
                 }
             }
         }
-
+        
+        /// <summary>
+        /// Change the value of the time span text box based on the value change of the time span slider.
+        /// </summary>
+        /// <param name="sliderValue">value of the time span slider</param>
         private void SetTimeSpanSliderControlTextBoxValue(double sliderValue)
         {
             string unitOfTime = TimeSpanSliderControlComboBox.Text;
@@ -274,27 +317,27 @@ namespace SeeShells.UI.Pages
             if (unitOfTime.Equals("Years"))
             {
                 decimal AmountOfSecondsInAYear = (decimal)31536000.0;
-                TimeSpanSliderControlTextBox.Text = ((decimal)sliderValue / AmountOfSecondsInAYear).ToString();
+                TimeSpanSliderControlTextBox.Text = String.Format("{0:0.00}", ((decimal)sliderValue / AmountOfSecondsInAYear));
             }
             else if (unitOfTime.Equals("Days"))
             {
                 decimal AmountOfSecondsInADay = (decimal)86400.0;
-                TimeSpanSliderControlTextBox.Text = ((decimal)sliderValue / AmountOfSecondsInADay).ToString();
+                TimeSpanSliderControlTextBox.Text = String.Format("{0:0.00}", ((decimal)sliderValue / AmountOfSecondsInADay));
             }
             else if (unitOfTime.Equals("Hours"))
             {
                 double AmountOfSecondsInAnHour = 3600.0;
-                TimeSpanSliderControlTextBox.Text = (sliderValue / AmountOfSecondsInAnHour).ToString();
+                TimeSpanSliderControlTextBox.Text = String.Format("{0:0.00}", (sliderValue / AmountOfSecondsInAnHour));
             }
             else if (unitOfTime.Equals("Minutes"))
             {
                 double AmountOfSecondsInAMinute = 60.0;
-                TimeSpanSliderControlTextBox.Text = (sliderValue / AmountOfSecondsInAMinute).ToString();
+                TimeSpanSliderControlTextBox.Text = String.Format("{0:0.00}", (sliderValue / AmountOfSecondsInAMinute));
 
             }
             else if (unitOfTime.Equals("Seconds"))
             {
-                TimeSpanSliderControlTextBox.Text = sliderValue.ToString();
+                TimeSpanSliderControlTextBox.Text = String.Format("{0:0.00}", sliderValue);
             }
         }
     }
