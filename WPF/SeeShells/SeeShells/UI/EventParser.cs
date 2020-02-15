@@ -27,7 +27,7 @@ namespace SeeShells.UI
                         String name = item.Name;
                         String typename = item.TypeName;
                         DateTime eventDate = Convert.ToDateTime(el.Value);
-                        String[] type = check.Split('D');
+                        String[] type = el.Key.Split('D');
                         String eventType = type[0];
                         Event e = new Event(name, eventDate, item, eventType);
                         eventList.Add(e);
