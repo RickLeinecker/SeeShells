@@ -245,8 +245,7 @@ namespace SeeShells.UI.Pages
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             App.ShellItems = await ParseShellBags();
-            EventParser parser = new EventParser(App.ShellItems);
-            List<IEvent> events = parser.Parser(); //FIXME EventParser.getEvents(shellItems);
+            List<IEvent> events = EventParser.Parser(App.ShellItems); //FIXME EventParser.getEvents(shellItems);
             App.nodeCollection.nodeList = new List<Node.Node>(); //TODO REMOVE ME once merged with filtering code, unneccesarly NPE stopping
             App.nodeCollection.nodeList.AddRange(NodeParser.GetNodes(events));
             stopwatch.Stop();
