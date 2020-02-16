@@ -26,9 +26,7 @@ namespace SeeShells.UI.Pages
         // A potential alternative is to create a custom silent text box class that extends text box and allows for changing of text without triggering a
         // a text change event.
         private bool unitTimeSpanSliderCanWriteToTextBox = true;
-
-        public double UnitSize = 10;
-        public TimeSpan UnitTimeSpan = new TimeSpan(0, 12, 0, 0);
+        private TimeSpan unitTimeSpan = new TimeSpan(0, 12, 0, 0);
 
         public TimelinePage()
         {
@@ -149,24 +147,27 @@ namespace SeeShells.UI.Pages
         }
 
         /// <summary>
-        /// When the time span slider is moved, it sets a new UnitTimeSpan for the timeline, and rebuilds it.
+        /// When the time span slider is moved, it sets a new UnitTimeSpan for the timeline.
         /// </summary>
         /// <param name="sender">Slider</param>
         /// <param name="e">event args</param>
         private void TimeSpanSliderControl_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             var slider = sender as Slider;
-            this.UnitTimeSpan = TimeSpan.FromSeconds(slider.Value);
+            this.unitTimeSpan = TimeSpan.FromSeconds(slider.Value);
             if(unitTimeSpanSliderCanWriteToTextBox)
             {
                 SetTimeSpanSliderControlTextBoxValue(slider.Value);
             }
             unitTimeSpanSliderCanWriteToTextBox = true;
-            BuildTimeline();
+            if(Nodeline != null)
+            {
+                Nodeline.UnitTimeSpan = this.unitTimeSpan;
+            }
         }
 
         /// <summary>
-        /// When the time span slider text box text is changed, it moves the slider control to desired position, which in turn rebuilds the timeline.
+        /// When the time span slider text box text is changed, it moves the slider control to desired position, which in turn sets a new UnitTimeSpan for the timeline.
         /// </summary>
         /// <param name="sender">TextBox</param>
         /// <param name="e">event args</param>
@@ -177,7 +178,7 @@ namespace SeeShells.UI.Pages
         }
 
         /// <summary>
-        /// When an item from the time span slider combo box is selected, it moves the slider control to desired position, which in turn rebuilds the timeline.
+        /// When an item from the time span slider combo box is selected, it moves the slider control to desired position, which in turn sets a new UnitTimeSpan for the timeline.
         /// </summary>
         /// <param name="sender">ComboBox</param>
         /// <param name="e">event args</param>
@@ -208,7 +209,7 @@ namespace SeeShells.UI.Pages
             /// This will be removed when all aplication components are connected
             //List<IEvent> eventList = new List<IEvent>();
             //DateTime time = new DateTime(2007, 1, 1);
-            //for(int i = 0; i < 100; i++)
+            //for (int i = 0; i < 100; i++)
             //{
             //    eventList.Add(new Event("item1", time, null, "Access"));
             //    time = time.AddHours(12);
@@ -217,11 +218,10 @@ namespace SeeShells.UI.Pages
 
             try
             {
-                Nodeline.UnitSize = this.UnitSize;
-                Nodeline.UnitTimeSpan = this.UnitTimeSpan;
+                Nodeline.UnitSize = 10; // Default size of a dot
+                Nodeline.UnitTimeSpan = this.unitTimeSpan;
                 Nodeline.BeginDate = GetBeginDate();
-                // EndDate should be one UnitTimeSpan more than the max value from the data to display properly
-                Nodeline.EndDate = GetEndDate() + this.UnitTimeSpan;
+                Nodeline.EndDate = GetEndDate() + this.unitTimeSpan; // EndDate should be one UnitTimeSpan more than the max value from the data to display properly
                 Nodeline.Children.Clear();
 
                 foreach (Node.Node node in App.nodeCollection.nodeList)

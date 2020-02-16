@@ -1,4 +1,4 @@
-﻿using SeeShells.ShellParser.ShellItems;
+using SeeShells.ShellParser.ShellItems;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,4 +43,3 @@ namespace SeeShells.UI
         public string EventType { get; set; }
     }
 }
-
