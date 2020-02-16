@@ -17,9 +17,9 @@ namespace SeeShells.ShellParser.Scripting
         /// </summary>
         private readonly Dictionary<int, string> scripts = new Dictionary<int, string>();
 
-        public ScriptHandler()
+        public ScriptHandler(string fileLocation)
         {
-            GetScripts();
+            GetScriptsTest();
         }
 
         public bool HasScriptForShellItem(int identifier)
@@ -27,20 +27,30 @@ namespace SeeShells.ShellParser.Scripting
             return scripts.ContainsKey(identifier);
         }
 
-        public IShellItem ParseShellItem(int identifier)
+        public IShellItem ParseShellItem(byte[] buf, int identifier)
         {
             scripts.TryGetValue(identifier, out string script);
 
-            // make lua shell item with the script
-            // return the lua shell item
+            return new LuaShellItem(buf, script);
 
-            throw new NotImplementedException();
         }
 
-        private void GetScripts()
+        private void GetScripts(string fileLocation)
         {
             // get scripts from the configuration file & store them in scripts dictionary
             throw new NotImplementedException();
+        }
+
+        private void GetScriptsTest()
+        {
+            // see if the scripts works with a control panel shell item
+            string LuaScript = @"
+                    properties:Add(""TypeName"", ""Control Panel"")
+                    properties:Add(""Guid"", shellitem:unpack_guid(0x0E))
+                    properties:Add(""Flags"", shellitem:unpack_byte(0x03))
+            ";
+
+            scripts.Add(Int32.Parse("71", System.Globalization.NumberStyles.HexNumber), LuaScript);
         }
 
 

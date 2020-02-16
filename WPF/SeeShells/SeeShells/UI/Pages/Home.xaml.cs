@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using SeeShells.IO.Networking.JSON;
 using SeeShells.ShellParser.ShellItems;
 using SeeShells.ShellParser;
+using SeeShells.ShellParser.Scripting;
 using SeeShells.UI.Node;
 using System.Diagnostics;
 
@@ -245,6 +246,8 @@ namespace SeeShells.UI.Pages
             //begin the parsing process
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
+
+            App.Scripts = new ScriptHandler(locations.ScriptFileLocation);
             App.ShellItems = await ParseShellBags();
             List<IEvent> events = new List<IEvent>(); //FIXME EventParser.getEvents(shellItems);
             App.nodeCollection.nodeList.AddRange(NodeParser.GetNodes(events));
