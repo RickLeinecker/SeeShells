@@ -13,18 +13,32 @@ namespace SeeShells.ShellParser.Scripting
         private readonly Lua state;
         private readonly string luascript;
         Dictionary<string, string> properties = new Dictionary<string, string>();
+        private bool skipParsing = false;
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public LuaShellItem(byte[] buf, string luascript): base(buf)
         {
-            state = new Lua();
-            state.LoadCLRPackage();
-            state.DoString(@" import ('System', 'SeeShells', 'SeeShells.ShellParser.ShellItems', 'SeeShells.ShellParser') ");
-            state["properties"] = properties;
-            state["shellitem"] = this;
-            state["knownGUIDs"] = KnownGuids.dict;
+            try
+            {
+                state = new Lua();
+                state.LoadCLRPackage();
+                state.DoString(@" import ('System', 'SeeShells', 'SeeShells.ShellParser.ShellItems', 'SeeShells.ShellParser') ");
+                state["properties"] = properties;
+                state["shellitem"] = this;
+                state["knownGUIDs"] = KnownGuids.dict;
+                this.luascript = luascript;
+            }
+            catch (BadImageFormatException)
+            {
+                // it seems like this exception happens when there's an issue with a DLL or reference file.
+                // occurs on state = new Lua();
+                // on stackoverflow, it seems to mostly happen when mixing x86 and x64 stuff
+                // not really what to do here; this error has only popped up for me when running the tests
+                // maybe it's something with the way it's building? https://github.com/NLua/NLua/issues/67
 
-            this.luascript = luascript;
+                skipParsing = true;
+            }
+
         }
 
         public override string TypeName
@@ -137,6 +151,9 @@ namespace SeeShells.ShellParser.Scripting
 
         private void ParseShellItem()
         {
+            if (skipParsing)
+                return;
+
             if (luascript is null || luascript == "")
                 throw new Exception("No Lua script provided");
 

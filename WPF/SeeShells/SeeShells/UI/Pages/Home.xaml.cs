@@ -247,7 +247,8 @@ namespace SeeShells.UI.Pages
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            App.Scripts = new ScriptHandler(locations.ScriptFileLocation);
+            // uncomment the below line when actually getting the script file
+            // App.Scripts.GetScripts(locations.ScriptFileLocation);
             App.ShellItems = await ParseShellBags();
             List<IEvent> events = EventParser.GetEvents(App.ShellItems); //FIXME EventParser.getEvents(shellItems);
             App.nodeCollection.nodeList = new List<Node.Node>(); //TODO REMOVE ME once merged with filtering code, unneccesarly NPE stopping

@@ -17,9 +17,15 @@ namespace SeeShells.ShellParser.Scripting
         /// </summary>
         private readonly Dictionary<int, string> scripts = new Dictionary<int, string>();
 
-        public ScriptHandler(string fileLocation)
+        public ScriptHandler()
         {
             GetScriptsTest();
+        }
+
+        public void GetScripts(string fileLocation)
+        {
+            // get scripts from the configuration file & store them in scripts dictionary
+            throw new NotImplementedException();
         }
 
         public bool HasScriptForShellItem(int identifier)
@@ -33,12 +39,6 @@ namespace SeeShells.ShellParser.Scripting
 
             return new LuaShellItem(buf, script);
 
-        }
-
-        private void GetScripts(string fileLocation)
-        {
-            // get scripts from the configuration file & store them in scripts dictionary
-            throw new NotImplementedException();
         }
 
         private void GetScriptsTest()

@@ -33,6 +33,6 @@ namespace SeeShells
         /// <summary>
         /// An object to hold and provide the scripts needed for the embedded scripting portion of the program.
         /// </summary>
-        public static ScriptHandler Scripts;
+        public static ScriptHandler Scripts = new ScriptHandler();
     }
 }
