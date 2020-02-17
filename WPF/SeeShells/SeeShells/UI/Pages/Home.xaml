@@ -35,7 +35,14 @@
             <StackPanel Orientation="Vertical">
                 <Label Content="Offline hive location:" Foreground="LightGray" />
                 <StackPanel Orientation="Horizontal">
-                    <TextBox x:Name="offlineHiveLocation" MinWidth="300" Text="{Binding OfflineFileLocation}" IsEnabled="False"/>
+                    <ListBox x:Name="offlineHiveLocation" MinWidth="300" ItemsSource="{Binding OfflineFileLocations}" MaxHeight="60">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="2" IsItemsHost="True" HorizontalAlignment="Stretch"/>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+
+                    </ListBox>
                     <Button x:Name="OfflineBrowseButton" Content="Browse" Click="OfflineBrowseButton_Click" Margin="20,0"/>
                 </StackPanel>
             </StackPanel>

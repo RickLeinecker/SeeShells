@@ -101,6 +101,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="IO\HtmlIO.cs" />
     <Compile Include="IO\CsvIO.cs" />
     <Compile Include="IO\CsvParsedShellItem.cs" />
     <Compile Include="IO\Networking\API.cs" />
@@ -163,7 +164,6 @@
     <Compile Include="ShellParser\ShellItems\ShellItemWithExtensions.cs" />
     <Compile Include="ShellParser\ShellItems\ShellItem0x00.cs" />
     <Compile Include="ShellParser\ShellItems\SHITEM_UNKNOWNENTRY2.cs" />
-      
     <Compile Include="UI\Templates\CheckBoxWithLabel.xaml.cs">
       <DependentUpon>CheckBoxWithLabel.xaml</DependentUpon>
     </Compile>
@@ -194,7 +194,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\MainWindow.xaml">
-
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

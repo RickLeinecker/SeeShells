@@ -50,14 +50,15 @@ namespace SeeShells.UI.Pages
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
-                Filter = "Registry files (*.reg)|*.reg|Dat files (*.dat)|*.dat|All files|*.*",
+                Multiselect = true,
+                Filter = "Dat files (*.dat)|*.dat|Registry files (*.reg)|*.reg|All files|*.*",
                 InitialDirectory = Directory.GetCurrentDirectory()
             };
 
             if (openFileDialog.ShowDialog() != true)
                 return;
 
-            locations.OfflineFileLocation = openFileDialog.FileName;
+            locations.OfflineFileLocations = openFileDialog.FileNames;
         }
 
         private void UpdateOSVersionList()
@@ -250,8 +251,7 @@ namespace SeeShells.UI.Pages
             // uncomment the below line when actually getting the script file
             // App.Scripts.GetScripts(locations.ScriptFileLocation);
             App.ShellItems = await ParseShellBags();
-            List<IEvent> events = EventParser.GetEvents(App.ShellItems); //FIXME EventParser.getEvents(shellItems);
-            App.nodeCollection.nodeList = new List<Node.Node>(); //TODO REMOVE ME once merged with filtering code, unneccesarly NPE stopping
+            List<IEvent> events = EventParser.GetEvents(App.ShellItems);
             App.nodeCollection.nodeList.AddRange(NodeParser.GetNodes(events));
             stopwatch.Stop();
             logger.Info("Parsing Complete. ShellItems Parsed: " + App.ShellItems.Count + ". Time Elapsed: " + stopwatch.ElapsedMilliseconds / 1000 + " seconds");
@@ -280,8 +280,7 @@ namespace SeeShells.UI.Pages
                 if (useRegistryHiveFiles)
                 {
                     parser.OsVersion = osVersion;
-                    List<string> registryFilePaths = new List<string>() { locations.OfflineFileLocation };
-                    //TODO handle multiple offline registry files (locations only serves one so far)
+                    string[] registryFilePaths = locations.OfflineFileLocations;
                     foreach (string registryFile in registryFilePaths)
                     {
                         OfflineRegistryReader offlineReader = new OfflineRegistryReader(parser, registryFile);
@@ -311,22 +310,26 @@ namespace SeeShells.UI.Pages
                 showErrorMessage("Select a proper GUID configuration file or create a new one.", "Missing GUID File");
                 return false;
             }
-            if (!File.Exists(locations.ScriptFileLocation))
-            {
-                showErrorMessage("Select a proper script configuration file or create a new one.", "Missing Script File");
-                return false;
-            }
 
             return true;
         }
 
         private bool OfflineSelectionsAreValid()
         {
-            if(!File.Exists(locations.OfflineFileLocation))
+            if (locations.OfflineFileLocations.Length == 0)
             {
                 showErrorMessage("Select a registry hive file.", "Missing Hive");
                 return false;
             }
+
+            foreach (string location in locations.OfflineFileLocations)
+            {
+                if (!File.Exists(location))
+                {
+                    showErrorMessage(location + " is an invalid location.", "Invalid Hive");
+                    return false;
+                }
+            }          
 
             if (OSVersion.SelectedItem is null)
             {

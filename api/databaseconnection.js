@@ -194,6 +194,50 @@ function GUIDDoesNotExist(guid) {
     });
 }
 
+function addScript(identifier, encodedscript) {
+    return new Promise(function (resolve, reject) {
+        pool.query('INSERT INTO scripts(typeidentifier, script) values($1, $2);', [identifier, encodedscript], (err, res) => {
+            if (err) {
+                reject(err);
+            }
+
+            resolve({ "message": "Success" });
+        });
+    });
+}
+
+function scriptForIdentifierDoesNotExist(identifier) {
+    return new Promise(function (resolve, reject) {
+        pool.query('SELECT id FROM scripts WHERE typeidentifier=$1;', [identifier], (err, res) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+
+            if (res.rowCount > 0) {
+                reject({
+                    result: res.rowCount
+                });
+                return;
+            }
+
+            resolve({ result: "No script exists for this shell item identifier." });
+        });
+    });
+}
+
+// this will return the scripts, but they will be base64 encoded
+// the website will need to decode it
+function getScripts(callback) {
+    pool.query('SELECT typeidentifier, script FROM scripts;', (err, res) => {
+        if (err) {
+            callback({});
+        }
+
+        callback(res.rows);
+    });
+}
+
 module.exports = {
     pool,
     session,
@@ -207,6 +251,9 @@ module.exports = {
     getRegistryLocations,
     getGUIDs,
     addGUID,
-    GUIDDoesNotExist
+    GUIDDoesNotExist,
+    addScript,
+    scriptForIdentifierDoesNotExist,
+    getScripts
 }
 
