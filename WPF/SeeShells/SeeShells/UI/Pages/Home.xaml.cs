@@ -49,14 +49,15 @@ namespace SeeShells.UI.Pages
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
-                Filter = "Registry files (*.reg)|*.reg|Dat files (*.dat)|*.dat|All files|*.*",
+                Multiselect = true,
+                Filter = "Dat files (*.dat)|*.dat|Registry files (*.reg)|*.reg|All files|*.*",
                 InitialDirectory = Directory.GetCurrentDirectory()
             };
 
             if (openFileDialog.ShowDialog() != true)
                 return;
 
-            locations.OfflineFileLocation = openFileDialog.FileName;
+            locations.OfflineFileLocations = openFileDialog.FileNames;
         }
 
         private void UpdateOSVersionList()
@@ -276,8 +277,7 @@ namespace SeeShells.UI.Pages
                 if (useRegistryHiveFiles)
                 {
                     parser.OsVersion = osVersion;
-                    List<string> registryFilePaths = new List<string>() { locations.OfflineFileLocation };
-                    //TODO handle multiple offline registry files (locations only serves one so far)
+                    string[] registryFilePaths = locations.OfflineFileLocations;
                     foreach (string registryFile in registryFilePaths)
                     {
                         OfflineRegistryReader offlineReader = new OfflineRegistryReader(parser, registryFile);
@@ -318,11 +318,20 @@ namespace SeeShells.UI.Pages
 
         private bool OfflineSelectionsAreValid()
         {
-            if(!File.Exists(locations.OfflineFileLocation))
+            if (locations.OfflineFileLocations.Length == 0)
             {
                 showErrorMessage("Select a registry hive file.", "Missing Hive");
                 return false;
             }
+
+            foreach (string location in locations.OfflineFileLocations)
+            {
+                if (!File.Exists(location))
+                {
+                    showErrorMessage(location + " is an invalid location.", "Invalid Hive");
+                    return false;
+                }
+            }          
 
             if (OSVersion.SelectedItem is null)
             {
