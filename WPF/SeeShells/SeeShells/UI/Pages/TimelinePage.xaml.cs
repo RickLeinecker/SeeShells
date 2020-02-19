@@ -344,14 +344,18 @@ namespace SeeShells.UI.Pages
         }
 
         /// <summary>
-        /// This checks when the download button is hit, whether the HTML checkbox is checked or not and calls the creation of HtmlOutput.
+        /// This checks when the download button is hit, whether the HTML and/or the CSV checkbox is checked or not and calls the creation of HtmlOutput.
         /// </summary>
         private void download_Click(object sender, RoutedEventArgs e)
         {
-            if (htmlCheckBox.IsChecked ?? false)
+            if(htmlCheckBox.IsChecked ?? false)
             {
-                System.Windows.MessageBox.Show("helps");
                 HtmlIO.OutputHtmlFile(App.nodeCollection.nodeList, "timeline.html");
+            }
+            if(csvCheckBox.IsChecked ?? false)
+            {
+
+                CsvIO.OutputCSVFile(App.ShellItems, "raw.csv");
             }
         }
     }
