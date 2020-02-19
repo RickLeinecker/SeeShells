@@ -1,4 +1,5 @@
-﻿using SeeShells.UI.EventFilters;
+﻿using SeeShells.IO;
+using SeeShells.UI.EventFilters;
 using SeeShells.UI.Node;
 using System;
 using System.Collections.Generic;
@@ -339,6 +340,18 @@ namespace SeeShells.UI.Pages
             else if (unitOfTime.Equals("Seconds"))
             {
                 TimeSpanSliderControlTextBox.Text = String.Format("{0:0.00}", sliderValue);
+            }
+        }
+
+        /// <summary>
+        /// This checks when the download button is hit, whether the HTML checkbox is checked or not and calls the creation of HtmlOutput.
+        /// </summary>
+        private void download_Click(object sender, RoutedEventArgs e)
+        {
+            if (htmlCheckBox.IsChecked ?? false)
+            {
+                System.Windows.MessageBox.Show("helps");
+                HtmlIO.OutputHtmlFile(App.nodeCollection.nodeList, "timeline.html");
             }
         }
     }

@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using SeeShells.ShellParser.ShellItems;
-using SeeShells.UI;
+using SeeShells.UI.Node;
 
 namespace SeeShells.IO
 {
@@ -14,10 +10,10 @@ namespace SeeShells.IO
         /// <summary>
         /// Creates a HTML file with ShellBag data in a given location.
         /// </summary>
-        /// <param name="eventList">A list of IEvents containg the filtered list of events from the timeline</param>
-        /// <param name="filePath">The directory in which to output the CSV file including the CSV file name</param>
+        /// <param name="nodeList">A list of Nodes containg the filtered list of events from the timeline</param>
+        /// <param name="filePath">The directory in which to output the HTML file including the HTML file name</param>
         /// <returns></returns>
-        public static void OutputHtmlFile(List<IEvent> eventList, String filePath)
+        public static void OutputHtmlFile(List<Node> nodeList, String filePath)
         {
             // Creates the html file
             StreamWriter outputFile;
@@ -40,21 +36,21 @@ namespace SeeShells.IO
             outputFile.WriteLine("<h2>Timeline HTML Output</h2>");
 
             // Iterates through the list of IEvents and adds the information to the HTML file
-            foreach (IEvent aEvent in eventList)
+            foreach (Node node in nodeList)
             {
                 outputFile.WriteLine("<div class=\"card\">");
                 outputFile.WriteLine("<div class=\"container\">");
                 outputFile.WriteLine("<div class=\"grid-container\">");
                 // This is the opening of the main shellItem
                 outputFile.WriteLine("<div class=\"grid-item\">");
-                outputFile.WriteLine("<h4><b>" + aEvent.Name + "</b></h4>");
-                outputFile.WriteLine("<p>" + aEvent.EventTime + "</p>");
-                outputFile.WriteLine("<p>" + aEvent.EventType + "</p>");
+                outputFile.WriteLine("<h4><b>" + node.aEvent.Name + "</b></h4>");
+                outputFile.WriteLine("<p>" + node.aEvent.EventTime + "</p>");
+                outputFile.WriteLine("<p>" + node.aEvent.EventType + "</p>");
                 outputFile.WriteLine("</div>");
                 
                 // This shows the extra information about the shellItem
                 outputFile.WriteLine("<div class=\"grid-item\" style=\"column-count: 3;\" > ");
-                foreach (KeyValuePair<string, string> property in aEvent.Parent.GetAllProperties())
+                foreach (KeyValuePair<string, string> property in node.aEvent.Parent.GetAllProperties())
                 {
                     outputFile.WriteLine("<p>" + property + "</p>");
                 }

@@ -1,12 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SeeShells.IO;
-using SeeShells.ShellParser;
-using SeeShells.ShellParser.ShellItems;
 using SeeShells.UI;
-using SeeShellsTests.ShellParser.ShellParserMocks;
+using SeeShells.UI.Node;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows.Shapes;
 
 namespace SeeShellsTests.IO
 {
@@ -14,12 +13,12 @@ namespace SeeShellsTests.IO
     public class HtmlIOTests
     {
         /// <summary>
-        /// Tests if a CSV file is otputted.
+        /// Tests if a HTML file is otputted.
         /// </summary>
         [TestMethod()]
         public void OutputHtmlFileTest()
         {
-            List<IEvent> eventList = new List<IEvent>();
+            List<Node> nodeList = new List<Node>();
 
             Dictionary<string, string> shellItemProperties = new Dictionary<string, string>();
             shellItemProperties.Add("Size", "0");
@@ -32,13 +31,16 @@ namespace SeeShellsTests.IO
             CsvParsedShellItem ShellItem = new CsvParsedShellItem(shellItemProperties);
 
             Event aEvent = new Event("item1", DateTime.Now, ShellItem, "Access");
-            eventList.Add(aEvent);
+            Ellipse dot = new Ellipse();
+            Rectangle block = new Rectangle();
+            Node aNode = new Node(aEvent, dot, block);
+            nodeList.Add(aNode);
 
             if (File.Exists("timeline.html"))
             {
                 File.Delete("timeline.html");
             }
-            HtmlIO.OutputHtmlFile(eventList, "timeline.html");
+            HtmlIO.OutputHtmlFile(nodeList, "timeline.html");
             Assert.IsTrue(File.Exists("timeline.html"));
         }
     }
