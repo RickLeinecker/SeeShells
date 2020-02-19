@@ -246,8 +246,7 @@ namespace SeeShells.UI.Pages
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             App.ShellItems = await ParseShellBags();
-            List<IEvent> events = EventParser.GetEvents(App.ShellItems); //FIXME EventParser.getEvents(shellItems);
-            App.nodeCollection.nodeList = new List<Node.Node>(); //TODO REMOVE ME once merged with filtering code, unneccesarly NPE stopping
+            List<IEvent> events = EventParser.GetEvents(App.ShellItems);
             App.nodeCollection.nodeList.AddRange(NodeParser.GetNodes(events));
             stopwatch.Stop();
             logger.Info("Parsing Complete. ShellItems Parsed: " + App.ShellItems.Count + ". Time Elapsed: " + stopwatch.ElapsedMilliseconds / 1000 + " seconds");
@@ -305,11 +304,6 @@ namespace SeeShells.UI.Pages
             if (!File.Exists(locations.GUIDFileLocation))
             {
                 showErrorMessage("Select a proper GUID configuration file or create a new one.", "Missing GUID File");
-                return false;
-            }
-            if (!File.Exists(locations.ScriptFileLocation))
-            {
-                showErrorMessage("Select a proper script configuration file or create a new one.", "Missing Script File");
                 return false;
             }
 
