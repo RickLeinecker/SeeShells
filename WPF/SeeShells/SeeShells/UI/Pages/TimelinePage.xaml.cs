@@ -347,7 +347,10 @@ namespace SeeShells.UI.Pages
                 TimeSpanSliderControlTextBox.Text = String.Format("{0:0.00}", sliderValue);
             }
         }
-        
+
+        /// <summary>
+        /// This is activated when the left mouse if pushed down and sets the beginning position.
+        /// </summary>
         private void Hold_Timeline(object sender, MouseButtonEventArgs e)
         {
             Point myLocation = e.GetPosition(Frame);
@@ -355,6 +358,9 @@ namespace SeeShells.UI.Pages
             transPoint = new TranslateTransform(pointOrig.X, pointOrig.Y);
         }
 
+        /// <summary>
+        /// This is activated upon movement of the mouse while it is being held down. It moves the canvas that holds the timeline.
+        /// </summary>
         private void Move_Timeline(object sender, MouseEventArgs e)
         {
             mouseLocation = e.GetPosition(Timeline);
