@@ -26,6 +26,9 @@ namespace SeeShells.UI.EventFilters
         }
         public void Apply(ref List<Node.Node> nodes)
         {
+            if (names.Length == 1 && names[0].Equals(string.Empty))
+                return;
+
             for (int i = nodes.Count-1; i >= 0; i--) //iterate backwards because iterating forwards would be an issue with a list of changing size.
             {
                 Node.Node node = nodes[i];
@@ -43,7 +46,6 @@ namespace SeeShells.UI.EventFilters
 
                 if (!acceptableName)
                 {
-                    //nodes.Remove(node);
                     node.dot.Visibility = System.Windows.Visibility.Collapsed;
                 }
             }

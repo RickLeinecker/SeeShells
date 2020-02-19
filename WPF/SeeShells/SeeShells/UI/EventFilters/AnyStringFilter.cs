@@ -107,7 +107,6 @@ namespace SeeShells.UI.EventFilters
                     //if we found a match add result
                     if (!foundMatch)
                     {
-                        //nodes.Remove(node);
                         node.dot.Visibility = System.Windows.Visibility.Collapsed;
 
                     }
