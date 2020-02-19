@@ -35,8 +35,8 @@ namespace SeeShells.UI.Pages
 
             string currentDirectory = Directory.GetCurrentDirectory();
             locations = new FileLocations(
-                os: currentDirectory + @"\OS.json",
-                guid: currentDirectory + @"\GUIDs.json",
+                os: currentDirectory + @"\defaultOS.json",
+                guid: currentDirectory + @"\defaultGUID.json",
                 script: currentDirectory + @"\Scripts.json"
             );
 
