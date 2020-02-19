@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 using Xceed.Wpf.Toolkit;
 
 namespace SeeShells.UI.Pages
@@ -27,6 +29,10 @@ namespace SeeShells.UI.Pages
         // a text change event.
         private bool unitTimeSpanSliderCanWriteToTextBox = true;
         private TimeSpan unitTimeSpan = new TimeSpan(0, 12, 0, 0);
+
+        private Point mouseLocation;
+        private Point pointOrig;
+        private TranslateTransform transPoint;
 
         public TimelinePage()
         {
@@ -339,6 +345,25 @@ namespace SeeShells.UI.Pages
             else if (unitOfTime.Equals("Seconds"))
             {
                 TimeSpanSliderControlTextBox.Text = String.Format("{0:0.00}", sliderValue);
+            }
+        }
+        
+        private void Hold_Timeline(object sender, MouseButtonEventArgs e)
+        {
+            Point myLocation = e.GetPosition(Frame);
+            pointOrig = new Point(myLocation.X, myLocation.Y);
+            transPoint = new TranslateTransform(pointOrig.X, pointOrig.Y);
+        }
+
+        private void Move_Timeline(object sender, MouseEventArgs e)
+        {
+            mouseLocation = e.GetPosition(Timeline);
+
+            if(e.LeftButton == MouseButtonState.Pressed)
+            {
+                transPoint.X = (mouseLocation.X - pointOrig.X);
+                transPoint.Y = (mouseLocation.Y - pointOrig.Y);
+                Frame.RenderTransform = transPoint;
             }
         }
     }

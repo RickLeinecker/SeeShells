@@ -133,8 +133,10 @@
                             </Grid>
                             <ScrollViewer x:Name="TimelineScroll" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  Margin="0,0,0.333,163.667">
                                 <Grid x:Name="Timeline" Background="#292525" Width="Auto" Height="Auto">
-                                    <xctk:TimelinePanel x:Name="Nodeline" BeginDate="1/1/1" EndDate="1/1/1">
-                                    </xctk:TimelinePanel>
+                                    <Grid x:Name="Frame" MouseDown="Hold_Timeline" MouseMove="Move_Timeline" Width="Auto" Height="Auto">
+                                        <xctk:TimelinePanel x:Name="Nodeline" BeginDate="1/1/1" EndDate="1/1/1">
+                                        </xctk:TimelinePanel>
+                                    </Grid>
                                 </Grid>
                             </ScrollViewer>
                         </Grid>
