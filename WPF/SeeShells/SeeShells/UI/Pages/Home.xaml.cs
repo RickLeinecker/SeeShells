@@ -1,20 +1,20 @@
-﻿using System;
-using System.IO;
+﻿using Microsoft.Win32;
+using Newtonsoft.Json;
+using SeeShells.IO.Networking;
+using SeeShells.IO.Networking.JSON;
+using SeeShells.ShellParser;
+using SeeShells.ShellParser.ShellItems;
+using SeeShells.UI.Node;
+using SeeShells.UI.ViewModels;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Navigation;
-using SeeShells.IO.Networking;
-using Microsoft.Win32;
-using SeeShells.UI.ViewModels;
-using Newtonsoft.Json;
-using SeeShells.IO.Networking.JSON;
-using SeeShells.ShellParser.ShellItems;
-using SeeShells.ShellParser;
-using SeeShells.UI.Node;
-using System.Diagnostics;
 
 namespace SeeShells.UI.Pages
 {
@@ -24,6 +24,7 @@ namespace SeeShells.UI.Pages
     public partial class Home : Page
     {
         private readonly FileLocations locations;
+        private FileLocations defaultLocations;
         private GridLength visibleRow = new GridLength(2, GridUnitType.Star);
         private GridLength hiddenRow = new GridLength(0);
 
@@ -35,14 +36,28 @@ namespace SeeShells.UI.Pages
 
             string currentDirectory = Directory.GetCurrentDirectory();
             locations = new FileLocations(
-                os: currentDirectory + @"\defaultOS.json",
-                guid: currentDirectory + @"\defaultGUID.json",
+                os: currentDirectory + @"\OS.json",
+                guid: currentDirectory + @"\GUID.json",
                 script: currentDirectory + @"\Scripts.json"
             );
+
 
             this.DataContext = locations;
             UpdateOSVersionList();
             HideOfflineRows();
+        }
+        private void defaultSettings()
+        {
+
+            string defaultdir = Directory.GetCurrentDirectory();
+            string supporter = Path.GetFullPath(Path.Combine(defaultdir, @"..\..\..\"));
+
+            defaultLocations = new FileLocations(
+                os: supporter + @"\SeeShells\IO\Networking\JSON\defaultOS.json",
+                guid: supporter + @"\SeeShells\IO\Networking\JSON\defaultGUID.json",
+                script: supporter + @"\SeeShells\IO\Networking\JSON\Scripts.json"
+                );
+            this.DataContext = defaultLocations;
         }
 
         private void OfflineBrowseButton_Click(object sender, RoutedEventArgs e)
@@ -87,9 +102,9 @@ namespace SeeShells.UI.Pages
         private void OSBrowseButton_Click(object sender, RoutedEventArgs e)
         {
             string location = GetFileFromBrowsing();
-            if(UserSelectedFile(location))
+            if (UserSelectedFile(location))
             {
-               locations.OSFileLocation = location;
+                locations.OSFileLocation = location;
 
                 UpdateOSVersionList();
             }
@@ -186,7 +201,7 @@ namespace SeeShells.UI.Pages
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Warning);
 
-                if(answer == MessageBoxResult.Yes)
+                if (answer == MessageBoxResult.Yes)
                     return true;
 
                 return false;
@@ -229,8 +244,8 @@ namespace SeeShells.UI.Pages
 
         private async void ParseButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!ConfigurationFilesAreValid())
-                return;
+            ConfigurationFilesAreValidAsync();
+
 
             if (OfflineCheck.IsChecked == true)
                 if (!OfflineSelectionsAreValid())
@@ -246,7 +261,7 @@ namespace SeeShells.UI.Pages
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             App.ShellItems = await ParseShellBags();
-            List<IEvent> events = EventParser.GetEvents(App.ShellItems); //FIXME EventParser.getEvents(shellItems);
+            List<IEvent> events = EventParser.GetEvents(App.ShellItems);
             App.nodeCollection.nodeList = new List<Node.Node>(); //TODO REMOVE ME once merged with filtering code, unneccesarly NPE stopping
             App.nodeCollection.nodeList.AddRange(NodeParser.GetNodes(events));
             stopwatch.Stop();
@@ -265,12 +280,14 @@ namespace SeeShells.UI.Pages
         {
             bool useRegistryHiveFiles = OfflineCheck.IsChecked.GetValueOrDefault(false);
             string osVersion = OSVersion.SelectedItem == null ? string.Empty : OSVersion.SelectedItem.ToString();
+            ConfigParser parser = new ConfigParser(defaultLocations.GUIDFileLocation, defaultLocations.OSFileLocation);
             //potentially long running operation, operate in another thread.
-            return await Task.Run(() => 
-            { 
+            return await Task.Run(() =>
+            {
 
                 List<IShellItem> retList = new List<IShellItem>();
-                ConfigParser parser = new ConfigParser(locations.GUIDFileLocation, locations.OSFileLocation);
+                if (File.Exists(locations.GUIDFileLocation))
+                    parser = new ConfigParser(locations.GUIDFileLocation, locations.OSFileLocation);
 
                 //perform offline shellbag parsing
                 if (useRegistryHiveFiles)
@@ -295,30 +312,32 @@ namespace SeeShells.UI.Pages
             });
         }
 
-        private bool ConfigurationFilesAreValid()
+        private async void ConfigurationFilesAreValidAsync()
         {
+            defaultSettings();
             if (!File.Exists(locations.OSFileLocation))
             {
-                showErrorMessage("Select a proper OS configuration file or create a new one.", "Missing OS File");
-                return false;
+                string defaultOs = defaultLocations.OSFileLocation;
+                Mouse.OverrideCursor = Cursors.Wait;
+                await Task.Run(() => API.GetOSRegistryLocations(defaultOs));
+
             }
             if (!File.Exists(locations.GUIDFileLocation))
             {
-                showErrorMessage("Select a proper GUID configuration file or create a new one.", "Missing GUID File");
-                return false;
+                string defaultGuid = defaultLocations.GUIDFileLocation;
+                Mouse.OverrideCursor = Cursors.Wait;
+                await Task.Run(() => API.GetGuids(defaultGuid));
             }
             if (!File.Exists(locations.ScriptFileLocation))
             {
-                showErrorMessage("Select a proper script configuration file or create a new one.", "Missing Script File");
-                return false;
+                string defaultScript = defaultLocations.ScriptFileLocation;
             }
 
-            return true;
         }
 
         private bool OfflineSelectionsAreValid()
         {
-            if(!File.Exists(locations.OfflineFileLocation))
+            if (!File.Exists(locations.OfflineFileLocation))
             {
                 showErrorMessage("Select a registry hive file.", "Missing Hive");
                 return false;

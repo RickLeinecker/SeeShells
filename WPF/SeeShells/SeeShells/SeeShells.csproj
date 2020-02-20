@@ -161,7 +161,6 @@
     <Compile Include="ShellParser\ShellItems\ShellItemWithExtensions.cs" />
     <Compile Include="ShellParser\ShellItems\ShellItem0x00.cs" />
     <Compile Include="ShellParser\ShellItems\SHITEM_UNKNOWNENTRY2.cs" />
-      
     <Compile Include="UI\Templates\CheckBoxWithLabel.xaml.cs">
       <DependentUpon>CheckBoxWithLabel.xaml</DependentUpon>
     </Compile>
@@ -192,7 +191,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\MainWindow.xaml">
-
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -232,6 +230,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Content Include="resources\CommandLine.dll" />
+    <Content Include="resources\NFluent.dll" />
+    <Content Include="resources\Registry.dll" />
     <Resource Include="SeeShellsSolid.ico" />
     <Resource Include="SeeShells.ico" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -242,6 +243,9 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="IO\Networking\JSON\defaultGUID.json" />
+    <None Include="IO\Networking\JSON\defaultOS.json" />
+    <None Include="IO\Networking\JSON\Scripts.json" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
