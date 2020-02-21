@@ -8,32 +8,26 @@ using SeeShells.ShellParser.ShellItems;
 namespace SeeShells.ShellParser.Scripting
 {
 
-    public class ScriptHandler
+    public static class ScriptHandler
     {
         /// <summary>
         /// A dictionary of key value pairs to store the scripts.
         /// The key is an int for the shell item identifier.
         /// The value is a string for the content of the script.
         /// </summary>
-        private readonly Dictionary<int, string> scripts = new Dictionary<int, string>();
+        public static Dictionary<int, string> scripts { get; set; }
 
-        public ScriptHandler()
+        static ScriptHandler()
         {
-            GetScriptsTest();
+            scripts = new Dictionary<int, string>();
         }
 
-        public void GetScripts(string fileLocation)
-        {
-            // get scripts from the configuration file & store them in scripts dictionary
-            throw new NotImplementedException();
-        }
-
-        public bool HasScriptForShellItem(int identifier)
+        public static bool HasScriptForShellItem(int identifier)
         {
             return scripts.ContainsKey(identifier);
         }
 
-        public IShellItem ParseShellItem(byte[] buf, int identifier)
+        public static IShellItem ParseShellItem(byte[] buf, int identifier)
         {
             scripts.TryGetValue(identifier, out string script);
 
@@ -41,7 +35,7 @@ namespace SeeShells.ShellParser.Scripting
 
         }
 
-        private void GetScriptsTest()
+        private static void GetScriptsTest()
         {
             // see if the scripts works with a control panel shell item
             string LuaScript = @"         

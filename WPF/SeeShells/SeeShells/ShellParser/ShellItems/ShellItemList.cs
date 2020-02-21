@@ -1,4 +1,5 @@
 ﻿using System;
+using SeeShells.ShellParser.Scripting;
 using System.Collections.Generic;
 
 namespace SeeShells.ShellParser.ShellItems
@@ -28,9 +29,9 @@ namespace SeeShells.ShellParser.ShellItems
             { 
                 // if we have a script for the ShellItem, use it to get the information needed
                 int identifier = unpack_byte(off + 2);
-                if (App.Scripts.HasScriptForShellItem(identifier))
+                if (ScriptHandler.HasScriptForShellItem(identifier))
                 {
-                    return App.Scripts.ParseShellItem(buf, identifier);
+                    return ScriptHandler.ParseShellItem(buf, identifier);
                 }
 
                 // Getting here means that the ShellItem is unidentified

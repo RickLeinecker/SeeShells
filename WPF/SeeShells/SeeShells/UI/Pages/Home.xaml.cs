@@ -274,7 +274,12 @@ namespace SeeShells.UI.Pages
             { 
 
                 List<IShellItem> retList = new List<IShellItem>();
-                ConfigParser parser = new ConfigParser(locations.GUIDFileLocation, locations.OSFileLocation);
+
+                ConfigParser parser;
+                if (File.Exists(locations.ScriptFileLocation))
+                    parser = new ConfigParser(locations.GUIDFileLocation, locations.OSFileLocation, locations.ScriptFileLocation);
+                else
+                    parser = new ConfigParser(locations.GUIDFileLocation, locations.OSFileLocation);
 
                 //perform offline shellbag parsing
                 if (useRegistryHiveFiles)

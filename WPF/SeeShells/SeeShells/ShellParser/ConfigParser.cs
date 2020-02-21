@@ -6,6 +6,8 @@ using Newtonsoft.Json;
 using SeeShells.IO.Networking.JSON;
 using SeeShells.UI.ViewModels;
 using Microsoft.Win32;
+using SeeShells.ShellParser.Scripting;
+
 namespace SeeShells.ShellParser
 {
     class ConfigParser : IConfigParser
@@ -20,6 +22,20 @@ namespace SeeShells.ShellParser
             OsVersion = getLiveOSVersion();
             this.OSRegistryFile = OSRegistryFile;
         }
+        /// <summary>
+        /// Scripts are optional, so use this constructor when there is a selected scripts file.
+        /// </summary>
+        /// <param name="guidsFile"></param>
+        /// <param name="OSRegistryFile"></param>
+        /// <param name="scriptsFile"></param>
+        public ConfigParser(string guidsFile, string OSRegistryFile, string scriptsFile)
+        {
+            UpdateKnownGUIDS(guidsFile);
+            UpdateScripts(scriptsFile);
+            OsVersion = getLiveOSVersion();
+            this.OSRegistryFile = OSRegistryFile;
+        }
+
 
 
         /// <summary>
@@ -32,6 +48,16 @@ namespace SeeShells.ShellParser
             foreach(GUIDPair pair in guidPairs)
             {   
                 KnownGuids.dict[pair.getKnownGUID().Key] = pair.getKnownGUID().Value;
+            }
+
+        }
+
+        private void UpdateScripts(string file)
+        {
+            IList<ScriptPair> scriptPairs = JsonConvert.DeserializeObject<IList<ScriptPair>>(File.ReadAllText(file));
+            foreach(ScriptPair pair in scriptPairs)
+            {
+                ScriptHandler.scripts[pair.getScript().Key] = pair.getScript().Value;   
             }
 
         }
