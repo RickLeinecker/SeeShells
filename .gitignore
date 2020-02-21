@@ -4,3 +4,5 @@ npm-debug.log
 .vs
 /*.env
 .idea
+/api/node_modules
+/api/.env
