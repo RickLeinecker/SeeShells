@@ -2,6 +2,7 @@ require('dotenv').config();
 var express = require('express');
 var database = require('./databaseconnection.js');
 var security = require('./cryptowork.js');
+const { check, validationResult } = require('express-validator');
 
 var port = process.env.PORT || 3000;
 var app = express();
@@ -23,6 +24,8 @@ app.use(database.session({
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(require('sanitize').middleware);
+
 
 
 app.get('/', function (req, res) {
@@ -219,14 +222,24 @@ app.get('/getRegistryLocations', function (req, res) {
     );
 });
 
-app.post('/addScript', function (req, res) {
+// scripts must be sent base 64 encoded to this endpoint
+app.post('/addScript', [
+    check('identifier').isNumeric().trim().escape(),
+    check('script').isBase64().trim(),
+], function (req, res) {
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
+
     var identifier = String(req.body.identifier);
-    var script = String(req.body.script);
+    var encodedscript = String(req.body.script);
 
     let promise = database.scriptForIdentifierDoesNotExist(identifier);
     promise.then(
         function (value) {
-            let addPromise = database.addScript(identifier, script);
+            let addPromise = database.addScript(identifier, encodedscript);
             addPromise.then(
                 function (value) {
                     res.send({ "success": 1 });
@@ -243,6 +256,17 @@ app.post('/addScript', function (req, res) {
                 res.send({ "success": 0, "error": err.message });
         }
     );
+});
+
+app.get('/getScripts',  function (req, res) {
+
+    database.getScripts(function (results) {
+        if (Object.keys(results).length > 0)
+            res.send({ "success": 1, "json": results });
+        else
+            res.send({ "success": 0, "error": "Failed to get any scripts" });
+    });
+
 });
 
 app.get('/logout', function (req, res) {
