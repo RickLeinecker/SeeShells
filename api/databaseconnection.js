@@ -194,6 +194,38 @@ function GUIDDoesNotExist(guid) {
     });
 }
 
+function addScript(identifier, script) {
+    return new Promise(function (resolve, reject) {
+        pool.query('INSERT INTO scripts(typeidentifier, script) values($1, $2);', [identifier, script], (err, res) => {
+            if (err) {
+                reject(err);
+            }
+
+            resolve({ "message": "Success" });
+        });
+    });
+}
+
+function scriptForIdentifierDoesNotExist(identifier) {
+    return new Promise(function (resolve, reject) {
+        pool.query('SELECT id FROM scripts WHERE typeidentifier=$1;', [identifier], (err, res) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+
+            if (res.rowCount > 0) {
+                reject({
+                    result: res.rowCount
+                });
+                return;
+            }
+
+            resolve({ result: "No script exists for this shell item identifier." });
+        });
+    });
+}
+
 module.exports = {
     pool,
     session,
@@ -207,6 +239,8 @@ module.exports = {
     getRegistryLocations,
     getGUIDs,
     addGUID,
-    GUIDDoesNotExist
+    GUIDDoesNotExist,
+    addScript,
+    scriptForIdentifierDoesNotExist
 }
 

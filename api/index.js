@@ -219,6 +219,32 @@ app.get('/getRegistryLocations', function (req, res) {
     );
 });
 
+app.post('/addScript', function (req, res) {
+    var identifier = String(req.body.identifier);
+    var script = String(req.body.script);
+
+    let promise = database.scriptForIdentifierDoesNotExist(identifier);
+    promise.then(
+        function (value) {
+            let addPromise = database.addScript(identifier, script);
+            addPromise.then(
+                function (value) {
+                    res.send({ "success": 1 });
+                },
+                function (err) {
+                    res.send({ "success": 0, "error": "Failed to add new script." });
+                }
+            );
+        },
+        function (err) { 
+            if(err.result >= 1)
+                res.send({ "success": 0, "error": "Script exists in the database already for this identifier." });
+            else
+                res.send({ "success": 0, "error": err.message });
+        }
+    );
+});
+
 app.get('/logout', function (req, res) {
     req.session.destroy(function (err) {
         if (err) {
