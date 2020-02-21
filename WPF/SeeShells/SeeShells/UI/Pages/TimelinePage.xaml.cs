@@ -1,8 +1,10 @@
-﻿using SeeShells.IO;
+﻿using Microsoft.Win32;
+using SeeShells.IO;
 using SeeShells.UI.EventFilters;
 using SeeShells.UI.Node;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -313,14 +315,29 @@ namespace SeeShells.UI.Pages
         }
 
         /// <summary>
-        /// This checks when the download button is hit, whether the HTML checkbox is checked or not and calls the creation of HtmlOutput.
+        /// This checks when the download button is hit, whether the HTML and/or the CSV checkbox is checked or not and calls the creation of HtmlOutput.
         /// </summary>
         private void download_Click(object sender, RoutedEventArgs e)
         {
-            if (htmlCheckBox.IsChecked ?? false)
+            if(htmlCheckBox.IsChecked ?? false)
             {
-                System.Windows.MessageBox.Show("helps");
-                HtmlIO.OutputHtmlFile(App.nodeCollection.nodeList, "timeline.html");
+                SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+                saveFileDialog1.DefaultExt = ".html";
+                saveFileDialog1.Filter = "Html File (*.html)| *.html";
+                saveFileDialog1.AddExtension = true;
+                saveFileDialog1.ShowDialog();
+                string name = saveFileDialog1.FileName;
+                HtmlIO.OutputHtmlFile(App.nodeCollection.nodeList, name);
+            }
+            if(csvCheckBox.IsChecked ?? false)
+            {
+                SaveFileDialog saveFileDialog2 = new SaveFileDialog();
+                saveFileDialog2.DefaultExt = ".csv";
+                saveFileDialog2.Filter = "CSV File (*.csv)| *.csv";
+                saveFileDialog2.AddExtension = true;
+                saveFileDialog2.ShowDialog();
+                string name2 = saveFileDialog2.FileName;
+                CsvIO.OutputCSVFile(App.ShellItems, name2);
             }
         }
     }
