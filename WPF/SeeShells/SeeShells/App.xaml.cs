@@ -1,4 +1,5 @@
-﻿using SeeShells.ShellParser.ShellItems;
+﻿using SeeShells.ShellParser.Scripting;
+using SeeShells.ShellParser.ShellItems;
 using SeeShells.UI;
 using SeeShells.UI.Node;
 using System;
@@ -28,5 +29,10 @@ namespace SeeShells
         /// Collectin of <see cref="ShellItem"/> which is populated after a parsing operation.
         /// </summary>
         public static List<IShellItem> ShellItems { get; set; }
+
+        /// <summary>
+        /// An object to hold and provide the scripts needed for the embedded scripting portion of the program.
+        /// </summary>
+        public static ScriptHandler Scripts = new ScriptHandler();
     }
 }

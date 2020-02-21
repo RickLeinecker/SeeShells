@@ -24,13 +24,18 @@ namespace SeeShells.ShellParser.ShellItems
             String postfix = unpack_byte(off + 2).ToString("X2");
 
             Type type = Type.GetType("SeeShells.ShellParser.ShellItems.ShellItem0x" + postfix);
-            if(type == null)
-            {
+            if (type == null || type == Type.GetType("SeeShells.ShellParser.ShellItems.ShellItem0x71"))
+            { 
+                // if we have a script for the ShellItem, use it to get the information needed
+                int identifier = unpack_byte(off + 2);
+                if (App.Scripts.HasScriptForShellItem(identifier))
+                {
+                    return App.Scripts.ParseShellItem(buf, identifier);
+                }
+
                 // Getting here means that the ShellItem is unidentified
                 logger.Info("Could not identify ShellItem 0x" + postfix);
                 return new ShellItem(buf);
-
-                // TODO Embedded Scripting
             }
 
             try

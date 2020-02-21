@@ -246,6 +246,10 @@ namespace SeeShells.UI.Pages
             //begin the parsing process
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
+
+            // uncomment the below line when actually getting the script file
+            // App.Scripts.GetScripts(locations.ScriptFileLocation);
+
             App.ShellItems = await ParseShellBags();
             List<IEvent> events = EventParser.GetEvents(App.ShellItems);
             App.nodeCollection.nodeList.AddRange(NodeParser.GetNodes(events));
