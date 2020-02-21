@@ -41,6 +41,11 @@ namespace SeeShells.UI.Node
 
             if (didRemove)
             {
+                //restore visibility of previously filtered events
+                foreach (var node in nodeList)
+                {
+                    node.dot.Visibility = System.Windows.Visibility.Visible;
+                }
                 //reapply all remaining filters
                 foreach (INodeFilter filter in filterList.Values)
                 {
