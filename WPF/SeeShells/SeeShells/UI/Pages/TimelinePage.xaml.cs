@@ -195,7 +195,8 @@ namespace SeeShells.UI.Pages
                 UnitTimeSpan = new TimeSpan(0, 0, 0, 1),
                 UnitSize = 10,
                 BeginDate = nodesCluster[0].aEvent.EventTime,
-                EndDate = nodesCluster[nodesCluster.Count - 1].aEvent.EventTime + new TimeSpan(0, 0, 0, 1)
+                EndDate = nodesCluster[nodesCluster.Count - 1].aEvent.EventTime + new TimeSpan(0, 0, 0, 1),
+                KeepOriginalOrderForOverlap = true
             };
             foreach (Node.Node node in nodesCluster)
             {
