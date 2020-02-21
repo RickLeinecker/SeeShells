@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using Xceed.Wpf.Toolkit;
+using Xceed.Wpf.Toolkit.Primitives;
 
 namespace SeeShells.UI.Pages
 {
@@ -34,7 +35,6 @@ namespace SeeShells.UI.Pages
             InitializeComponent();
 
             BuildTimeline();
-            eventTypeList.Add(""); //default blank entry
         }
 
         private void AllStringFilter_TextChanged(object sender, TextChangedEventArgs e)
@@ -63,62 +63,31 @@ namespace SeeShells.UI.Pages
 
         }
 
-        private void EventTypeFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ComboBox emitter = (ComboBox)sender;
-
-            EventTypeFilter_ListChanged(emitter.Name, emitter.SelectedItem.ToString());
-
-        }
-
         /// <summary>
         /// Updates the list of <seealso cref="EventFilters.EventTypeFilter"/>s when a change occurs
-        /// This assumes you dont have two
         /// </summary>
-        /// <param name="emitterName">Name of object that is specifying the filter. used for keep track of updates</param>
-        /// <param name="typeValue">the name of the type to be filtered</param>
-        private void EventTypeFilter_ListChanged(string emitterName, string typeValue)
+        private void EventTypeFilter_OnItemSelectionChanged(object sender, ItemSelectionChangedEventArgs e)
         {
-            if (typeValue.Trim().Length == 0) //handle blank filters
-            {
-                eventTypeFilterList.Remove(emitterName);
-            }
-            else
-            {
-                eventTypeFilterList.Add(emitterName, typeValue); //also replaces existing values
-            }
+            CheckComboBox emitter = (CheckComboBox)sender;
 
-            UpdateFilter("EventType", new EventTypeFilter(eventTypeFilterList.Values.ToArray()));
+            string[] items = emitter.SelectedItems.Cast<string>().ToArray();
+            UpdateFilter("EventType", new EventTypeFilter(items));
+
         }
 
         private void EventTypeFilter_DropDownOpened(object sender, EventArgs e)
         {
-            //show only the options that havent been selected yet
-            ComboBox emitter = (ComboBox)sender;
-            if (eventTypeList.Count == 1)
-            { //obtain all eventTypes found if the list isnt populated
+            CheckComboBox emitter = (CheckComboBox)sender;
+
+            if (eventTypeList.Count == 0)
+            {
                 foreach (Node.Node node in App.nodeCollection.nodeList)
                 {
                     eventTypeList.Add(node.aEvent.EventType);
                 }
             }
 
-            //add all types to the lsit that arent already selected as filters
-            foreach (string eventType in eventTypeList)
-            {
-                if (!eventTypeFilterList.Values.Contains(eventType))
-                {
-                    //dont let mutiple blanks be put into the list
-                    if (eventType.Equals(string.Empty) && emitter.Items.Contains(string.Empty))
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        emitter.Items.Add(eventType);
-                    }
-                }
-            }
+            emitter.ItemsSource = eventTypeList;
         }
 
         private void EventParentTextBox_TextChanged(object sender, TextChangedEventArgs e)

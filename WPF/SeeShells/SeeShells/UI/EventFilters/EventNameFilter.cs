@@ -19,7 +19,7 @@ namespace SeeShells.UI.EventFilters
         /// Filter's <see cref="IEvent"/>s by their <see cref="IEvent.Name"/> property.
         /// If multiple <see cref="IEvent.Name"/> are specified, returned events are one of the specified types.
         /// </summary>
-        /// <param name="names">One or more acceptable <see cref="string"/> to filter on. </param
+        /// <param name="names">One or more acceptable <see cref="string"/> to filter on. </param>
         public EventNameFilter(params string[] names)
         {
             this.names = names;

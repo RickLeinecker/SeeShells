@@ -80,8 +80,7 @@
                                     <Border>
                                         <StackPanel>
                                             <Label Content="Event Type Filter"/>
-                                            <!-- TODO: handle dynamic list of event types based on NodeCollections's results-->
-                                            <ComboBox x:Name="EventTypeFilter" SelectionChanged="EventTypeFilter_SelectionChanged" DropDownOpened="EventTypeFilter_DropDownOpened" Margin="5,0"/>
+                                            <xctk:CheckComboBox x:Name="EventTypeFilter" ItemSelectionChanged="EventTypeFilter_OnItemSelectionChanged"  Opened="EventTypeFilter_DropDownOpened" Margin="5,0"/>
                                         </StackPanel>
                                     </Border>
 
@@ -115,10 +114,9 @@
                                     <ComboBox x:Name="TimeSpanSliderControlComboBox" DropDownClosed="TimeSpanSliderControlComboBox_DropDownClosed" KeyUp="TimeSpanSliderControlComboBox_KeyUp" FontSize="20" Height="37">
                                         <ComboBoxItem Content="Years"/>
                                         <ComboBoxItem Content="Days"/>
-                                        <ComboBoxItem Content="Hours"/>
+                                        <ComboBoxItem IsSelected="True" Content="Hours"/>
                                         <ComboBoxItem Content="Minutes"/>
                                         <ComboBoxItem Content="Seconds"/>
-                                        <ComboBoxItem IsSelected="True" Content="Hours"/>
                                     </ComboBox>
                                 </StackPanel>
                                 <Viewbox Margin="0,20,156,55" Grid.Row="2" Grid.RowSpan="2" Grid.Column="1">
