@@ -32,7 +32,7 @@ namespace SeeShells.UI
                     }
                 }
             }
-            return eventList;
+            return eventList.OrderBy(o => o.EventTime).ToList();
         }
     }
 }

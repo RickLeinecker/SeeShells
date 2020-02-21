@@ -13,10 +13,10 @@ using SeeShells.IO;
 
 namespace SeeShellsTests.UI
 {
-    [TestClass]
-    class EventParserTest
+    [TestClass()]
+    public class EventParserTest
     {
-        [TestMethod]
+        [TestMethod()]
         public void EventListOutput()
         {
             List<IShellItem> shellItems = new List<IShellItem>();
