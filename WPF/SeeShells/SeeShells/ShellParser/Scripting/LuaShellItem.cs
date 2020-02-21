@@ -175,10 +175,21 @@ namespace SeeShells.ShellParser.Scripting
             state.Dispose();
         }
 
-        // I had to grab unpack_guid and unpack_byte from the block class because
-        // the functions are protected & they need to be public to be used by Lua.
-        // I'm not sure what would be best to do here. Change the protected function to public
-        // or make the Lua script do this itself?
+        // The rest of these function are taken from the block class because
+        // the block functions are protected & they need to be public to be used by Lua.
+        // These have the same functionality, but now Lua scripts can use these functions.
+
+        public new ushort unpack_word(int off)
+        {
+            try
+            {
+                return BitConverter.ToUInt16(buf, offset + off);
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                throw new OverrunBufferException(offset + off, buf.Length);
+            }
+        }
         public new string unpack_guid(int off)
         {
             try
@@ -195,17 +206,109 @@ namespace SeeShells.ShellParser.Scripting
                 throw new OverrunBufferException(offset + off, buf.Length);
             }
         }
-
-        public new byte unpack_byte(int off)
+        public new string unpack_wstring(int off, int length = 0)
         {
             try
             {
-                return buf[offset + off];
+                if (length == 0)
+                {
+                    int end = offset + off;
+                    for (int ind = offset + off; ind + 1 < buf.Length; ind += 2)
+                    {
+                        if (buf[ind] == 0 && buf[ind + 1] == 0)
+                        {
+                            end = ind;
+                            break;
+                        }
+                    }
+                    length = end - offset - off;
+                }
+                while (buf[offset + off + length - 2] == 0 && buf[offset + off + length - 1] == 0) length -= 2;
+                return Encoding.Unicode.GetString(buf, offset + off, length);
             }
             catch (IndexOutOfRangeException ex)
             {
                 throw new OverrunBufferException(offset + off, buf.Length);
             }
+        }
+        public new string unpack_string(int off, int length = 0)
+        {
+            try
+            {
+                if (length == 0)
+                {
+                    int end = Array.IndexOf(buf, (byte)0, offset + off);
+                    length = end - offset - off;
+                    if (length == 0) return string.Empty;
+                }
+                while (buf[offset + off + length - 1] == 0) --length;
+                return Encoding.ASCII.GetString(buf, offset + off, length);
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                throw new OverrunBufferException(offset + off, buf.Length);
+            }
+        }
+        public new uint unpack_dword(int off)
+        {
+            try
+            {
+                return BitConverter.ToUInt32(buf, offset + off);
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                throw new OverrunBufferException(offset + off, buf.Length);
+            }
+        }
+        public new ulong UnpackQword(int off)
+        {
+            try
+            {
+                return BitConverter.ToUInt64(buf, offset + off);
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                throw new OverrunBufferException(offset + off, buf.Length);
+            }
+        }
+        public new DateTime unpack_dosdate(int off)
+        {
+            try
+            {
+                ushort dosdate = (ushort)(buf[offset + off + 1] << 8 | buf[offset + off]);
+                ushort dostime = (ushort)(buf[offset + off + 3] << 8 | buf[offset + off + 2]);
+
+                //check if the bytes contained no data
+                if ((dosdate == 0 || dosdate == 1) && dostime == 0)
+                {
+                    return DateTime.MinValue; //same thing as invalid. (minvalue goes below the epoch)
+                }
+
+                int day = dosdate & 0x1F;
+                int month = (dosdate & 0x1E0) >> 5;
+                int year = (dosdate & 0xFE00) >> 9;
+                year += 1980;
+
+                int sec = (dostime & 0x1F) * 2;
+                int minute = (dostime & 0x7E0) >> 5;
+                int hour = (dostime & 0xF800) >> 11;
+
+                return new DateTime(year, month, day, hour, minute, sec);
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                throw new OverrunBufferException(offset + off, buf.Length);
+            }
+        }
+        public new DateTime UnpackFileTime(int off)
+        {
+            return DateTime.FromFileTimeUtc(BitConverter.ToInt64(buf, offset + off));
+        }
+        public new int align(int off, int alignment)
+        {
+            if (off % alignment == 0)
+                return off;
+            return off + (alignment - off % alignment);
         }
 
     }
