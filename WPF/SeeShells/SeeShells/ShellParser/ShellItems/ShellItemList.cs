@@ -25,7 +25,7 @@ namespace SeeShells.ShellParser.ShellItems
             String postfix = unpack_byte(off + 2).ToString("X2");
 
             Type type = Type.GetType("SeeShells.ShellParser.ShellItems.ShellItem0x" + postfix);
-            if (type == null || type == Type.GetType("SeeShells.ShellParser.ShellItems.ShellItem0x71"))
+            if (type == null)
             { 
                 // if we have a script for the ShellItem, use it to get the information needed
                 int identifier = unpack_byte(off + 2);

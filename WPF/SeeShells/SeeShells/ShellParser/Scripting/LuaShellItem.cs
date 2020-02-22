@@ -179,6 +179,17 @@ namespace SeeShells.ShellParser.Scripting
         // the block functions are protected & they need to be public to be used by Lua.
         // These have the same functionality, but now Lua scripts can use these functions.
 
+        public new byte unpack_byte(int off)
+        {
+            try
+            {
+                return buf[offset + off];
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                throw new OverrunBufferException(offset + off, buf.Length);
+            }
+        }
         public new ushort unpack_word(int off)
         {
             try

@@ -34,26 +34,5 @@ namespace SeeShells.ShellParser.Scripting
             return new LuaShellItem(buf, script);
 
         }
-
-        private static void GetScriptsTest()
-        {
-            // see if the scripts works with a control panel shell item
-            string LuaScript = @"         
-                local guid = shellitem:unpack_guid(0x0E)
-                local flag = shellitem:unpack_byte(0x03)
-                properties:Add(""TypeName"", ""Control Panel"")
-                properties:Add(""Guid"", tostring(guid))
-                properties:Add(""Flags"", tostring(flag))
-                if knownGUIDs:ContainsKey(tostring(guid)) then
-                    properties:Add(""Name"", string.format(""{{CONTROL PANEL: %s}}"", knownGUIDs[guid]))
-                else
-                    properties:Add(""Name"", string.format(""{{CONTROL PANEL: %s}}"", guid))
-                end
-            ";
-
-            scripts.Add(Int32.Parse("71", System.Globalization.NumberStyles.HexNumber), LuaScript);
-        }
-
-
     }
 }

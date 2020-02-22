@@ -54,8 +54,8 @@ namespace SeeShells.ShellParser
 
         private void UpdateScripts(string file)
         {
-            IList<ScriptPair> scriptPairs = JsonConvert.DeserializeObject<IList<ScriptPair>>(File.ReadAllText(file));
-            foreach(ScriptPair pair in scriptPairs)
+            IList<DecodedScriptPair> scriptPairs = JsonConvert.DeserializeObject<IList<DecodedScriptPair>>(File.ReadAllText(file));
+            foreach(DecodedScriptPair pair in scriptPairs)
             {
                 ScriptHandler.scripts[pair.getScript().Key] = pair.getScript().Value;   
             }
