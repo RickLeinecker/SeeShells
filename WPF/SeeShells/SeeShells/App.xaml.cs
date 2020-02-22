@@ -1,5 +1,4 @@
-﻿using SeeShells.ShellParser.Scripting;
-using SeeShells.ShellParser.ShellItems;
+﻿using SeeShells.ShellParser.ShellItems;
 using SeeShells.UI;
 using SeeShells.UI.Node;
 using System;

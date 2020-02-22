@@ -32,9 +32,6 @@ namespace SeeShells.ShellParser.Scripting
             {
                 // it seems like this exception happens when there's an issue with a DLL or reference file.
                 // occurs on state = new Lua();
-                // on stackoverflow, it seems to mostly happen when mixing x86 and x64 stuff
-                // not really what to do here; this error has only popped up for me when running the tests
-                // maybe it's something with the way it's building? https://github.com/NLua/NLua/issues/67
 
                 skipParsing = true;
             }
@@ -57,10 +54,6 @@ namespace SeeShells.ShellParser.Scripting
                 return GetString("Name");
             }
         }
-
-        public string test()
-        { return "test"; }
-
 
         public override DateTime ModifiedDate
         {
@@ -167,7 +160,6 @@ namespace SeeShells.ShellParser.Scripting
             }
             catch (Exception ex)
             {
-                // since someone might add their own scripts, they should be able to see the errors right?
                 logger.Error(ex, "Error with a Lua script.\n" + ex.ToString());
             }
 
