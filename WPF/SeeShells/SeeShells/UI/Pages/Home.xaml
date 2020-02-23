@@ -81,7 +81,7 @@
         <Viewbox Grid.Row="5" Grid.Column="1" Stretch="Uniform" HorizontalAlignment="Left" Margin="5">
             <StackPanel Orientation="Horizontal">
                 <Button x:Name="GUIDBrowseButton" Content="Browse" Click="GUIDBrowseButton_Click"  Margin="10,0"/>
-                <Button x:Name="GUIUpdateButton" Content="Update File" Click="GUIUpdateButton_Click"  Margin="10,0"/>
+                <Button x:Name="GUIDUpdateButton" Content="Update File" Click="GUIDUpdateButton_Click"  Margin="10,0"/>
             </StackPanel>
         </Viewbox>
 
