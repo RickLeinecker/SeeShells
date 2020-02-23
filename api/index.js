@@ -3,6 +3,9 @@ var express = require('express');
 var database = require('./databaseconnection.js');
 var security = require('./cryptowork.js');
 const { check, validationResult } = require('express-validator');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+var flash = require("connect-flash");
 
 var port = process.env.PORT || 3000;
 var app = express();
@@ -22,21 +25,75 @@ app.use(database.session({
     }
 }));
 
+passport.use(new LocalStrategy({ passReqToCallback: true}, 
+    function (req, username, password, done) {
+
+        let promise = database.userExistsAndIsApproved(username);
+        promise.then(
+            function (user) {
+                if (user.result == 1) {
+                    var compare = user.password;
+                    var salt = user.salt;
+
+                    let verifyPromise = security.verifyPassword(compare, salt, password);
+                    verifyPromise.then(
+                        function (result) {
+                            return done(null, user);
+                        },
+                        function (fail) {
+                            return done(null, false, { message: 'Incorrect password.' });
+                        }
+                    );
+                }
+                else {
+                    return done(null, false, { message: 'Incorrect username.' });
+                }
+            },
+            function (err) {
+                return done(err);
+            }
+
+        );
+    }
+));
+
+passport.serializeUser(function (user, done) {
+    done(null, user.id);
+});
+
+passport.deserializeUser(function (id, done) {
+    let promise = database.getUserByID(id);
+    promise.then(
+        function (user) {
+            return done(null, user);
+        },
+        function (err) {
+            return done(err);
+        }
+    );
+});
+
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(require('sanitize').middleware);
-
-
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
 
 app.get('/', function (req, res) {
     res.send({ test: 'testing', hello: 'klayton', and: 'aleks', aswellas: 'bridget', andlastbutnotleast: 'yara' });
 });
+app.get('/notauthenticated', function (req, res) {
+    res.send({ message: 'You must log in to perform this action.' });
+});
+
 
 app.post('/register', function (req, res) {;
     var username = String(req.body.username);
     var password = String(req.body.password);
 
-    let promise = database.userExists(username);
+    let promise = database.userExistsAndIsApproved(username);
     promise.then(
         function (value) {
             if (value.result == 0) {
@@ -64,42 +121,50 @@ app.post('/register', function (req, res) {;
     );
 });
 
-app.post('/login', function (req, res) {
-    var username = String(req.body.username);
-    var password = String(req.body.password);
+app.get('/login', function (req, res) {
+    res.send({});
+});
 
-    let promise = database.userExists(username);
-    promise.then(
-        function (value) {
-            if (value.result == 1) {
-                var compare = value.password;
-                var salt = value.salt;
+app.post('/login', passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/login',
+    failureFlash: true
+}));
 
-                let verifyPromise = security.verifyPassword(compare, salt, password);
-                verifyPromise.then(
-                    function (result) {
-
-                        req.session.user = {
-                            name: username
-                        };
-
-                        res.send({ "success": 1, "session": req.session });
-
-                    },
-                    function (fail) {
-                        res.send({ "success": 0, "error": "Incorrect password." });
-                    }
-                );
+app.post('/approveUser', function (req, res) {
+    if (req.isAuthenticated()) {
+        var id = (req.body.userID);
+        let promise = database.approveUser(id);
+        promise.then(
+            function () {
+                res.send({ "success": 1 });
+            },
+            function () {
+                res.send({ "success": 0, "error": "Failed to approve the user." });
             }
-            else {
-                res.send({ "success": 0, "error": "User does not exist." });
-            }
+        );
+    }
+    else {
+        res.redirect('/notauthenticated');
+    }
+});
 
-        },
-        function (err) {
-            res.send({ "success": 0, "error": "Failure checking the database for existing users." });
-        }
-    );
+app.post('/rejectUser', function (req, res) {
+    if (req.isAuthenticated()) {
+        var id = (req.body.userID);
+        let promise = database.rejectUser(id);
+        promise.then(
+            function () {
+                res.send({ "success": 1 });
+            },
+            function () {
+                res.send({ "success": 0, "error": "Failed to delete the user." });
+            }
+        );
+    }
+    else {
+        res.redirect('/notauthenticated');
+    }
 });
 
 app.get('/getOSandRegistryLocations', function (req, res) {
@@ -128,37 +193,76 @@ app.get('/getGUIDs', function (req, res) {
 });
 
 app.post('/addGUID', function (req, res) {
-    var guid = String(req.body.guid);
-    var name = String(req.body.name);
+    if (req.isAuthenticated()) {
+        var guid = String(req.body.guid);
+        var name = String(req.body.name);
 
-    let promise = database.GUIDDoesNotExist(guid);
-    promise.then(
-        function (value) {
-            let addPromise = database.addGUID(guid, name);
-            addPromise.then(
-                function (value) {
-                    res.send({ "success": 1 });
-                },
-                function (err) {
-                    res.send({ "success": 0, "error": "Failed to add new GUID." });
-                }
-            );
-        },
-        function (err) {
-            res.send({ "success": 0, "error": "GUID exists in the database already."});
-        }
-    );
+        let promise = database.GUIDDoesNotExist(guid);
+        promise.then(
+            function (value) {
+                let addPromise = database.addGUID(guid, name);
+                addPromise.then(
+                    function (value) {
+                        res.send({ "success": 1 });
+                    },
+                    function (err) {
+                        res.send({ "success": 0, "error": "Failed to add new GUID." });
+                    }
+                );
+            },
+            function (err) {
+                res.send({ "success": 0, "error": "GUID exists in the database already." });
+            }
+        );
+    }
+    else {
+        res.redirect('/notauthenticated');
+    }
 });
 
 app.post('/addOS', function (req, res) {
-    var num = String(req.body.osnum);
-    var name = String(req.body.osname);
-    var mainkeysid = String(req.body.mainkeysid);
+    if (req.isAuthenticated()) {
+        var num = String(req.body.osnum);
+        var name = String(req.body.osname);
+        var mainkeysid = String(req.body.mainkeysid);
 
-    let keysExist = database.keysIDExists(mainkeysid);
-    keysExist.then(
-        function (value) {
-            if (value == true) {
+        let keysExist = database.keysIDExists(mainkeysid);
+        keysExist.then(
+            function (value) {
+                if (value == true) {
+                    let addPromise = database.addOS(num, name, mainkeysid);
+                    addPromise.then(
+                        function (value) {
+                            res.send({ "success": 1 });
+                        },
+                        function (err) {
+                            res.send({ "success": 0, "error": "Failed to add new OS." });
+                        }
+                    );
+                }
+                else {
+                    res.send({ "success": 0, "error": "The keys ID selected does not exist." });
+                }
+            },
+            function (err) {
+                res.send({ "success": 0, "error": "Error with database connection." });
+            }
+        );
+    }
+    else {
+        res.redirect('/notauthenticated');
+    }       
+});
+
+app.post('/addOSWithFileLocations', function (req, res) {
+    if (req.isAuthenticated()) {
+        var num = String(req.body.osnum);
+        var name = String(req.body.osname);
+        var keysArray = req.body.keys;
+
+        let keysAdded = database.addKeys(keysArray);
+        keysAdded.then(
+            function (mainkeysid) {
                 let addPromise = database.addOS(num, name, mainkeysid);
                 addPromise.then(
                     function (value) {
@@ -168,42 +272,16 @@ app.post('/addOS', function (req, res) {
                         res.send({ "success": 0, "error": "Failed to add new OS." });
                     }
                 );
+
+            },
+            function (err) {
+                res.send({ "success": 0, "error": "Failed to add the new registry key locations." });
             }
-            else {
-                res.send({ "success": 0, "error": "The keys ID selected does not exist." });
-            }
-        },
-        function (err) {
-            res.send({ "success": 0, "error": "Error with database connection." });
-        }
-    );
-        
-});
-
-app.post('/addOSWithFileLocations', function (req, res) {
-    var num = String(req.body.osnum);
-    var name = String(req.body.osname);
-    var keysArray = req.body.keys;
-
-    let keysAdded = database.addKeys(keysArray);
-    keysAdded.then(
-        function (mainkeysid) {
-            let addPromise = database.addOS(num, name, mainkeysid);
-            addPromise.then(
-                function (value) {
-                    res.send({ "success": 1 });
-                },
-                function (err) {
-                    res.send({ "success": 0, "error": "Failed to add new OS." });
-                }
-            );
-
-        },
-        function (err) {
-            res.send({ "success": 0, "error": "Failed to add the new registry key locations." });
-        }
-    );
-
+        );
+    }
+    else {
+        res.redirect('/notauthenticated');
+    }
 });
 
 app.get('/getRegistryLocations', function (req, res) {
@@ -227,35 +305,39 @@ app.post('/addScript', [
     check('identifier').isNumeric().trim().escape(),
     check('script').isBase64().trim(),
 ], function (req, res) {
-
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
-    }
-
-    var identifier = String(req.body.identifier);
-    var encodedscript = String(req.body.script);
-
-    let promise = database.scriptForIdentifierDoesNotExist(identifier);
-    promise.then(
-        function (value) {
-            let addPromise = database.addScript(identifier, encodedscript);
-            addPromise.then(
-                function (value) {
-                    res.send({ "success": 1 });
-                },
-                function (err) {
-                    res.send({ "success": 0, "error": "Failed to add new script." });
-                }
-            );
-        },
-        function (err) { 
-            if(err.result >= 1)
-                res.send({ "success": 0, "error": "Script exists in the database already for this identifier." });
-            else
-                res.send({ "success": 0, "error": err.message });
+    if (req.isAuthenticated()) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() });
         }
-    );
+
+        var identifier = String(req.body.identifier);
+        var encodedscript = String(req.body.script);
+
+        let promise = database.scriptForIdentifierDoesNotExist(identifier);
+        promise.then(
+            function (value) {
+                let addPromise = database.addScript(identifier, encodedscript);
+                addPromise.then(
+                    function (value) {
+                        res.send({ "success": 1 });
+                    },
+                    function (err) {
+                        res.send({ "success": 0, "error": "Failed to add new script." });
+                    }
+                );
+            },
+            function (err) {
+                if (err.result >= 1)
+                    res.send({ "success": 0, "error": "Script exists in the database already for this identifier." });
+                else
+                    res.send({ "success": 0, "error": err.message });
+            }
+        );
+    }
+    else {
+        res.redirect('/notauthenticated');
+    }    
 });
 
 app.get('/getScripts',  function (req, res) {
@@ -269,16 +351,12 @@ app.get('/getScripts',  function (req, res) {
 
 });
 
+
 app.get('/logout', function (req, res) {
-    req.session.destroy(function (err) {
-        if (err) {
-            console.log(err);
-        }
-        else {
-            res.redirect('/');
-        }
-    });
+    req.logout();
+    res.redirect('/');
 });
+
 
 app.listen(port, function () {
     console.log('Example app listening...');
