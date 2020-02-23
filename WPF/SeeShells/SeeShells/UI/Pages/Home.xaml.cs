@@ -171,9 +171,32 @@ namespace SeeShells.UI.Pages
             }
         }
 
-        private void ScriptUpdateButton_Click(object sender, RoutedEventArgs e)
+        private async void ScriptUpdateButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Scripting is still a work in progress.", "Check back later.", MessageBoxButton.OK, MessageBoxImage.Information);
+            string location = locations.ScriptFileLocation;
+            if (!ContinueAfterSendingOverwriteWarning(location))
+                return;
+
+            string message = "File saved at\n" + location;
+            string caption = "Success";
+            MessageBoxImage image = MessageBoxImage.Information;
+
+            try
+            {
+                Mouse.OverrideCursor = Cursors.Wait;
+
+                await Task.Run(() => API.GetScripts(location));
+
+            }
+            catch (APIException)
+            {
+                message = "Failed to save the Scripts configuration file.";
+                caption = "Fail";
+                image = MessageBoxImage.Error;
+            }
+
+            Mouse.OverrideCursor = Cursors.Arrow;
+            MessageBox.Show(message, caption, MessageBoxButton.OK, image);
         }
 
         private bool ContinueAfterSendingOverwriteWarning(string path)
@@ -270,7 +293,12 @@ namespace SeeShells.UI.Pages
             { 
 
                 List<IShellItem> retList = new List<IShellItem>();
-                ConfigParser parser = new ConfigParser(locations.GUIDFileLocation, locations.OSFileLocation);
+
+                ConfigParser parser;
+                if (File.Exists(locations.ScriptFileLocation))
+                    parser = new ConfigParser(locations.GUIDFileLocation, locations.OSFileLocation, locations.ScriptFileLocation);
+                else
+                    parser = new ConfigParser(locations.GUIDFileLocation, locations.OSFileLocation);
 
                 //perform offline shellbag parsing
                 if (useRegistryHiveFiles)
