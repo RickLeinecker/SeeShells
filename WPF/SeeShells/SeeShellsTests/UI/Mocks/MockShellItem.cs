@@ -9,6 +9,7 @@ namespace SeeShellsTests.UI.Mocks
 {
     class MockShellItem : IShellItem
     {
+        readonly Dictionary<string, string> properties = new Dictionary<string, string>();
         public MockShellItem(string name, byte type)
         {
             Name = name;
@@ -36,15 +37,18 @@ namespace SeeShellsTests.UI.Mocks
 
         public IDictionary<string, string> GetAllProperties()
         {
-            return new Dictionary<string, string>()
-            {
-                {"Name", Name },
-                {"Type", Type.ToString("X2") },
-                {"thing1", "thing2" },
-                {"thing3", "thing4" },
-                {"thing5", "thing6" },
 
-            };
+            properties["Name"] = Name;
+            properties["Type"] = Type.ToString("X2");
+            properties["thing1"]  = "thing2";
+            properties["thing3"]  = "thing4";
+            properties["thing5"] = "thing6";
+            return properties;
+        }
+
+        public void AddProperty(string key, string value)
+        {
+            properties.Add(key, value);
         }
     }
 }
