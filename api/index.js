@@ -121,13 +121,8 @@ app.post('/register', function (req, res) {;
     );
 });
 
-app.get('/login', function (req, res) {
-    res.send({});
-});
-
 app.post('/login', passport.authenticate('local', {
     successRedirect: '/',
-    failureRedirect: '/login',
     failureFlash: true
 }));
 
