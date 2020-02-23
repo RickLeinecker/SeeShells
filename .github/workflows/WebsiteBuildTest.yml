@@ -36,9 +36,6 @@ jobs:
         
     - name: Yarn Install
       run: cd $GITHUB_WORKSPACE/docs && yarn install
-
-    - name: Yarn serve 
-      run: cd $GITHUB_WORKSPACE/docs && yarn serve
   
     - name: Yarn Build
       run: cd $GITHUB_WORKSPACE/docs && yarn build
