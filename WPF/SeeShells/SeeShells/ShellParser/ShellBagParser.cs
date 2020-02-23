@@ -1,6 +1,7 @@
 ﻿using SeeShells.ShellParser.ShellItems;
 using System;
 using System.Collections.Generic;
+using SeeShells.ShellParser.Registry;
 
 namespace SeeShells.ShellParser
 {
@@ -19,12 +20,12 @@ namespace SeeShells.ShellParser
             List<IShellItem> shellItems = new List<IShellItem>();
             foreach (RegistryKeyWrapper keyWrapper in registryReader.GetRegistryKeys())
             {
-                if(keyWrapper.getValue() != null) // Some Registry Keys are null
+                if(keyWrapper.Value != null) // Some Registry Keys are null
                 {
-                    ShellItemList shellItemList = new ShellItemList(keyWrapper.getValue());
+                    ShellItemList shellItemList = new ShellItemList(keyWrapper.Value);
                     foreach (IShellItem shellItem in shellItemList.Items())
                     {
-                        shellItems.Add(shellItem);
+                        shellItems.Add(new RegistryShellItemDecorator(shellItem, keyWrapper));
                     }
                 }
             }

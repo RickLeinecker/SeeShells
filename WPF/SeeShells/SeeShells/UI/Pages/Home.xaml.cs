@@ -15,6 +15,7 @@ using SeeShells.ShellParser.ShellItems;
 using SeeShells.ShellParser;
 using SeeShells.UI.Node;
 using System.Diagnostics;
+using SeeShells.ShellParser.Registry;
 
 namespace SeeShells.UI.Pages
 {

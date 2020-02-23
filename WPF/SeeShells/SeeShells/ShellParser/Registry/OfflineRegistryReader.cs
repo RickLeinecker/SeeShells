@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Registry;
 using Registry.Abstractions;
 
-namespace SeeShells.ShellParser
+namespace SeeShells.ShellParser.Registry
 {
     /// <summary>
     /// This class is used to read an offline regisry hive file.
@@ -31,6 +31,10 @@ namespace SeeShells.ShellParser
                 foreach (byte[] keyValue in IterateRegistry(hive.GetKey(location), hive, location, 0, ""))
                 {
                     retList.Add(new RegistryKeyWrapper(keyValue));
+                }
+                foreach (RegistryKeyWrapper keyWrapper in retList)
+                {
+                    // todo pull out owner
                 }
             }
 

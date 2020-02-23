@@ -5,6 +5,7 @@ using SeeShells.ShellParser.ShellItems;
 using System.Collections.Generic;
 using System.IO;
 using System;
+using SeeShells.ShellParser.Registry;
 
 namespace SeeShellsTests.ShellParser
 {
