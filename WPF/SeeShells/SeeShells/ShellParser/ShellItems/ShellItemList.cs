@@ -29,9 +29,22 @@ namespace SeeShells.ShellParser.ShellItems
             { 
                 // if we have a script for the ShellItem, use it to get the information needed
                 int identifier = unpack_byte(off + 2);
+
                 if (ScriptHandler.HasScriptForShellItem(identifier))
                 {
-                    return ScriptHandler.ParseShellItem(buf, identifier);
+                    try
+                    {
+                        return ScriptHandler.ParseShellItem(buf, identifier);
+                    }
+                    catch (ArgumentNullException)
+                    {
+                        logger.Error("The identifier being passed to the Lua scripts is null.");
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error("Failed to parse shell item through script: " + ex.Message);
+                    }
+
                 }
 
                 // Getting here means that the ShellItem is unidentified
