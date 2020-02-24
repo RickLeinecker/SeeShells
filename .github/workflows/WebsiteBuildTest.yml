@@ -34,13 +34,13 @@ jobs:
       with:
         node-version: '12.x'
         
-    - name: NPM Install
-      run: cd $GITHUB_WORKSPACE/docs && npm install
+    - name: Yarn Install
+      run: cd $GITHUB_WORKSPACE/docs && yarn install
   
-    - name: NPM Build
-      run: cd $GITHUB_WORKSPACE/docs && npm run build
+    - name: Yarn Build
+      run: cd $GITHUB_WORKSPACE/docs && yarn build
 
-    - name: NPM Audit
-      run: cd $GITHUB_WORKSPACE/docs && npm audit --audit-level=moderate
+    - name: Yarn Audit
+      run: cd $GITHUB_WORKSPACE/docs && yarn lint --audit-level=moderate
       env:
         CI: true
