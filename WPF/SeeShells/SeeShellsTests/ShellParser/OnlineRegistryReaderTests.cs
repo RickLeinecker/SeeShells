@@ -2,6 +2,7 @@
 using SeeShells.ShellParser;
 using SeeShellsTests.ShellParser.ShellParserMocks;
 using System.Collections.Generic;
+using SeeShells.ShellParser.Registry;
 
 namespace SeeShellsTests.ShellParser
 {

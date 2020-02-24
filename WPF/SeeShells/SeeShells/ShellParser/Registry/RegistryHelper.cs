@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Win32;
 using FILETIME = System.Runtime.InteropServices.ComTypes.FILETIME;
 
-namespace SeeShells.ShellParser
+namespace SeeShells.ShellParser.Registry
 {
     public static class RegistryHelper
     {
