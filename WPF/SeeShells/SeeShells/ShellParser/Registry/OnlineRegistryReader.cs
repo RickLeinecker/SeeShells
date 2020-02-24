@@ -43,14 +43,12 @@ namespace SeeShells.ShellParser.Registry
                 {
                     foreach (byte[] keyValue in IterateRegistry(userStore.OpenSubKey(location), location, 0, ""))
                     {
-                        retList.Add(new RegistryKeyWrapper(keyValue));
+                        var keyWrapper = new RegistryKeyWrapper(keyValue);
+                        keyWrapper.RegistryUser = userStore.Name.Split('\\').Last(); //only pull the SID, dont include HKEY_USERS\
+
+                        retList.Add(keyWrapper);
                     }
                 }
-                foreach (RegistryKeyWrapper keyWrapper in retList)
-                {
-                    keyWrapper.RegistryUser = userStore.Name.Split('\\').Last(); //only pull the SID, dont include HKEY_USERS\
-                }
-                //possible separation of RegistryKeyWrappers by user is also possible above.
             }
 
             return retList;

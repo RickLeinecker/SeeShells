@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Registry;
 using Registry.Abstractions;
 
@@ -11,8 +12,10 @@ namespace SeeShells.ShellParser.Registry
     /// </summary>
     public class OfflineRegistryReader : IRegistryReader
     {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         IConfigParser Parser { get; }
         private String RegistryFilePath;
+
 
         public OfflineRegistryReader(IConfigParser parser, String registryFilePath)
         {
@@ -27,18 +30,61 @@ namespace SeeShells.ShellParser.Registry
             foreach (string location in Parser.GetRegistryLocations())
             {
                 var hive = new RegistryHiveOnDemand(RegistryFilePath);
+                string userOfHive = FindOfflineUsername(hive);
 
                 foreach (byte[] keyValue in IterateRegistry(hive.GetKey(location), hive, location, 0, ""))
                 {
-                    retList.Add(new RegistryKeyWrapper(keyValue));
-                }
-                foreach (RegistryKeyWrapper keyWrapper in retList)
-                {
-                    // todo pull out owner
+                    var keyWrapper = new RegistryKeyWrapper(keyValue);
+                    if (userOfHive != string.Empty)
+                    {
+                        keyWrapper.RegistryUser = userOfHive;
+                    }
+
+                    retList.Add(keyWrapper);
                 }
             }
 
             return retList;
+        }
+
+        private string FindOfflineUsername(RegistryHiveOnDemand hive)
+        {
+            string retval = string.Empty;
+
+            //todo refactor this List into key-value pairs for lookup, we have to hardcode key-values otherwise.
+            List<string> usernameLocations = Parser.GetUsernameLocations();
+            
+            //todo we know of the Desktop value inside the "Shell Folders" location, so naively try this until a better way is found
+                Dictionary<string, int> likelyUsernames = new Dictionary<string, int>();
+            foreach (string usernameLocation in usernameLocations)
+            {
+                //based on the values in '...\Explorer\Shell Folders' the [2] value in the string may not always be the username, but it does appear the most.
+                foreach (KeyValue value in hive.GetKey(usernameLocation).Values)
+                {
+                    //break string up into it's path
+                    string[] pathParts = value.ValueData.Split('\\');
+                    if (pathParts.Length > 2)
+                    {
+                        string username = pathParts[2]; //usually in the form of C:\Users\username
+                        if (!likelyUsernames.ContainsKey(username))
+                        {
+                            likelyUsernames[username] = 1;
+                        }
+                        else
+                        {
+                            likelyUsernames[username]++;
+                        }
+                    }
+
+                }
+            }
+            //most occurred value is probably the username.
+            if (likelyUsernames.Count >= 1)
+            {
+                retval = likelyUsernames.OrderByDescending(pair => pair.Value).First().Key;
+            }
+
+            return retval;
         }
 
         /// <summary>
@@ -66,7 +112,7 @@ namespace SeeShells.ShellParser.Registry
                     }
 
                 string sk = getSubkeyString(subKey, valueName.KeyName);
-                    Console.WriteLine("{0}", sk);
+                    logger.Trace("{0}", sk);
                     RegistryKey rkNext;
                     try
                     {
@@ -74,7 +120,7 @@ namespace SeeShells.ShellParser.Registry
                     }
                     catch (System.Security.SecurityException ex)
                     {
-                        Console.WriteLine("ACCESS DENIED: " + ex.Message);
+                        logger.Warn("ACCESS DENIED: " + ex.Message);
                         continue;
                     }
                 /// The offline parser cannot GetValue() for any given gavlue, instead it has to get the data directly from a key value as it iterates over it
@@ -117,11 +163,11 @@ namespace SeeShells.ShellParser.Registry
 
                         catch (OverrunBufferException ex)
                         {
-                            Console.WriteLine("OverrunBufferException: " + valueName.KeyName);
+                            logger.Warn("OverrunBufferException: " + valueName.KeyName);
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine(valueName.KeyName);
+                            logger.Warn(valueName.KeyName);
                         }
                     }
 

@@ -16,5 +16,12 @@ namespace SeeShellsTests.ShellParser.ShellParserMocks
             list.Add(@"Software\Microsoft\Windows\Shell");
             return list;
         }
+
+        public List<string> GetUsernameLocations()
+        {
+            List<String> list = new List<String>();
+            list.Add(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders");
+            return list;
+        }
     }
 }
