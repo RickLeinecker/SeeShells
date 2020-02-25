@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.Win32;
+using SeeShells.ShellParser.Registry;
 using SeeShells.ShellParser.ShellItems;
 
 namespace SeeShells.ShellParser

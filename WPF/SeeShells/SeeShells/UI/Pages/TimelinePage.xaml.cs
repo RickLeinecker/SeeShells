@@ -20,8 +20,8 @@ namespace SeeShells.UI.Pages
     public partial class TimelinePage : Page
     {
         private const string EVENT_PARENT_IDENTIFER = "EventParent";
-        private Dictionary<string, string> eventTypeFilterList = new Dictionary<string, string>();
         private HashSet<string> eventTypeList = new HashSet<string>();
+        private HashSet<string> eventUserList = new HashSet<string>();
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -72,6 +72,7 @@ namespace SeeShells.UI.Pages
 
         }
 
+
         private void EventTypeFilter_DropDownOpened(object sender, EventArgs e)
         {
             CheckComboBox emitter = (CheckComboBox)sender;
@@ -85,6 +86,33 @@ namespace SeeShells.UI.Pages
             }
 
             emitter.ItemsSource = eventTypeList;
+        }
+
+        private void EventUserFilter_OnItemSelectionChanged(object sender, ItemSelectionChangedEventArgs e)
+        {
+            CheckComboBox emitter = (CheckComboBox)sender;
+
+            string[] items = emitter.SelectedItems.Cast<string>().ToArray();
+            UpdateFilter("EventUser", new EventUserFilter(items));
+        }
+
+        private void EventUserFilter_DropDownOpened(object sender, EventArgs e)
+        {
+            CheckComboBox emitter = (CheckComboBox)sender;
+            if (eventUserList.Count == 0)
+            {
+                //check if the owner property is on the node, then pull the user
+                foreach (Node.Node node in App.nodeCollection.nodeList)
+                {
+                    string userID;
+                    if (node.aEvent.Parent.GetAllProperties().TryGetValue("RegistryOwner", out userID))
+                    {
+                        eventUserList.Add(userID);
+                    }
+                }
+            }
+
+            emitter.ItemsSource = eventUserList;
         }
 
         private void EventParentTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -178,6 +206,7 @@ namespace SeeShells.UI.Pages
                 return;
             }
         }
+
 
         /// <summary>
         /// Creates a timeline with the given events and adds it to the UI.

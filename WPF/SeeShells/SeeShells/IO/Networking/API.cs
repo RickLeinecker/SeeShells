@@ -27,6 +27,9 @@ namespace SeeShells.IO.Networking
         public const string OS_REGISTRY_ENDPOINT = "getOSandRegistryLocations";
         private const string DEFAULT_OS_REGISTRY_FILENAME = "SeeShellsRegistryLocations.json";
 
+        public const string SCRIPTS_ENDPOINT = "getScripts";
+        private const string DEFAULT_SCRIPTS_FILENAME = "SeeShellsScripts.json";
+
 
         /// <summary>
         /// Obtains a <see cref="RestClient"/> which is ready to send requests to the SeeShells API Server.
@@ -86,6 +89,19 @@ namespace SeeShells.IO.Networking
         {
             RestRequest guidRequest = new RestRequest(OS_REGISTRY_ENDPOINT, DataFormat.Json);
             return await PerformGET<IList<RegistryLocations>>(guidRequest, outputFilePath, DEFAULT_OS_REGISTRY_FILENAME, apiClient);
+        }
+
+        /// <summary>
+        /// Obtains a list of Shellbag scripts from the SeeShells API in JSON format and writes to a file
+        /// </summary>
+        /// <param name="outputFilePath">Specific file path in which to save the results. If it doesnt exist it will be created.</param>
+        /// <param name="apiClient">A custom client to use for the GET operation.</param>
+        /// <returns>the filepath in which the data was saved.</returns>
+        /// <exception cref="IOException"> When any networking or file error occurs during the operation.</exception>
+        public static async Task<string> GetScripts(string outputFilePath, IRestClient apiClient = null)
+        {
+            RestRequest scriptsRequest = new RestRequest(SCRIPTS_ENDPOINT, DataFormat.Json);
+            return await PerformGET<IList<ScriptPair>>(scriptsRequest, outputFilePath, DEFAULT_SCRIPTS_FILENAME, apiClient);
         }
 
 
