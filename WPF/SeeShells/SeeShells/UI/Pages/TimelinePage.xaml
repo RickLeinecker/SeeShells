@@ -113,9 +113,8 @@
                             </Grid>
                             <ScrollViewer x:Name="TimelineScroll" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  Margin="0,0,0.333,163.667">
                                 <Grid x:Name="Timeline" Background="#292525" Width="Auto" Height="Auto">
-                                    <StackPanel x:Name="Timelines" Orientation="Horizontal">
-
-                                    </StackPanel>
+                                    <StackPanel x:Name="Timelines" Orientation="Horizontal"/>
+                                    <StackPanel x:Name="TimeStamps" Orientation="Horizontal" Margin="0,43,0,0"/>
                                     <!--<xctk:TimelinePanel x:Name="Nodeline" BeginDate="1/1/1" EndDate="1/1/1">
                                     </xctk:TimelinePanel>-->
                                 </Grid>

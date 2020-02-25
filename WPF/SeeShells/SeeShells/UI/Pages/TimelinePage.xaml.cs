@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Shapes;
 using Xceed.Wpf.Toolkit;
 using Xceed.Wpf.Toolkit.Primitives;
@@ -24,7 +25,7 @@ namespace SeeShells.UI.Pages
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private TimeSpan unitTimeSpan = new TimeSpan(0, 12, 0, 0);
+        private TimeSpan maxRealTimeSpan = new TimeSpan(0, 0, 1, 0); // Max time in one timeline (1 min).
 
         public TimelinePage()
         {
@@ -113,7 +114,7 @@ namespace SeeShells.UI.Pages
         }
 
         /// <summary>
-        /// Builds a timeline dynamically.
+        /// Builds a timeline dynamically. Creates one timeline for each cluster of events.
         /// </summary>
         public void BuildTimeline()
         {
@@ -137,24 +138,20 @@ namespace SeeShells.UI.Pages
 
             try
             {
-                //Nodeline.UnitSize = 10; // Default size of a dot
-                //Nodeline.UnitTimeSpan = this.unitTimeSpan;
-                //Nodeline.BeginDate = GetBeginDate();
-                //Nodeline.EndDate = GetEndDate() + this.unitTimeSpan; // EndDate should be one UnitTimeSpan more than the max value from the data to display properly
-                //Nodeline.Children.Clear();
-
-                List<Node.Node> nodesCluster = new List<Node.Node>();
+                List<Node.Node> nodesCluster = new List<Node.Node>(); // Holds events for one timeline at a time.
                 nodesCluster.Add(App.nodeCollection.nodeList[0]);
-                DateTime startDate = App.nodeCollection.nodeList[0].aEvent.EventTime;
+                DateTime previousDate = App.nodeCollection.nodeList[0].aEvent.EventTime;
+
                 int nodeListSize = App.nodeCollection.nodeList.Count;
                 for (int i = 1; i < nodeListSize; i++)
                 {
-                    double timeGap = Math.Abs(startDate.Subtract(App.nodeCollection.nodeList[i].aEvent.EventTime)
-                        .TotalMinutes);
-                    if (timeGap <= 1)
+                    long ticks = previousDate.Ticks / maxRealTimeSpan.Ticks;
+                    DateTime realTimeStart = new DateTime(ticks * maxRealTimeSpan.Ticks); // This is the time of the first event rounded down to the nearest maxRealTimeSpan
+
+                    // If the event belongs to the timeline
+                    if (App.nodeCollection.nodeList[i].aEvent.EventTime.Subtract(realTimeStart) < maxRealTimeSpan)
                     {
                         nodesCluster.Add(App.nodeCollection.nodeList[i]);
-                        startDate = App.nodeCollection.nodeList[i].aEvent.EventTime;
                     }
                     else
                     {
@@ -162,24 +159,18 @@ namespace SeeShells.UI.Pages
                         nodesCluster.Clear();
 
                         nodesCluster.Add(App.nodeCollection.nodeList[i]);
-                        startDate = App.nodeCollection.nodeList[i].aEvent.EventTime;
-                        if(i == nodeListSize - 1) // If it's the last element
+                        previousDate = App.nodeCollection.nodeList[i].aEvent.EventTime;
+                        if (i == nodeListSize - 1) // If it's the last event of nodeList.
                         {
                             AddTimeline(nodesCluster);
                             nodesCluster.Clear();
                         }
                     }
                 }
-                if(nodesCluster.Count != 0)
+                if (nodesCluster.Count != 0) // If all events belong to the same timeline.
                 {
                     AddTimeline(nodesCluster);
                 }
-
-                //foreach (Node.Node node in App.nodeCollection.nodeList)
-                //{
-                //    TimelinePanel.SetDate(node.dot, node.aEvent.EventTime);
-                //    Nodeline.Children.Add(node.dot);
-                //}
             }
             catch (System.NullReferenceException ex)
             {
@@ -188,67 +179,50 @@ namespace SeeShells.UI.Pages
             }
         }
 
+        /// <summary>
+        /// Creates a timeline with the given events and adds it to the UI.
+        /// </summary>
+        /// <param name="nodesCluster">list of events that belong in 1 timeline</param>
         private void AddTimeline(List<Node.Node> nodesCluster)
         {
+            long ticks = nodesCluster[0].aEvent.EventTime.Ticks / maxRealTimeSpan.Ticks;
+            DateTime beginDate = new DateTime(ticks * maxRealTimeSpan.Ticks);
+            ticks = (nodesCluster[nodesCluster.Count - 1].aEvent.EventTime.Ticks + maxRealTimeSpan.Ticks - 1) / maxRealTimeSpan.Ticks;
+            DateTime endDate = new DateTime(ticks * maxRealTimeSpan.Ticks);
+
             TimelinePanel timelinePanel = new TimelinePanel
             {
                 UnitTimeSpan = new TimeSpan(0, 0, 0, 1),
                 UnitSize = 10,
-                BeginDate = nodesCluster[0].aEvent.EventTime,
-                EndDate = nodesCluster[nodesCluster.Count - 1].aEvent.EventTime + new TimeSpan(0, 0, 0, 1),
+                BeginDate = beginDate,
+                EndDate = endDate,
                 KeepOriginalOrderForOverlap = true
             };
+
             foreach (Node.Node node in nodesCluster)
             {
                 TimelinePanel.SetDate(node.dot, node.aEvent.EventTime);
                 timelinePanel.Children.Add(node.dot);
             }
-            //Timeline.Children.Add(timelinePanel);
+
             Timelines.Children.Add(timelinePanel);
-            Line myLine = new Line();
-            myLine.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
-            myLine.X1 = 1;
-            myLine.X2 = 50;
-            myLine.Y1 = 1;
-            myLine.Y2 = 50;
-            myLine.HorizontalAlignment = HorizontalAlignment.Left;
-            myLine.VerticalAlignment = VerticalAlignment.Center;
-            myLine.StrokeThickness = 2;
-            Timelines.Children.Add(myLine);
+            AddTextBlockTimeStamp(beginDate, endDate);
         }
 
         /// <summary>
-        /// Finds the earliest date from the list of events that is represented on the timeline.
+        /// Adds a timestamp for timeline.
         /// </summary>
-        /// <returns>the earliest date</returns>
-        private DateTime GetBeginDate()
+        /// <param name="beginDate">the begin date of the time interval</param>
+        /// <param name="endDate">the end date of the time interval</param>
+        private void AddTextBlockTimeStamp(DateTime beginDate, DateTime endDate)
         {
-            DateTime minDate = DateTime.MaxValue;
-            foreach (Node.Node node in App.nodeCollection.nodeList)
-            {
-                if (minDate > node.aEvent.EventTime)
-                {
-                    minDate = node.aEvent.EventTime;
-                }
-            }
-            return minDate;
-        }
+            TextBlock textBlock = new TextBlock();
+            textBlock.Text = beginDate.ToString();
+            textBlock.Height = 20;
+            textBlock.Width = endDate.Subtract(beginDate).TotalSeconds * 10;
+            textBlock.Background = Brushes.LightSteelBlue;
 
-        /// <summary>
-        /// Finds the latest date from the list of events that is represented on the timeline.
-        /// </summary>
-        /// <returns>the latest date</returns>
-        private DateTime GetEndDate()
-        {
-            DateTime maxDate = DateTime.MinValue;
-            foreach (Node.Node node in App.nodeCollection.nodeList)
-            {
-                if (maxDate < node.aEvent.EventTime)
-                {
-                    maxDate = node.aEvent.EventTime;
-                }
-            }
-            return maxDate;
+            TimeStamps.Children.Add(textBlock);
         }
 
         /// <summary>
