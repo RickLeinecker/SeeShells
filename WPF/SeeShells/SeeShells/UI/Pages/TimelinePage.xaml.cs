@@ -1,14 +1,12 @@
-﻿using SeeShells.IO;
+﻿using Microsoft.Win32;
+using SeeShells.IO;
 using SeeShells.UI.EventFilters;
-using SeeShells.UI.Node;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Shapes;
 using Xceed.Wpf.Toolkit;
 using Xceed.Wpf.Toolkit.Primitives;
 
@@ -146,34 +144,21 @@ namespace SeeShells.UI.Pages
         /// </summary>
         public void BuildTimeline()
         {
-            /// TO BE REMOVED
-            /// Uncomment this to see a timeline draw (it builds the App.nodeCollection.nodeList)
-            /// This will be removed when all aplication components are connected
-            //List<IEvent> eventList = new List<IEvent>();
-            //DateTime time = new DateTime(2007, 1, 1);
-            //for (int i = 0; i < 1; i++)
-            //{
-            //    eventList.Add(new Event("item1", time, null, "Access"));
-            //    //time = time.AddHours(12);
-            //    //time = time.AddMinutes(4);
-            //    time = time.AddSeconds(1);
-            //}
-            //eventList.Add(new Event("item1", new DateTime(2007, 1, 1, 0, 0, 59), null, "Access"));
-            //eventList.Add(new Event("item1", new DateTime(2007, 1, 1, 0, 1, 0), null, "Access"));
-            //App.nodeCollection.nodeList = NodeParser.GetNodes(eventList);
-
             try
             {
+                if(App.nodeCollection.nodeList.Count == 0)
+                {
+                    logger.Info("No nodes to draw on the timeline.");
+                    return;
+                }
+
                 List<Node.Node> nodesCluster = new List<Node.Node>(); // Holds events for one timeline at a time.
                 nodesCluster.Add(App.nodeCollection.nodeList[0]);
                 DateTime previousDate = App.nodeCollection.nodeList[0].aEvent.EventTime;
-
+                DateTime realTimeStart = DateTimeRoundDown(previousDate, maxRealTimeSpan);
                 int nodeListSize = App.nodeCollection.nodeList.Count;
                 for (int i = 1; i < nodeListSize; i++)
                 {
-                    long ticks = previousDate.Ticks / maxRealTimeSpan.Ticks;
-                    DateTime realTimeStart = new DateTime(ticks * maxRealTimeSpan.Ticks); // This is the time of the first event rounded down to the nearest maxRealTimeSpan
-
                     // If the event belongs to the timeline
                     if (TimeSpan.Compare(App.nodeCollection.nodeList[i].aEvent.EventTime.Subtract(realTimeStart), maxRealTimeSpan) == -1) // Compare returns -1 if the first argument is less than the second
                     {
@@ -186,6 +171,7 @@ namespace SeeShells.UI.Pages
 
                         nodesCluster.Add(App.nodeCollection.nodeList[i]);
                         previousDate = App.nodeCollection.nodeList[i].aEvent.EventTime;
+                        realTimeStart = DateTimeRoundDown(previousDate, maxRealTimeSpan);
                         if (i == nodeListSize - 1) // If it's the last event of nodeList.
                         {
                             AddTimeline(nodesCluster);
@@ -205,23 +191,19 @@ namespace SeeShells.UI.Pages
             }
         }
 
-
         /// <summary>
         /// Creates a timeline with the given events and adds it to the UI.
         /// </summary>
         /// <param name="nodesCluster">list of events that belong in 1 timeline</param>
         private void AddTimeline(List<Node.Node> nodesCluster)
         {
-            long ticks = nodesCluster[0].aEvent.EventTime.Ticks / maxRealTimeSpan.Ticks;
-            DateTime beginDate = new DateTime(ticks * maxRealTimeSpan.Ticks);
-            //ticks = (nodesCluster[nodesCluster.Count - 1].aEvent.EventTime.Ticks + maxRealTimeSpan.Ticks - 1) / maxRealTimeSpan.Ticks;
-            //DateTime endDate = new DateTime(ticks * maxRealTimeSpan.Ticks);
+            DateTime beginDate = DateTimeRoundDown(nodesCluster[0].aEvent.EventTime, maxRealTimeSpan);
             DateTime endDate = beginDate.AddMinutes(1);
 
             TimelinePanel timelinePanel = new TimelinePanel
             {
                 UnitTimeSpan = new TimeSpan(0, 0, 0, 1),
-                UnitSize = 10,
+                UnitSize = App.nodeCollection.nodeList[0].dot.Width,
                 BeginDate = beginDate,
                 EndDate = endDate,
                 KeepOriginalOrderForOverlap = true
@@ -245,23 +227,50 @@ namespace SeeShells.UI.Pages
         private void AddTextBlockTimeStamp(DateTime beginDate, DateTime endDate)
         {
             TextBlock textBlock = new TextBlock();
-            textBlock.Text = beginDate.ToString();
+            textBlock.Text = beginDate.ToString() + " - " + endDate.ToString();
             textBlock.Height = 20;
-            textBlock.Width = endDate.Subtract(beginDate).TotalSeconds * 10;
+            textBlock.Width = endDate.Subtract(beginDate).TotalSeconds * App.nodeCollection.nodeList[0].dot.Width;
             textBlock.Background = Brushes.LightSteelBlue;
 
             TimeStamps.Children.Add(textBlock);
         }
 
         /// <summary>
-        /// This checks when the download button is hit, whether the HTML checkbox is checked or not and calls the creation of HtmlOutput.
+        /// Rounds down a DateTime to the nearest TimeSpan
+        /// </summary>
+        /// <param name="date">date to round down</param>
+        /// <param name="roundingFactor">TimeSpan to round down to</param>
+        /// <returns>a rounded down DateTime</returns>
+        private DateTime DateTimeRoundDown(DateTime date, TimeSpan roundingFactor)
+        {
+            long ticks = date.Ticks / roundingFactor.Ticks;
+            return new DateTime(ticks * roundingFactor.Ticks);
+        }
+
+        /// <summary>
+        /// This checks when the download button is hit, whether the HTML and/or the CSV checkbox is checked or not and calls the creation of HtmlOutput.
         /// </summary>
         private void download_Click(object sender, RoutedEventArgs e)
         {
             if (htmlCheckBox.IsChecked ?? false)
             {
-                System.Windows.MessageBox.Show("helps");
-                HtmlIO.OutputHtmlFile(App.nodeCollection.nodeList, "timeline.html");
+                SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+                saveFileDialog1.DefaultExt = ".html";
+                saveFileDialog1.Filter = "Html File (*.html)| *.html";
+                saveFileDialog1.AddExtension = true;
+                saveFileDialog1.ShowDialog();
+                string name = saveFileDialog1.FileName;
+                HtmlIO.OutputHtmlFile(App.nodeCollection.nodeList, name);
+            }
+            if (csvCheckBox.IsChecked ?? false)
+            {
+                SaveFileDialog saveFileDialog2 = new SaveFileDialog();
+                saveFileDialog2.DefaultExt = ".csv";
+                saveFileDialog2.Filter = "CSV File (*.csv)| *.csv";
+                saveFileDialog2.AddExtension = true;
+                saveFileDialog2.ShowDialog();
+                string name2 = saveFileDialog2.FileName;
+                CsvIO.OutputCSVFile(App.ShellItems, name2);
             }
         }
     }
