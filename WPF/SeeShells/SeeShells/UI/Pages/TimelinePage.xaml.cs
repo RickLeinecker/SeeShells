@@ -1,8 +1,10 @@
-﻿using SeeShells.IO;
+﻿using Microsoft.Win32;
+using SeeShells.IO;
 using SeeShells.UI.EventFilters;
 using SeeShells.UI.Node;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -21,8 +23,8 @@ namespace SeeShells.UI.Pages
     public partial class TimelinePage : Page
     {
         private const string EVENT_PARENT_IDENTIFER = "EventParent";
-        private Dictionary<string, string> eventTypeFilterList = new Dictionary<string, string>();
         private HashSet<string> eventTypeList = new HashSet<string>();
+        private HashSet<string> eventUserList = new HashSet<string>();
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -82,6 +84,7 @@ namespace SeeShells.UI.Pages
 
         }
 
+
         private void EventTypeFilter_DropDownOpened(object sender, EventArgs e)
         {
             CheckComboBox emitter = (CheckComboBox)sender;
@@ -95,6 +98,33 @@ namespace SeeShells.UI.Pages
             }
 
             emitter.ItemsSource = eventTypeList;
+        }
+
+        private void EventUserFilter_OnItemSelectionChanged(object sender, ItemSelectionChangedEventArgs e)
+        {
+            CheckComboBox emitter = (CheckComboBox)sender;
+
+            string[] items = emitter.SelectedItems.Cast<string>().ToArray();
+            UpdateFilter("EventUser", new EventUserFilter(items));
+        }
+
+        private void EventUserFilter_DropDownOpened(object sender, EventArgs e)
+        {
+            CheckComboBox emitter = (CheckComboBox)sender;
+            if (eventUserList.Count == 0)
+            {
+                //check if the owner property is on the node, then pull the user
+                foreach (Node.Node node in App.nodeCollection.nodeList)
+                {
+                    string userID;
+                    if (node.aEvent.Parent.GetAllProperties().TryGetValue("RegistryOwner", out userID))
+                    {
+                        eventUserList.Add(userID);
+                    }
+                }
+            }
+
+            emitter.ItemsSource = eventUserList;
         }
 
         private void EventParentTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -221,6 +251,7 @@ namespace SeeShells.UI.Pages
             }
         }
 
+
         /// <summary>
         /// Finds the earliest date from the list of events that is represented on the timeline.
         /// </summary>
@@ -290,7 +321,7 @@ namespace SeeShells.UI.Pages
                 }
             }
         }
-        
+
         /// <summary>
         /// Change the value of the time span text box based on the value change of the time span slider.
         /// </summary>
@@ -327,14 +358,29 @@ namespace SeeShells.UI.Pages
         }
 
         /// <summary>
-        /// This checks when the download button is hit, whether the HTML checkbox is checked or not and calls the creation of HtmlOutput.
+        /// This checks when the download button is hit, whether the HTML and/or the CSV checkbox is checked or not and calls the creation of HtmlOutput.
         /// </summary>
         private void download_Click(object sender, RoutedEventArgs e)
         {
-            if (htmlCheckBox.IsChecked ?? false)
+            if(htmlCheckBox.IsChecked ?? false)
             {
-                System.Windows.MessageBox.Show("helps");
-                HtmlIO.OutputHtmlFile(App.nodeCollection.nodeList, "timeline.html");
+                SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+                saveFileDialog1.DefaultExt = ".html";
+                saveFileDialog1.Filter = "Html File (*.html)| *.html";
+                saveFileDialog1.AddExtension = true;
+                saveFileDialog1.ShowDialog();
+                string name = saveFileDialog1.FileName;
+                HtmlIO.OutputHtmlFile(App.nodeCollection.nodeList, name);
+            }
+            if(csvCheckBox.IsChecked ?? false)
+            {
+                SaveFileDialog saveFileDialog2 = new SaveFileDialog();
+                saveFileDialog2.DefaultExt = ".csv";
+                saveFileDialog2.Filter = "CSV File (*.csv)| *.csv";
+                saveFileDialog2.AddExtension = true;
+                saveFileDialog2.ShowDialog();
+                string name2 = saveFileDialog2.FileName;
+                CsvIO.OutputCSVFile(App.ShellItems, name2);
             }
         }
 

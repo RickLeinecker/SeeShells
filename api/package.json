@@ -19,10 +19,15 @@
   },
   "homepage": "https://github.com/RickLeinecker/SeeShells#readme",
   "dependencies": {
+    "connect-flash": "^0.1.1",
     "connect-pg-simple": "^6.1.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
-    "pg": "^7.17.1"
+    "express-validator": "^6.4.0",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "pg": "^7.17.1",
+    "sanitize": "^2.1.0"
   }
 }

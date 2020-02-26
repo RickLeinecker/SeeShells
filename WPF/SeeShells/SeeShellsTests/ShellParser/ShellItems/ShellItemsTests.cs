@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SeeShells.ShellParser.Registry;
+using SeeShellsTests.UI.Mocks;
 
 namespace SeeShellsTests.ShellParser.ShellItems
 {
@@ -205,6 +207,23 @@ namespace SeeShellsTests.ShellParser.ShellItems
             printProperties(shell);
 
             //Test passes by throwing no Exceptions.
+        }
+
+        /// <summary>
+        /// Checks if values from a <see cref="RegistryKeyWrapper"/> can inject additional properties to a shellitem.
+        /// </summary>
+        [TestMethod()]
+        public void ShellItemRegistryDecoratorTest()
+        {
+            var shellItem = new MockShellItem("Test", 0x99);
+            var regKey = new RegistryKeyWrapper(null, "testUser", "testPath");
+
+            int existingPropCount = shellItem.GetAllProperties().Count;
+
+            //test injection of additional properties
+            var regShellItem = new RegistryShellItemDecorator(shellItem, regKey);
+
+            Assert.IsTrue(regShellItem.GetAllProperties().Count > existingPropCount);
         }
     }
 }

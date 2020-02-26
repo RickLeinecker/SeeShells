@@ -1,8 +1,9 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Win32;
 
-namespace SeeShells.ShellParser
+namespace SeeShells.ShellParser.Registry
 {
     /// <summary>
     /// This class is used to read the Registry on a live/running Windows Operating system.
@@ -10,6 +11,8 @@ namespace SeeShells.ShellParser
     /// </summary>
     public class OnlineRegistryReader : IRegistryReader
     {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         IConfigParser Parser { get; }
 
         public OnlineRegistryReader(IConfigParser parser)
@@ -34,7 +37,7 @@ namespace SeeShells.ShellParser
             //iterate over each user's registry
             foreach (RegistryKey userStore in userStores)
             {
-                Console.WriteLine("NEW USER SID: " + userStore.Name);
+                logger.Debug("NEW USER SID: " + userStore.Name);
 
                 foreach (string location in Parser.GetRegistryLocations())
                 {
@@ -43,7 +46,10 @@ namespace SeeShells.ShellParser
                         retList.Add(new RegistryKeyWrapper(keyValue));
                     }
                 }
-                //todo: this is the ideal spot for labeling information by each user if needed.
+                foreach (RegistryKeyWrapper keyWrapper in retList)
+                {
+                    keyWrapper.RegistryUser = userStore.Name.Split('\\').Last(); //only pull the SID, dont include HKEY_USERS\
+                }
                 //possible separation of RegistryKeyWrappers by user is also possible above.
             }
 
@@ -70,7 +76,7 @@ namespace SeeShells.ShellParser
             string[] subKeys = rk.GetSubKeyNames();
             string[] values = rk.GetValueNames();
 
-            Console.WriteLine("**" + subKey);
+            logger.Trace("**" + subKey);
 
             foreach (string valueName in subKeys)
             {
@@ -80,7 +86,7 @@ namespace SeeShells.ShellParser
                 }
 
                 string sk = getSubkeyString(subKey, valueName);
-                Console.WriteLine("{0}", sk);
+                logger.Trace("{0}", sk);
                 RegistryKey rkNext;
                 try
                 {
@@ -88,7 +94,7 @@ namespace SeeShells.ShellParser
                 }
                 catch (System.Security.SecurityException ex)
                 {
-                    Console.WriteLine("ACCESS DENIED: " + ex.Message);
+                    logger.Warn("ACCESS DENIED: " + ex.Message);
                     continue;
                 }
                 int slot = 0;
@@ -124,11 +130,11 @@ namespace SeeShells.ShellParser
                     }
                     catch (OverrunBufferException ex)
                     {
-                        Console.WriteLine("OverrunBufferException: " + valueName);
+                        logger.Warn("OverrunBufferException: " + valueName);
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(valueName);
+                        logger.Warn(valueName + '\n' + ex);
                     }
                 }
 

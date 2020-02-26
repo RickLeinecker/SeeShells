@@ -284,5 +284,54 @@ namespace SeeShellsTests.UI.Tests
             //TODO Find hard enough regex that actually takes time no matter the PC?
         }
 
+        [TestMethod]
+        public void FilterUserTest()
+        {
+            var user1 = "User1";
+            var user2 = "User2";
+
+            var parent1 = new MockShellItem();
+            parent1.AddProperty("RegistryOwner", user1);
+
+            var parent2 = new MockShellItem();
+            parent2.AddProperty("RegistryOwner", user2);
+
+            var eventList = new List<MockEvent>()         
+            {
+                new MockEvent("item1", DateTime.Now, parent1, "Access"),
+                new MockEvent("item2", DateTime.MaxValue, parent1, "Create"),
+                new MockEvent("item3", DateTime.MinValue, parent2, "Modified"),
+            };
+
+            var testList = new List<Node>()
+            {
+                new MockNode(eventList.ElementAt(0)),
+                new MockNode(eventList.ElementAt(1)),
+                new MockNode(eventList.ElementAt(2))
+            };
+            var startListSize = testList.Count;
+
+
+            //test same name
+            resetVisibility(testList);
+            new EventUserFilter(user1).Apply(ref testList);
+            Assert.AreEqual(2, countVisible(testList));
+            Assert.AreEqual(startListSize, testList.Count);
+
+            //test no name
+            resetVisibility(testList);
+            new EventUserFilter().Apply(ref testList);
+            Assert.AreEqual(0, countVisible(testList));
+            Assert.AreEqual(startListSize, testList.Count);
+
+            //test multiName
+            resetVisibility(testList);
+            new EventUserFilter(user1, user2).Apply(ref testList);
+            Assert.AreEqual(3, countVisible(testList));
+            Assert.AreEqual(startListSize, testList.Count);
+
+
+        }
+
     }
 }

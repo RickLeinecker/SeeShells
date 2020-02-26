@@ -1,4 +1,4 @@
-var JSONhelper = require('./JSONhelper.js');
+var JSONhelper = require('./helpers/JSONhelper.js');
 
 require('dotenv').config();
 const { Pool, Client } = require('pg'),
@@ -12,9 +12,9 @@ const pool = new Pool({
 pool.connect();
 
 
-function userExists(username) {
+function userExistsAndIsApproved(username) {
     return new Promise(function (resolve, reject) {
-        pool.query('SELECT * FROM logininfo WHERE username=$1;', [username], (err, res) => {
+        pool.query('SELECT * FROM logininfo WHERE username=$1 AND approved=TRUE;', [username], (err, res) => {
             if (err) {
                 reject(err);
                 return;
@@ -23,6 +23,8 @@ function userExists(username) {
             if (res.rowCount > 0) {
                 resolve({
                     result: 1,
+                    id: res.rows[0].id,
+                    username: res.rows[0].username,
                     password: res.rows[0].password,
                     salt: res.rows[0].salt
                 });
@@ -30,6 +32,32 @@ function userExists(username) {
             }
 
             resolve({ result: 0 });
+        });
+    });
+}
+
+function getUserByID(userID) {
+    return new Promise(function (resolve, reject) {
+        pool.query('SELECT * FROM logininfo WHERE id=$1;', [userID], (err, res) => {
+            if (err) {
+                reject({});
+                return;
+            }
+
+            resolve(res.rows);
+        });
+    });
+}
+
+function getUnapprovedUsers() {
+    return new Promise(function (resolve, reject) {
+        pool.query('SELECT * FROM logininfo WHERE approved=FALSE;', (err, res) => {
+            if (err) {
+                reject({});
+                return;
+            }
+
+            resolve(res.rows);
         });
     });
 }
@@ -91,10 +119,34 @@ function addKeys(keysArray) {
 }
 
 function registerUser(username, password, salt) {
-    pool.query('INSERT INTO logininfo(username, password, salt) values($1, $2, $3);', [username, password, salt], (err, res) => {
+    pool.query('INSERT INTO logininfo(username, password, salt, approved) values($1, $2, $3, FALSE);', [username, password, salt], (err, res) => {
         if (err) {
             throw err;
         }
+    });
+}
+
+function approveUser(userID) {
+    return new Promise(function (resolve, reject) {
+        pool.query('UPDATE logininfo SET approved=TRUE WHERE id=$1;', [userID], (err, res) => {
+            if (err) {
+                reject(err);
+            }
+
+            resolve({ "message": "success" });
+        });
+    });
+}
+
+function rejectUser(userID) {
+    return new Promise(function (resolve, reject) {
+        pool.query('DELETE FROM logininfo WHERE id=$1;', [userID], (err, res) => {
+            if (err) {
+                reject(err);
+            }
+
+            resolve({ "message": "success" });
+        });
     });
 }
 
@@ -194,19 +246,70 @@ function GUIDDoesNotExist(guid) {
     });
 }
 
+function addScript(identifier, encodedscript) {
+    return new Promise(function (resolve, reject) {
+        pool.query('INSERT INTO scripts(typeidentifier, script) values($1, $2);', [identifier, encodedscript], (err, res) => {
+            if (err) {
+                reject(err);
+            }
+
+            resolve({ "message": "Success" });
+        });
+    });
+}
+
+function scriptForIdentifierDoesNotExist(identifier) {
+    return new Promise(function (resolve, reject) {
+        pool.query('SELECT id FROM scripts WHERE typeidentifier=$1;', [identifier], (err, res) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+
+            if (res.rowCount > 0) {
+                reject({
+                    result: res.rowCount
+                });
+                return;
+            }
+
+            resolve({ result: "No script exists for this shell item identifier." });
+        });
+    });
+}
+
+// this will return the scripts, but they will be base64 encoded
+// the website will need to decode it
+function getScripts(callback) {
+    pool.query('SELECT typeidentifier, script FROM scripts;', (err, res) => {
+        if (err) {
+            callback({});
+        }
+
+        callback(res.rows);
+    });
+}
+
 module.exports = {
     pool,
     session,
     pgSession,
-    userExists,
+    userExistsAndIsApproved,
+    getUserByID,
+    getUnapprovedUsers,
     keysIDExists,
     addKeys,
     registerUser,
+    approveUser,
+    rejectUser,
     addOS,
     getOSandRegistryLocations,
     getRegistryLocations,
     getGUIDs,
     addGUID,
-    GUIDDoesNotExist
+    GUIDDoesNotExist,
+    addScript,
+    scriptForIdentifierDoesNotExist,
+    getScripts
 }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using SeeShells.ShellParser.Scripting;
 using System.Collections.Generic;
 
 namespace SeeShells.ShellParser.ShellItems
@@ -24,13 +25,31 @@ namespace SeeShells.ShellParser.ShellItems
             String postfix = unpack_byte(off + 2).ToString("X2");
 
             Type type = Type.GetType("SeeShells.ShellParser.ShellItems.ShellItem0x" + postfix);
-            if(type == null)
-            {
+            if (type == null)
+            { 
+                // if we have a script for the ShellItem, use it to get the information needed
+                int identifier = unpack_byte(off + 2);
+
+                if (ScriptHandler.HasScriptForShellItem(identifier))
+                {
+                    try
+                    {
+                        return ScriptHandler.ParseShellItem(buf, identifier);
+                    }
+                    catch (ArgumentNullException)
+                    {
+                        logger.Error("The identifier being passed to the Lua scripts is null.");
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error("Failed to parse shell item through script: " + ex.Message);
+                    }
+
+                }
+
                 // Getting here means that the ShellItem is unidentified
                 logger.Info("Could not identify ShellItem 0x" + postfix);
                 return new ShellItem(buf);
-
-                // TODO Embedded Scripting
             }
 
             try

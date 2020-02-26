@@ -15,6 +15,7 @@ using SeeShells.ShellParser.ShellItems;
 using SeeShells.ShellParser;
 using SeeShells.UI.Node;
 using System.Diagnostics;
+using SeeShells.ShellParser.Registry;
 
 namespace SeeShells.UI.Pages
 {
@@ -134,7 +135,7 @@ namespace SeeShells.UI.Pages
             }
         }
 
-        private async void GUIUpdateButton_Click(object sender, RoutedEventArgs e)
+        private async void GUIDUpdateButton_Click(object sender, RoutedEventArgs e)
         {
             string location = locations.GUIDFileLocation;
             if (!ContinueAfterSendingOverwriteWarning(location))
@@ -171,9 +172,32 @@ namespace SeeShells.UI.Pages
             }
         }
 
-        private void ScriptUpdateButton_Click(object sender, RoutedEventArgs e)
+        private async void ScriptUpdateButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Scripting is still a work in progress.", "Check back later.", MessageBoxButton.OK, MessageBoxImage.Information);
+            string location = locations.ScriptFileLocation;
+            if (!ContinueAfterSendingOverwriteWarning(location))
+                return;
+
+            string message = "File saved at\n" + location;
+            string caption = "Success";
+            MessageBoxImage image = MessageBoxImage.Information;
+
+            try
+            {
+                Mouse.OverrideCursor = Cursors.Wait;
+
+                await Task.Run(() => API.GetScripts(location));
+
+            }
+            catch (APIException)
+            {
+                message = "Failed to save the Scripts configuration file.";
+                caption = "Fail";
+                image = MessageBoxImage.Error;
+            }
+
+            Mouse.OverrideCursor = Cursors.Arrow;
+            MessageBox.Show(message, caption, MessageBoxButton.OK, image);
         }
 
         private bool ContinueAfterSendingOverwriteWarning(string path)
@@ -241,7 +265,7 @@ namespace SeeShells.UI.Pages
             Mouse.OverrideCursor = Cursors.Wait;
             //TODO spinner over screen to show operation in progress?
             ParseButton.Content = "Parsing...";
-            ParseButton.IsEnabled = false;
+            EnableUIElements(false);
 
             //begin the parsing process
             Stopwatch stopwatch = new Stopwatch();
@@ -251,9 +275,10 @@ namespace SeeShells.UI.Pages
             App.nodeCollection.nodeList.AddRange(NodeParser.GetNodes(events));
             stopwatch.Stop();
             logger.Info("Parsing Complete. ShellItems Parsed: " + App.ShellItems.Count + ". Time Elapsed: " + stopwatch.ElapsedMilliseconds / 1000 + " seconds");
+            
             //Restore UI
             ParseButton.Content = "Parse";
-            ParseButton.IsEnabled = true;
+            EnableUIElements(true);
 
             //Go to Timeline            
             Mouse.OverrideCursor = Cursors.Arrow;
@@ -270,7 +295,12 @@ namespace SeeShells.UI.Pages
             { 
 
                 List<IShellItem> retList = new List<IShellItem>();
-                ConfigParser parser = new ConfigParser(locations.GUIDFileLocation, locations.OSFileLocation);
+
+                ConfigParser parser;
+                if (File.Exists(locations.ScriptFileLocation))
+                    parser = new ConfigParser(locations.GUIDFileLocation, locations.OSFileLocation, locations.ScriptFileLocation);
+                else
+                    parser = new ConfigParser(locations.GUIDFileLocation, locations.OSFileLocation);
 
                 //perform offline shellbag parsing
                 if (useRegistryHiveFiles)
@@ -367,6 +397,21 @@ namespace SeeShells.UI.Pages
         {
             logger.Warn(message);
             MessageBox.Show(message, messageBoxTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        private void EnableUIElements(bool value)
+        {
+            ParseButton.IsEnabled = value;
+            OSBrowseButton.IsEnabled = value;
+            OSUpdateButton.IsEnabled = value;
+            GUIDBrowseButton.IsEnabled = value;
+            GUIDUpdateButton.IsEnabled = value;
+            ScriptBrowseButton.IsEnabled = value;
+            ScriptUpdateButton.IsEnabled = value;
+            OfflineCheck.IsEnabled = value;
+            OfflineBrowseButton.IsEnabled = value;
+            OSVersion.IsEnabled = value;
+            HelpButton.IsEnabled = value;
         }
     }
 }

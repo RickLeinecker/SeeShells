@@ -83,6 +83,12 @@
                                             <xctk:CheckComboBox x:Name="EventTypeFilter" ItemSelectionChanged="EventTypeFilter_OnItemSelectionChanged"  Opened="EventTypeFilter_DropDownOpened" Margin="5,0"/>
                                         </StackPanel>
                                     </Border>
+                                    <Border>
+                                        <StackPanel>
+                                            <Label Content="User Filter"/>
+                                            <xctk:CheckComboBox x:Name="EventUserFilter" ItemSelectionChanged="EventUserFilter_OnItemSelectionChanged"  Opened="EventUserFilter_DropDownOpened" Margin="5,0"/>
+                                        </StackPanel>
+                                    </Border>
 
                                 </StackPanel>
                             </Viewbox>
