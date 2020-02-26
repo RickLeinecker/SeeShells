@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Forms;
+using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace SeeShells.UI.Node
@@ -20,10 +23,11 @@ namespace SeeShells.UI.Node
             
             foreach(IEvent aEvent in eventList)
             {
-                Ellipse dot = new Ellipse();
+                TextBlock block = new TextBlock();
+                SetBlockProperties(block, aEvent);
+
+                InformedDot dot = new InformedDot(block);
                 SetDotProperties(dot);
-                Rectangle block = new Rectangle();
-                SetBlockProperties(block);
 
                 Node node = new Node(aEvent, dot, block);
                 nodeList.Add(node);
@@ -36,22 +40,28 @@ namespace SeeShells.UI.Node
         /// Sets up initial properties for a graphical dot object
         /// </summary>
         /// <param name="dot">graphical object that represents events on a timeline</param>
-        private static void SetDotProperties(Ellipse dot)
+        private static void SetDotProperties(InformedDot dot)
         {
-            dot.Stroke = System.Windows.Media.Brushes.Black;
-            dot.Fill = System.Windows.Media.Brushes.DarkBlue;
-            dot.Width = 10;
             dot.Height = 10;
+            dot.Width = 10;
+            dot.Click += Pages.TimelinePage.Dot_Press;
         }
 
         /// <summary>
         /// Sets up initial properties for a graphical block object
         /// </summary>
         /// <param name="block">graphical object that contains event details on a timeline</param>
-        private static void SetBlockProperties(Rectangle block)
+        private static void SetBlockProperties(TextBlock block, IEvent aEvent)
         {
-            /// TODO:
-            /// Set Properties.
+            foreach (KeyValuePair<string, string> property in aEvent.Parent.GetAllProperties())
+            {
+                block.Text += property.Key + "," + property.Value;
+            }
+            block.Foreground = Brushes.White;
+            block.Background = Brushes.Turquoise; // #5ec0ca
+            block.Height = 40;
+            block.Width = 100;
+            block.MouseDown += Pages.TimelinePage.Block_Press;
         }
     }
 }

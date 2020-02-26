@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Shapes;
 
 namespace SeeShells.UI.Node
@@ -10,8 +11,8 @@ namespace SeeShells.UI.Node
     public class Node
     {
         public IEvent aEvent;
-        public Ellipse dot;
-        Rectangle block;
+        public InformedDot dot;
+        TextBlock block;
 
         /// <summary>
         /// The Node is an object that stores event data and has graphical objects to be displayed on a timeline.
@@ -19,7 +20,7 @@ namespace SeeShells.UI.Node
         /// <param name="aEvent">object that stores event/shellbag data</param>
         /// <param name="dot">object to represent an event on a timeline</param>
         /// <param name="block">object to display event details on a timeline</param>
-        public Node(IEvent aEvent, Ellipse dot, Rectangle block)
+        public Node(IEvent aEvent, InformedDot dot, TextBlock block)
         {
             this.aEvent = aEvent;
             this.dot = dot;

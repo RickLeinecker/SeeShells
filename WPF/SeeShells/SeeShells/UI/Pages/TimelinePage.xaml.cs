@@ -7,6 +7,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Shapes;
 using Xceed.Wpf.Toolkit;
 using Xceed.Wpf.Toolkit.Primitives;
 
@@ -29,6 +32,10 @@ namespace SeeShells.UI.Pages
         // a text change event.
         private bool unitTimeSpanSliderCanWriteToTextBox = true;
         private TimeSpan unitTimeSpan = new TimeSpan(0, 12, 0, 0);
+
+        private Point mouseLocation;
+        private Point pointOrig;
+        private TranslateTransform transPoint;
 
         public TimelinePage()
         {
@@ -197,7 +204,14 @@ namespace SeeShells.UI.Pages
                 foreach (Node.Node node in App.nodeCollection.nodeList)
                 {
                     TimelinePanel.SetDate(node.dot, node.aEvent.EventTime);
+                    Ellipse ellipse = new Ellipse();
+                    ellipse.Stroke = Brushes.Black;
+                    ellipse.Fill = Brushes.DarkBlue;
+                    ellipse.Width = 10;
+                    ellipse.Height = 10;
+                    node.dot.Content = ellipse;
                     Nodeline.Children.Add(node.dot);
+                    Blocks.Children.Add(node.dot.block);
                 }
             }
             catch (System.NullReferenceException ex)
@@ -322,6 +336,16 @@ namespace SeeShells.UI.Pages
                 System.Windows.MessageBox.Show("helps");
                 HtmlIO.OutputHtmlFile(App.nodeCollection.nodeList, "timeline.html");
             }
+        }
+
+        public static void Dot_Press(object sender, EventArgs e)
+        {
+            ((InformedDot)sender).toggle_block();
+        }
+
+        public static void Block_Press(object sender, RoutedEventArgs e)
+        {
+            System.Windows.MessageBox.Show("pressing");
         }
     }
 }
