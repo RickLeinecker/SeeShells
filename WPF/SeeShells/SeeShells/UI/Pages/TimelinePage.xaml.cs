@@ -151,17 +151,15 @@ namespace SeeShells.UI.Pages
             /// This will be removed when all aplication components are connected
             //List<IEvent> eventList = new List<IEvent>();
             //DateTime time = new DateTime(2007, 1, 1);
-            //for (int i = 0; i < 3; i++)
+            //for (int i = 0; i < 1; i++)
             //{
             //    eventList.Add(new Event("item1", time, null, "Access"));
             //    //time = time.AddHours(12);
             //    //time = time.AddMinutes(4);
             //    time = time.AddSeconds(1);
             //}
-            //time = time.AddMinutes(10);
-            //eventList.Add(new Event("item1", time, null, "Access"));
-            //time = time.AddMinutes(2);
-            //eventList.Add(new Event("item1", time, null, "Access"));
+            //eventList.Add(new Event("item1", new DateTime(2007, 1, 1, 0, 0, 59), null, "Access"));
+            //eventList.Add(new Event("item1", new DateTime(2007, 1, 1, 0, 1, 0), null, "Access"));
             //App.nodeCollection.nodeList = NodeParser.GetNodes(eventList);
 
             try
@@ -177,7 +175,7 @@ namespace SeeShells.UI.Pages
                     DateTime realTimeStart = new DateTime(ticks * maxRealTimeSpan.Ticks); // This is the time of the first event rounded down to the nearest maxRealTimeSpan
 
                     // If the event belongs to the timeline
-                    if (App.nodeCollection.nodeList[i].aEvent.EventTime.Subtract(realTimeStart) < maxRealTimeSpan)
+                    if (TimeSpan.Compare(App.nodeCollection.nodeList[i].aEvent.EventTime.Subtract(realTimeStart), maxRealTimeSpan) == -1) // Compare returns -1 if the first argument is less than the second
                     {
                         nodesCluster.Add(App.nodeCollection.nodeList[i]);
                     }
@@ -216,8 +214,9 @@ namespace SeeShells.UI.Pages
         {
             long ticks = nodesCluster[0].aEvent.EventTime.Ticks / maxRealTimeSpan.Ticks;
             DateTime beginDate = new DateTime(ticks * maxRealTimeSpan.Ticks);
-            ticks = (nodesCluster[nodesCluster.Count - 1].aEvent.EventTime.Ticks + maxRealTimeSpan.Ticks - 1) / maxRealTimeSpan.Ticks;
-            DateTime endDate = new DateTime(ticks * maxRealTimeSpan.Ticks);
+            //ticks = (nodesCluster[nodesCluster.Count - 1].aEvent.EventTime.Ticks + maxRealTimeSpan.Ticks - 1) / maxRealTimeSpan.Ticks;
+            //DateTime endDate = new DateTime(ticks * maxRealTimeSpan.Ticks);
+            DateTime endDate = beginDate.AddMinutes(1);
 
             TimelinePanel timelinePanel = new TimelinePanel
             {
