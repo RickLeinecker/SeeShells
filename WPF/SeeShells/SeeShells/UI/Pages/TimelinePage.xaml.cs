@@ -1,14 +1,12 @@
 ﻿using Microsoft.Win32;
 using SeeShells.IO;
 using SeeShells.UI.EventFilters;
-using SeeShells.UI.Node;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using Xceed.Wpf.Toolkit;
 using Xceed.Wpf.Toolkit.Primitives;
 
@@ -25,12 +23,7 @@ namespace SeeShells.UI.Pages
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        // This flag is used in order to prevent the time span slider from writing to the time span slider text box after the text box has been written to.
-        // Even though flags are not the best practice, it is necessary since there is no way to write to a text box without triggering a text change event.
-        // A potential alternative is to create a custom silent text box class that extends text box and allows for changing of text without triggering a
-        // a text change event.
-        private bool unitTimeSpanSliderCanWriteToTextBox = true;
-        private TimeSpan unitTimeSpan = new TimeSpan(0, 12, 0, 0);
+        private TimeSpan maxRealTimeSpan = new TimeSpan(0, 0, 1, 0); // Max time in one timeline (1 min).
 
         public TimelinePage()
         {
@@ -147,87 +140,48 @@ namespace SeeShells.UI.Pages
         }
 
         /// <summary>
-        /// When the time span slider is moved, it sets a new UnitTimeSpan for the timeline.
-        /// </summary>
-        /// <param name="sender">Slider</param>
-        /// <param name="e">event args</param>
-        private void TimeSpanSliderControl_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            var slider = sender as Slider;
-            this.unitTimeSpan = TimeSpan.FromSeconds(slider.Value);
-            if(unitTimeSpanSliderCanWriteToTextBox)
-            {
-                SetTimeSpanSliderControlTextBoxValue(slider.Value);
-            }
-            unitTimeSpanSliderCanWriteToTextBox = true;
-            if(Nodeline != null)
-            {
-                Nodeline.UnitTimeSpan = this.unitTimeSpan;
-            }
-        }
-
-        /// <summary>
-        /// When the time span slider text box text is changed, it moves the slider control to desired position, which in turn sets a new UnitTimeSpan for the timeline.
-        /// </summary>
-        /// <param name="sender">TextBox</param>
-        /// <param name="e">event args</param>
-        private void TimeSpanSliderControlTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            unitTimeSpanSliderCanWriteToTextBox = false;
-            UnpdateTimeSpanSliderControl();
-        }
-
-        /// <summary>
-        /// When an item from the time span slider combo box is selected, it moves the slider control to desired position, which in turn sets a new UnitTimeSpan for the timeline.
-        /// </summary>
-        /// <param name="sender">ComboBox</param>
-        /// <param name="e">event args</param>
-        private void TimeSpanSliderControlComboBox_DropDownClosed(object sender, EventArgs e)
-        {
-            unitTimeSpanSliderCanWriteToTextBox = false;
-            UnpdateTimeSpanSliderControl();
-        }
-
-        /// <summary>
-        /// When an item from the time span slider combo box is selected (with arrow keys), it moves the slider control to desired position, which in turn rebuilds the timeline.
-        /// </summary>
-        /// <param name="sender">ComboBox</param>
-        /// <param name="e">event args</param>
-        private void TimeSpanSliderControlComboBox_KeyUp(object sender, EventArgs e)
-        {
-            unitTimeSpanSliderCanWriteToTextBox = false;
-            UnpdateTimeSpanSliderControl();
-        }
-
-        /// <summary>
-        /// Builds a timeline dynamically.
+        /// Builds a timeline dynamically. Creates one timeline for each cluster of events.
         /// </summary>
         public void BuildTimeline()
         {
-            /// TO BE REMOVED
-            /// Uncomment this to see a timeline draw (it builds the App.nodeCollection.nodeList)
-            /// This will be removed when all aplication components are connected
-            //List<IEvent> eventList = new List<IEvent>();
-            //DateTime time = new DateTime(2007, 1, 1);
-            //for (int i = 0; i < 100; i++)
-            //{
-            //    eventList.Add(new Event("item1", time, null, "Access"));
-            //    time = time.AddHours(12);
-            //}
-            //App.nodeCollection.nodeList = NodeParser.GetNodes(eventList);
-
             try
             {
-                Nodeline.UnitSize = 10; // Default size of a dot
-                Nodeline.UnitTimeSpan = this.unitTimeSpan;
-                Nodeline.BeginDate = GetBeginDate();
-                Nodeline.EndDate = GetEndDate() + this.unitTimeSpan; // EndDate should be one UnitTimeSpan more than the max value from the data to display properly
-                Nodeline.Children.Clear();
-
-                foreach (Node.Node node in App.nodeCollection.nodeList)
+                if(App.nodeCollection.nodeList.Count == 0)
                 {
-                    TimelinePanel.SetDate(node.dot, node.aEvent.EventTime);
-                    Nodeline.Children.Add(node.dot);
+                    logger.Info("No nodes to draw on the timeline.");
+                    return;
+                }
+
+                List<Node.Node> nodesCluster = new List<Node.Node>(); // Holds events for one timeline at a time.
+                nodesCluster.Add(App.nodeCollection.nodeList[0]);
+                DateTime previousDate = App.nodeCollection.nodeList[0].aEvent.EventTime;
+                DateTime realTimeStart = DateTimeRoundDown(previousDate, maxRealTimeSpan);
+                int nodeListSize = App.nodeCollection.nodeList.Count;
+                for (int i = 1; i < nodeListSize; i++)
+                {
+                    // If the event belongs to the timeline
+                    if (TimeSpan.Compare(App.nodeCollection.nodeList[i].aEvent.EventTime.Subtract(realTimeStart), maxRealTimeSpan) == -1) // Compare returns -1 if the first argument is less than the second
+                    {
+                        nodesCluster.Add(App.nodeCollection.nodeList[i]);
+                    }
+                    else
+                    {
+                        AddTimeline(nodesCluster);
+                        nodesCluster.Clear();
+
+                        nodesCluster.Add(App.nodeCollection.nodeList[i]);
+                        previousDate = App.nodeCollection.nodeList[i].aEvent.EventTime;
+                        realTimeStart = DateTimeRoundDown(previousDate, maxRealTimeSpan);
+                        if (i == nodeListSize - 1) // If it's the last event of nodeList.
+                        {
+                            AddTimeline(nodesCluster);
+                            nodesCluster.Clear();
+                        }
+                    }
+                }
+                if (nodesCluster.Count != 0) // If all events belong to the same timeline.
+                {
+                    AddTimeline(nodesCluster);
                 }
             }
             catch (System.NullReferenceException ex)
@@ -237,110 +191,60 @@ namespace SeeShells.UI.Pages
             }
         }
 
-
         /// <summary>
-        /// Finds the earliest date from the list of events that is represented on the timeline.
+        /// Creates a timeline with the given events and adds it to the UI.
         /// </summary>
-        /// <returns>the earliest date</returns>
-        private DateTime GetBeginDate()
+        /// <param name="nodesCluster">list of events that belong in 1 timeline</param>
+        private void AddTimeline(List<Node.Node> nodesCluster)
         {
-            DateTime minDate = DateTime.MaxValue;
-            foreach (Node.Node node in App.nodeCollection.nodeList)
+            DateTime beginDate = DateTimeRoundDown(nodesCluster[0].aEvent.EventTime, maxRealTimeSpan);
+            DateTime endDate = beginDate.AddMinutes(1);
+
+            TimelinePanel timelinePanel = new TimelinePanel
             {
-                if (minDate > node.aEvent.EventTime)
-                {
-                    minDate = node.aEvent.EventTime;
-                }
+                UnitTimeSpan = new TimeSpan(0, 0, 0, 1),
+                UnitSize = App.nodeCollection.nodeList[0].dot.Width,
+                BeginDate = beginDate,
+                EndDate = endDate,
+                KeepOriginalOrderForOverlap = true
+            };
+
+            foreach (Node.Node node in nodesCluster)
+            {
+                TimelinePanel.SetDate(node.dot, node.aEvent.EventTime);
+                timelinePanel.Children.Add(node.dot);
             }
-            return minDate;
+
+            Timelines.Children.Add(timelinePanel);
+            AddTextBlockTimeStamp(beginDate, endDate);
         }
 
         /// <summary>
-        /// Finds the latest date from the list of events that is represented on the timeline.
+        /// Adds a timestamp for timeline.
         /// </summary>
-        /// <returns>the latest date</returns>
-        private DateTime GetEndDate()
+        /// <param name="beginDate">the begin date of the time interval</param>
+        /// <param name="endDate">the end date of the time interval</param>
+        private void AddTextBlockTimeStamp(DateTime beginDate, DateTime endDate)
         {
-            DateTime maxDate = DateTime.MinValue;
-            foreach (Node.Node node in App.nodeCollection.nodeList)
-            {
-                if (maxDate < node.aEvent.EventTime)
-                {
-                    maxDate = node.aEvent.EventTime;
-                }
-            }
-            return maxDate;
+            TextBlock textBlock = new TextBlock();
+            textBlock.Text = beginDate.ToString() + " - " + endDate.ToString();
+            textBlock.Height = 20;
+            textBlock.Width = endDate.Subtract(beginDate).TotalSeconds * App.nodeCollection.nodeList[0].dot.Width;
+            textBlock.Background = Brushes.LightSteelBlue;
+
+            TimeStamps.Children.Add(textBlock);
         }
 
         /// <summary>
-        /// Move the time span slider control based on the value of the text box and the unit of time from the combo box.
+        /// Rounds down a DateTime to the nearest TimeSpan
         /// </summary>
-        private void UnpdateTimeSpanSliderControl()
+        /// <param name="date">date to round down</param>
+        /// <param name="roundingFactor">TimeSpan to round down to</param>
+        /// <returns>a rounded down DateTime</returns>
+        private DateTime DateTimeRoundDown(DateTime date, TimeSpan roundingFactor)
         {
-            if (double.TryParse(TimeSpanSliderControlTextBox.Text, out double num))
-            {
-                string unitOfTime = TimeSpanSliderControlComboBox.Text;
-
-                if (unitOfTime.Equals("Years"))
-                {
-                    double AmountOfSecondsInAYear = 31536000.0;
-                    TimeSpanSliderControl.Value = num * AmountOfSecondsInAYear;
-                }
-                else if (unitOfTime.Equals("Days"))
-                {
-                    double AmountOfSecondsInADay = 86400.0;
-                    TimeSpanSliderControl.Value = num * AmountOfSecondsInADay;
-                }
-                else if (unitOfTime.Equals("Hours"))
-                {
-                    double AmountOfSecondsInAnHour = 3600.0;
-                    TimeSpanSliderControl.Value = num * AmountOfSecondsInAnHour;
-                }
-                else if (unitOfTime.Equals("Minutes"))
-                {
-                    double AmountOfSecondsInAMinute = 60.0;
-                    TimeSpanSliderControl.Value = num * AmountOfSecondsInAMinute;
-                }
-                else if (unitOfTime.Equals("Seconds"))
-                {
-                    TimeSpanSliderControl.Value = num;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Change the value of the time span text box based on the value change of the time span slider.
-        /// </summary>
-        /// <param name="sliderValue">value of the time span slider</param>
-        private void SetTimeSpanSliderControlTextBoxValue(double sliderValue)
-        {
-            string unitOfTime = TimeSpanSliderControlComboBox.Text;
-
-            if (unitOfTime.Equals("Years"))
-            {
-                decimal AmountOfSecondsInAYear = (decimal)31536000.0;
-                TimeSpanSliderControlTextBox.Text = String.Format("{0:0.00}", ((decimal)sliderValue / AmountOfSecondsInAYear));
-            }
-            else if (unitOfTime.Equals("Days"))
-            {
-                decimal AmountOfSecondsInADay = (decimal)86400.0;
-                TimeSpanSliderControlTextBox.Text = String.Format("{0:0.00}", ((decimal)sliderValue / AmountOfSecondsInADay));
-            }
-            else if (unitOfTime.Equals("Hours"))
-            {
-                double AmountOfSecondsInAnHour = 3600.0;
-                TimeSpanSliderControlTextBox.Text = String.Format("{0:0.00}", (sliderValue / AmountOfSecondsInAnHour));
-            }
-            else if (unitOfTime.Equals("Minutes"))
-            {
-                double AmountOfSecondsInAMinute = 60.0;
-                TimeSpanSliderControlTextBox.Text = String.Format("{0:0.00}", (sliderValue / AmountOfSecondsInAMinute));
-
-            }
-            else if (unitOfTime.Equals("Seconds"))
-            {
-                TimeSpanSliderControlTextBox.Text = String.Format("{0:0.00}", sliderValue);
-            }
+            long ticks = date.Ticks / roundingFactor.Ticks;
+            return new DateTime(ticks * roundingFactor.Ticks);
         }
 
         /// <summary>
@@ -348,7 +252,7 @@ namespace SeeShells.UI.Pages
         /// </summary>
         private void download_Click(object sender, RoutedEventArgs e)
         {
-            if(htmlCheckBox.IsChecked ?? false)
+            if (htmlCheckBox.IsChecked ?? false)
             {
                 SaveFileDialog saveFileDialog1 = new SaveFileDialog();
                 saveFileDialog1.DefaultExt = ".html";
@@ -358,7 +262,7 @@ namespace SeeShells.UI.Pages
                 string name = saveFileDialog1.FileName;
                 HtmlIO.OutputHtmlFile(App.nodeCollection.nodeList, name);
             }
-            if(csvCheckBox.IsChecked ?? false)
+            if (csvCheckBox.IsChecked ?? false)
             {
                 SaveFileDialog saveFileDialog2 = new SaveFileDialog();
                 saveFileDialog2.DefaultExt = ".csv";
