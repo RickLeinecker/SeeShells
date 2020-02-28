@@ -8,5 +8,7 @@ namespace SeeShells.ShellParser
     {
         List<string> GetRegistryLocations();
 
+        List<string> GetUsernameLocations();
+
     }
 }

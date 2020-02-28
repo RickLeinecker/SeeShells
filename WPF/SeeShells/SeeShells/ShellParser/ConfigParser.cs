@@ -82,7 +82,16 @@ namespace SeeShells.ShellParser
 
             return locations;
         }
-        
+
+        public List<string> GetUsernameLocations()
+        {
+            //todo retrieve from OSRegistryFile instead of hardcoded path
+            List<string> list = new List<string>();
+            // found username retrievalable key-value @ https://stackoverflow.com/a/53585223
+            list.Add(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders");
+            return list;
+        }
+
         private string getLiveOSVersion()
         {
             RegistryKey registryKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion");

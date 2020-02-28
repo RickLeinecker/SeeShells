@@ -34,6 +34,12 @@ namespace SeeShellsTests.ShellParser
             List<IShellItem> shellItems = ShellBagParser.GetShellItems(new OfflineRegistryReader(new OfflineMockConfigParser(), registryFilePath));
 
             Assert.AreNotEqual(shellItems.Count, 0);
+
+            //test for username presence in the shellItems
+            foreach (IShellItem shellItem in shellItems)
+            {
+                Assert.AreEqual("Klayton", shellItem.GetAllProperties()["RegistryOwner"]);
+            }
         }
     }
 }
