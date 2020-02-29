@@ -7,9 +7,10 @@
       xmlns:local="clr-namespace:SeeShells.UI.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Home">
-
-    <Grid Background="#FF343030">
+      Title="Home"
+      Style="{StaticResource DefaultPageStyle}">
+    <DockPanel>
+        <Grid Background="#FF343030">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="*"/>
@@ -105,4 +106,5 @@
 
 
     </Grid>
+    </DockPanel>
 </Page>
