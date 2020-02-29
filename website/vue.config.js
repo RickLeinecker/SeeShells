@@ -1,4 +1,4 @@
 module.exports = {
-    publicPath: "/SeeShells",
+    publicPath: "/",
     outputDir: "../docs"
 };
