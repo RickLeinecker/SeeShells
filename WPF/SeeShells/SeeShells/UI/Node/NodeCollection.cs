@@ -25,7 +25,7 @@ namespace SeeShells.UI.Node
         {
             filterList.Add(identifier, filter);
             filter.Apply(ref nodeList);
-            TimelinePage.timelinePage.RebuildTimeline();
+            Home.timelinePage.RebuildTimeline();
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace SeeShells.UI.Node
                 {
                     filter.Apply(ref nodeList);
                 }
-                TimelinePage.timelinePage.RebuildTimeline();
+                Home.timelinePage.RebuildTimeline();
             }
         }
 

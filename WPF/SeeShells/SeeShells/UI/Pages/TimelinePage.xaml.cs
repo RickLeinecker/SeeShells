@@ -26,12 +26,10 @@ namespace SeeShells.UI.Pages
 
         private TimeSpan maxRealTimeSpan = new TimeSpan(0, 0, 1, 0); // Max time in one timeline (1 min).
 
-        public static TimelinePage timelinePage;
         public TimelinePage()
         {
             InitializeComponent();
             BuildTimeline();
-            timelinePage = this;
         }
 
         private void AllStringFilter_TextChanged(object sender, TextChangedEventArgs e)
