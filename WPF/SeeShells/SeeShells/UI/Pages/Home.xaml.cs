@@ -282,7 +282,16 @@ namespace SeeShells.UI.Pages
 
             //Go to Timeline            
             Mouse.OverrideCursor = Cursors.Arrow;
-            NavigationService.Navigate(new TimelinePage());
+            if(TimelinePage.timelinePage == null)
+            {
+                NavigationService.Navigate(new TimelinePage());
+            }
+            else
+            {
+                TimelinePage.timelinePage.RebuildTimeline();
+                NavigationService.Navigate(TimelinePage.timelinePage);
+            }
+            
 
         }
 

@@ -1,9 +1,6 @@
 ﻿using SeeShells.UI.EventFilters;
-using System;
+using SeeShells.UI.Pages;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SeeShells.UI.Node
 {
@@ -28,6 +25,7 @@ namespace SeeShells.UI.Node
         {
             filterList.Add(identifier, filter);
             filter.Apply(ref nodeList);
+            TimelinePage.timelinePage.RebuildTimeline();
         }
 
         /// <summary>
@@ -51,6 +49,7 @@ namespace SeeShells.UI.Node
                 {
                     filter.Apply(ref nodeList);
                 }
+                TimelinePage.timelinePage.RebuildTimeline();
             }
         }
 
