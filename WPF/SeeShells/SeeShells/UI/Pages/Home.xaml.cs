@@ -30,7 +30,7 @@ namespace SeeShells.UI.Pages
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public static TimelinePage timelinePage;
+        private TimelinePage timelinePage;
 
         public Home()
         {
