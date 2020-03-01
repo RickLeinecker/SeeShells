@@ -1,7 +1,6 @@
 ﻿using Microsoft.Win32;
 using SeeShells.IO;
 using SeeShells.UI.EventFilters;
-using SeeShells.UI.Node;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,6 +55,8 @@ namespace SeeShells.UI.Pages
             //add a new filter with our date restrictions
             App.nodeCollection.AddEventFilter(filterIdentifer, newFilter);
 
+            //rebuild the timeline according to the new filters
+            this.RebuildTimeline();
         }
 
         /// <summary>
