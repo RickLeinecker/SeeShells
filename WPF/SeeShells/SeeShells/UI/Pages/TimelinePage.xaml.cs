@@ -28,7 +28,6 @@ namespace SeeShells.UI.Pages
         public TimelinePage()
         {
             InitializeComponent();
-
             BuildTimeline();
         }
 
@@ -56,6 +55,8 @@ namespace SeeShells.UI.Pages
             //add a new filter with our date restrictions
             App.nodeCollection.AddEventFilter(filterIdentifer, newFilter);
 
+            //rebuild the timeline according to the new filters
+            this.RebuildTimeline();
         }
 
         /// <summary>
@@ -142,7 +143,7 @@ namespace SeeShells.UI.Pages
         /// <summary>
         /// Builds a timeline dynamically. Creates one timeline for each cluster of events.
         /// </summary>
-        public void BuildTimeline()
+        private void BuildTimeline()
         {
             try
             {
@@ -152,25 +153,40 @@ namespace SeeShells.UI.Pages
                     return;
                 }
 
+                List<Node.Node> nodeList = new List<Node.Node>();
+                foreach (Node.Node node in App.nodeCollection.nodeList)
+                {
+                    if(node.dot.Visibility == System.Windows.Visibility.Visible)
+                    {
+                        nodeList.Add(node);
+                    }
+                }
+
+                if (nodeList.Count == 0)
+                {
+                    logger.Info("All nodes are filtered out, no nodes to draw on the timeline.");
+                    return;
+                }
+
                 List<Node.Node> nodesCluster = new List<Node.Node>(); // Holds events for one timeline at a time.
-                nodesCluster.Add(App.nodeCollection.nodeList[0]);
-                DateTime previousDate = App.nodeCollection.nodeList[0].aEvent.EventTime;
+                nodesCluster.Add(nodeList[0]);
+                DateTime previousDate = nodeList[0].aEvent.EventTime;
                 DateTime realTimeStart = DateTimeRoundDown(previousDate, maxRealTimeSpan);
-                int nodeListSize = App.nodeCollection.nodeList.Count;
+                int nodeListSize = nodeList.Count;
                 for (int i = 1; i < nodeListSize; i++)
                 {
                     // If the event belongs to the timeline
-                    if (TimeSpan.Compare(App.nodeCollection.nodeList[i].aEvent.EventTime.Subtract(realTimeStart), maxRealTimeSpan) == -1) // Compare returns -1 if the first argument is less than the second
+                    if (TimeSpan.Compare(nodeList[i].aEvent.EventTime.Subtract(realTimeStart), maxRealTimeSpan) == -1) // Compare returns -1 if the first argument is less than the second
                     {
-                        nodesCluster.Add(App.nodeCollection.nodeList[i]);
+                        nodesCluster.Add(nodeList[i]);
                     }
                     else
                     {
                         AddTimeline(nodesCluster);
                         nodesCluster.Clear();
 
-                        nodesCluster.Add(App.nodeCollection.nodeList[i]);
-                        previousDate = App.nodeCollection.nodeList[i].aEvent.EventTime;
+                        nodesCluster.Add(nodeList[i]);
+                        previousDate = nodeList[i].aEvent.EventTime;
                         realTimeStart = DateTimeRoundDown(previousDate, maxRealTimeSpan);
                         if (i == nodeListSize - 1) // If it's the last event of nodeList.
                         {
@@ -209,6 +225,7 @@ namespace SeeShells.UI.Pages
                 KeepOriginalOrderForOverlap = true
             };
 
+
             foreach (Node.Node node in nodesCluster)
             {
                 TimelinePanel.SetDate(node.dot, node.aEvent.EventTime);
@@ -245,6 +262,20 @@ namespace SeeShells.UI.Pages
         {
             long ticks = date.Ticks / roundingFactor.Ticks;
             return new DateTime(ticks * roundingFactor.Ticks);
+        }
+
+        /// <summary>
+        /// Clears the children of all timeline related UI objects and builds timeline.
+        /// </summary>
+        public void RebuildTimeline()
+        {
+            foreach(TimelinePanel timeline in Timelines.Children)
+            {
+                timeline.Children.Clear();
+            }
+            Timelines.Children.Clear();
+            TimeStamps.Children.Clear();
+            BuildTimeline();
         }
 
         /// <summary>

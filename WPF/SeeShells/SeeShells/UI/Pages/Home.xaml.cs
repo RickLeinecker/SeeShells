@@ -30,6 +30,8 @@ namespace SeeShells.UI.Pages
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
+        private TimelinePage timelinePage;
+
         public Home()
         {
             InitializeComponent();
@@ -282,7 +284,17 @@ namespace SeeShells.UI.Pages
 
             //Go to Timeline            
             Mouse.OverrideCursor = Cursors.Arrow;
-            NavigationService.Navigate(new TimelinePage());
+            if(timelinePage == null)
+            {
+                timelinePage = new TimelinePage();
+                NavigationService.Navigate(timelinePage);
+            }
+            else
+            {
+                timelinePage.RebuildTimeline();
+                NavigationService.Navigate(timelinePage);
+            }
+            
 
         }
 
