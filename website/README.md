@@ -1,4 +1,4 @@
-# seeshellsdocs
+# website
 
 ## Project setup
 ```
