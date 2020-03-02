@@ -58,8 +58,8 @@
 
 <style>
     #register{
-        margin-left: 500px;
-        margin-right: 500px;
+        margin-left: 100px;
+        margin-right: 100px;
         margin-top: 10px;
         margin-bottom: 10px;
     }
