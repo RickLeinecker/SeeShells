@@ -274,6 +274,7 @@ namespace SeeShells.UI.Pages
             stopwatch.Start();
             App.ShellItems = await ParseShellBags();
             List<IEvent> events = EventParser.GetEvents(App.ShellItems);
+            App.nodeCollection.ClearAllFilters();
             App.nodeCollection.nodeList.AddRange(NodeParser.GetNodes(events));
             stopwatch.Stop();
             logger.Info("Parsing Complete. ShellItems Parsed: " + App.ShellItems.Count + ". Time Elapsed: " + stopwatch.ElapsedMilliseconds / 1000 + " seconds");
