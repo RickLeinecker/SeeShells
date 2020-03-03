@@ -51,11 +51,11 @@
                         var result = JSON.parse(xhr.responseText);
 
                         if (result.success == 1) {
-                            (document.getElementById('messages')).insertAdjacentHTML('afterend', '<div class="alert alert-info alert-dismissible" id="passwordIssue">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong>Registration sent!</strong> You must wait for a current administrator to approve you now. </div>');
+                            (document.getElementById('messages')).insertAdjacentHTML('afterend', '<div class="alert alert-info alert-dismissible">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong>Registration sent! </strong>You must wait for a current administrator to approve you now. </div>');
         
                         }
                         else {
-                            (document.getElementById('messages')).insertAdjacentHTML('afterend', '<div class="alert alert-danger alert-dismissible" id="badRegister">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong>Error!</strong>' + result.error + ' Please try again later. </div>');
+                            (document.getElementById('messages')).insertAdjacentHTML('afterend', '<div class="alert alert-danger alert-dismissible">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong>Error! </strong>' + result.error + ' Please try again later. </div>');
                         }
 
                     }
@@ -64,7 +64,7 @@
                     }
                 }
                 else {
-                    (document.getElementById('messages')).insertAdjacentHTML('afterend', '<b-alert show dismissible ><strong>Passwords don\'t match!</strong></b-alert>');
+                    (document.getElementById('messages')).insertAdjacentHTML('afterend', '<div class="alert alert-danger alert-dismissible">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong>Passwords don\'t match! </strong>Re-enter the passwords. </div>');
                 }
           }
         }

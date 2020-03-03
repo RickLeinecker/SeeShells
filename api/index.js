@@ -100,7 +100,7 @@ app.post('/register', function (req, res) {;
     var username = String(req.body.username);
     var password = String(req.body.password);
 
-    let promise = database.userExistsAndIsApproved(username);
+    let promise = database.userExists(username);
     promise.then(
         function (value) {
             if (value.result == 0) {
