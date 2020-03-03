@@ -2,7 +2,7 @@
     <div id="nav">
         <b-navbar toggleable="lg" type="dark" variant="dark">
             <img alt="Vue logo" src="./../assets/logo.png" width="75" height="75">
-            <b-navbar-brand href="#">SeeShells</b-navbar-brand>
+            <router-link to='/SeeShells/'><b-navbar-brand>SeeShells</b-navbar-brand></router-link>
 
             <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -22,7 +22,7 @@
                         <template v-slot:button-content>
                             <em>Administrative</em>
                         </template>
-                        <b-dropdown-item href="#">Register</b-dropdown-item>
+                        <b-dropdown-item><router-link to='/SeeShells/register'>Register</router-link></b-dropdown-item>
                         <b-dropdown-item href="#">Login</b-dropdown-item>
                     </b-nav-item-dropdown>
                 </b-navbar-nav>
