@@ -35,7 +35,7 @@
         methods: {
             onRegister(event) {
                 event.preventDefault();
-                var baseurl = 'http://localhost:3000/'; //https://seeshells.herokuapp.com/
+                var baseurl = 'https://seeshells.herokuapp.com/';
                 
 
                 if (this.form.password == this.form.passwordconfirm) {
