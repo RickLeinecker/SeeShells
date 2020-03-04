@@ -5,16 +5,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Shapes;
 
 namespace SeeShellsTests.UI.Mocks
 {
     class MockNode : Node
     {
-        public MockNode(IEvent aEvent) : this(aEvent, new Ellipse(), new Rectangle())
+        public MockNode(IEvent aEvent) : this(aEvent, new InformedDot(),  new TextBlock())
         {
         }
-        public MockNode(IEvent aEvent, Ellipse dot, Rectangle block) : base(aEvent, dot, block)
+        public MockNode(IEvent aEvent, InformedDot dot, TextBlock block) : base(aEvent, dot, block)
         {
             AEvent = aEvent;
             Dot = dot;
@@ -24,8 +25,8 @@ namespace SeeShellsTests.UI.Mocks
         }
 
         public IEvent AEvent { get; }
-        public Ellipse Dot { get; }
-        public Rectangle Block { get; }
+        public InformedDot Dot { get; }
+        public TextBlock Block { get; }
     }
 
 }

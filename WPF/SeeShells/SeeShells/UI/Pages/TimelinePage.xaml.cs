@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using SeeShells.IO;
 using SeeShells.UI.EventFilters;
+using SeeShells.UI.Node;
 using System;
 using System.Collections.Generic;
 using System.Linq;

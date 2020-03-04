@@ -5,6 +5,7 @@ using SeeShells.UI.Node;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows.Controls;
 using System.Windows.Shapes;
 
 namespace SeeShellsTests.IO
@@ -31,8 +32,8 @@ namespace SeeShellsTests.IO
             CsvParsedShellItem ShellItem = new CsvParsedShellItem(shellItemProperties);
 
             Event aEvent = new Event("item1", DateTime.Now, ShellItem, "Access");
-            Ellipse dot = new Ellipse();
-            Rectangle block = new Rectangle();
+            TextBlock block = new TextBlock();
+            InformedDot dot = new InformedDot(block);
             Node aNode = new Node(aEvent, dot, block);
             nodeList.Add(aNode);
 

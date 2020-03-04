@@ -11,6 +11,11 @@ namespace SeeShells.UI.Node
         /// The InformedDot is an object that holds the graphical elements of the dots on the timeline.
         /// </summary>
         /// <param name="block">object to display event details on a timeline</param>
+        
+        public InformedDot()
+        {
+            this.block = null;
+        }
         public InformedDot(TextBlock block)
         {
             this.block = block;
