@@ -15,6 +15,9 @@ using SeeShells.ShellParser.ShellItems;
 using SeeShells.ShellParser;
 using SeeShells.UI.Node;
 using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using NLog.Time;
 using SeeShells.ShellParser.Registry;
 
 namespace SeeShells.UI.Pages
@@ -29,6 +32,8 @@ namespace SeeShells.UI.Pages
         private GridLength hiddenRow = new GridLength(0);
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
+        private TimelinePage timelinePage;
 
         public Home()
         {
@@ -65,25 +70,29 @@ namespace SeeShells.UI.Pages
         {
             OSVersion.SelectedIndex = -1;
             OSVersion.Items.Clear();
-            OSVersion.Items.Add("Generic Windows");
 
-            if (!File.Exists(locations.OSFileLocation))
-                return;
+            IList<RegistryLocations> registryLocations = ConfigParser.GetDefaultRegistryLocations();
 
-            string json = File.ReadAllText(locations.OSFileLocation);
-            try
+            if (File.Exists(locations.OSFileLocation))
             {
-                IList<RegistryLocations> registryLocations = JsonConvert.DeserializeObject<IList<RegistryLocations>>(json);
-                foreach (RegistryLocations location in registryLocations)
+                string json = File.ReadAllText(locations.OSFileLocation);
+                try
                 {
-                    if (!OSVersion.Items.Contains(location.OperatingSystem))
-                        OSVersion.Items.Add(location.OperatingSystem);
+                    registryLocations = JsonConvert.DeserializeObject<IList<RegistryLocations>>(json);
+                }
+                catch (JsonSerializationException)
+                {
+                    showErrorMessage("The OS file selected is not formatted properly. Will proceed with default OS configurations.",
+                        "Incorrect OS Configuration File Format");
                 }
             }
-            catch (JsonSerializationException)
+
+            foreach (RegistryLocations location in registryLocations)
             {
-                showErrorMessage("The OS file you selected is not formatted properly.", "Incorrect OS Configuration File Format");
+                if (!OSVersion.Items.Contains(location.OperatingSystem))
+                    OSVersion.Items.Add(location.OperatingSystem);
             }
+
         }
 
         private void OSBrowseButton_Click(object sender, RoutedEventArgs e)
@@ -91,8 +100,7 @@ namespace SeeShells.UI.Pages
             string location = GetFileFromBrowsing();
             if(UserSelectedFile(location))
             {
-               locations.OSFileLocation = location;
-
+                locations.OSFileLocation = location;
                 UpdateOSVersionList();
             }
         }
@@ -123,6 +131,7 @@ namespace SeeShells.UI.Pages
 
             Mouse.OverrideCursor = Cursors.Arrow;
             MessageBox.Show(message, caption, MessageBoxButton.OK, image);
+            UpdateOSVersionList();
 
         }
 
@@ -272,6 +281,7 @@ namespace SeeShells.UI.Pages
             stopwatch.Start();
             App.ShellItems = await ParseShellBags();
             List<IEvent> events = EventParser.GetEvents(App.ShellItems);
+            App.nodeCollection.ClearAllFilters();
             App.nodeCollection.nodeList.AddRange(NodeParser.GetNodes(events));
             stopwatch.Stop();
             logger.Info("Parsing Complete. ShellItems Parsed: " + App.ShellItems.Count + ". Time Elapsed: " + stopwatch.ElapsedMilliseconds / 1000 + " seconds");
@@ -282,7 +292,17 @@ namespace SeeShells.UI.Pages
 
             //Go to Timeline            
             Mouse.OverrideCursor = Cursors.Arrow;
-            NavigationService.Navigate(new TimelinePage());
+            if(timelinePage == null)
+            {
+                timelinePage = new TimelinePage();
+                NavigationService.Navigate(timelinePage);
+            }
+            else
+            {
+                timelinePage.RebuildTimeline();
+                NavigationService.Navigate(timelinePage);
+            }
+            
 
         }
 
@@ -296,11 +316,7 @@ namespace SeeShells.UI.Pages
 
                 List<IShellItem> retList = new List<IShellItem>();
 
-                ConfigParser parser;
-                if (File.Exists(locations.ScriptFileLocation))
-                    parser = new ConfigParser(locations.GUIDFileLocation, locations.OSFileLocation, locations.ScriptFileLocation);
-                else
-                    parser = new ConfigParser(locations.GUIDFileLocation, locations.OSFileLocation);
+                ConfigParser parser = new ConfigParser(locations.GUIDFileLocation, locations.OSFileLocation, locations.ScriptFileLocation);
 
                 //perform offline shellbag parsing
                 if (useRegistryHiveFiles)
@@ -326,15 +342,28 @@ namespace SeeShells.UI.Pages
 
         private bool ConfigurationFilesAreValid()
         {
-            if (!File.Exists(locations.OSFileLocation))
+            string messageBoxTitle = "Invalid configuration selected";
+            string question = "The currently selected {0} file is invalid or missing.\n" +
+                              "Would you like to proceed anyway?";
+
+            if (!ConfigParser.IsValidOsFile(locations.OSFileLocation))
             {
-                showErrorMessage("Select a proper OS configuration file or create a new one.", "Missing OS File");
-                return false;
+                MessageBoxResult result = AskYesNoQuestion(string.Format(question, "OS Configuration"), messageBoxTitle);
+                if (result != MessageBoxResult.Yes)
+                    return false;
             }
-            if (!File.Exists(locations.GUIDFileLocation))
+            if (!ConfigParser.IsValidGuidFile(locations.GUIDFileLocation))
             {
-                showErrorMessage("Select a proper GUID configuration file or create a new one.", "Missing GUID File");
-                return false;
+                MessageBoxResult result = AskYesNoQuestion(string.Format(question, "GUID Configuration"), messageBoxTitle);
+                if (result != MessageBoxResult.Yes)
+                    return false;
+            }
+            if (!ConfigParser.IsValidScriptFile(locations.ScriptFileLocation))
+            {
+                MessageBoxResult result = AskYesNoQuestion(string.Format(question, "Script Configuration"), messageBoxTitle);
+                if (result != MessageBoxResult.Yes)
+                    return false;
+
             }
 
             return true;
@@ -393,10 +422,14 @@ namespace SeeShells.UI.Pages
             OSVersionRow.Height = visibleRow;
         }
 
-        private void showErrorMessage(string message, string messageBoxTitle = "An Error Occurred")
+        private static void showErrorMessage(string message, string messageBoxTitle = "An Error Occurred")
         {
             logger.Warn(message);
             MessageBox.Show(message, messageBoxTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        private static MessageBoxResult AskYesNoQuestion(string message, string messageBoxTitle = "SeeShells")
+        {
+            return MessageBox.Show(message, messageBoxTitle, MessageBoxButton.YesNo, MessageBoxImage.Question);
         }
 
         private void EnableUIElements(bool value)

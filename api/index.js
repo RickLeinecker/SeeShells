@@ -18,7 +18,7 @@ app.use(database.session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days
+    cookie: { maxAge: 30 * 60 * 1000 }, // 30 minutes
     unset: 'destroy',
     genid: (req) => {
         return security.generateSessionKey();
@@ -344,6 +344,38 @@ app.get('/getScripts',  function (req, res) {
             res.send({ "success": 0, "error": "Failed to get any scripts" });
     });
 
+});
+
+
+app.get('/getHelpInformation', function (req, res) {
+    let promise = database.getHelpInformation();
+    promise.then(
+        function (results) {
+            res.send({ "success": 1, "json":results });
+        },
+        function () {
+            res.send({ "success": 0, "error": "Failed to get the help information." });
+        }
+    );
+});
+
+app.post('/changeHelpInformation', function (req, res) {
+    if (req.isAuthenticated()) {
+        var title = (req.body.title);
+        var description = (req.body.description);
+        let promise = database.updateHelpInformation(title, description);
+        promise.then(
+            function () {
+                res.send({ "success": 1 });
+            },
+            function () {
+                res.send({ "success": 0, "error": "Failed to update the help information." });
+            }
+        );
+    }
+    else {
+        res.redirect('/notauthenticated');
+    }
 });
 
 

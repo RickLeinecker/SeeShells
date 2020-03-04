@@ -290,6 +290,32 @@ function getScripts(callback) {
     });
 }
 
+function getHelpInformation() {
+    return new Promise(function (resolve, reject) {
+        pool.query('SELECT * FROM helpinfo;', (err, res) => {
+            if (err) {
+                reject({});
+                return;
+            }
+
+            resolve(res.rows);
+        });
+    });
+}
+
+function updateHelpInformation(title, description) {
+    return new Promise(function (resolve, reject) {
+        pool.query('UPDATE helpinfo SET title=$1, description=$2;', [title, description], (err, res) => {
+            if (err) {
+                reject({});
+                return;
+            }
+
+            resolve({message:"success"});
+        });
+    });
+}
+
 module.exports = {
     pool,
     session,
@@ -310,6 +336,8 @@ module.exports = {
     GUIDDoesNotExist,
     addScript,
     scriptForIdentifierDoesNotExist,
-    getScripts
+    getScripts,
+    getHelpInformation,
+    updateHelpInformation
 }
 
