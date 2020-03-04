@@ -8,7 +8,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="TimelinePage">
-
+  
     <Grid>
         <Viewbox>
             <TabControl HorizontalAlignment="Left" Background="#FF343030" Height="592" Width="1113">
@@ -140,9 +140,6 @@
                                     <xctk:TimelinePanel x:Name="Nodeline" Grid.ZIndex ="2" BeginDate="1/1/1" EndDate="1/1/1">
 
                                     </xctk:TimelinePanel>
-                                    <Grid x:Name="Blocks" Grid.ZIndex="1" Margin="0,244,0.4,0.4">
-
-                                    </Grid>
                                 </Grid>
                             </ScrollViewer>
                         </Grid>

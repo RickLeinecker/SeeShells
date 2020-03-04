@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.UI.WebControls;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace SeeShells.UI.Node
 {   
@@ -15,21 +7,28 @@ namespace SeeShells.UI.Node
     {
         public TextBlock block;
 
+        /// <summary>
+        /// The InformedDot is an object that holds the graphical elements of the dots on the timeline.
+        /// </summary>
+        /// <param name="block">object to display event details on a timeline</param>
         public InformedDot(TextBlock block)
         {
             this.block = block;
         }
 
+        /// <summary>
+        /// This is used to hide and show the block of information connected to each dot of information on the timeline.
+        /// </summary>
         public void toggle_block()
         {
-            MessageBox.Show(this.block.Text);
-            if (this.block.Visibility == System.Windows.Visibility.Collapsed)
+            MessageBox.Show(block.Text);
+            if (this.block.Visibility == Visibility.Collapsed)
             {
-                this.block.Visibility = System.Windows.Visibility.Visible;
+                this.block.Visibility = Visibility.Visible;
             }
-            else if(this.block.Visibility == System.Windows.Visibility.Visible)
+            else if(this.block.Visibility == Visibility.Visible)
             {
-                this.block.Visibility = System.Windows.Visibility.Collapsed;
+                this.block.Visibility = Visibility.Collapsed;
             }
         }
     }

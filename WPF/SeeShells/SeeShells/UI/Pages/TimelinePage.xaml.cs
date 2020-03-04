@@ -241,7 +241,6 @@ namespace SeeShells.UI.Pages
                     ellipse.Height = 10;
                     node.dot.Content = ellipse;
                     Nodeline.Children.Add(node.dot);
-                    Blocks.Children.Add(node.dot.block);
                 }
             }
             catch (System.NullReferenceException ex)
@@ -384,14 +383,21 @@ namespace SeeShells.UI.Pages
             }
         }
 
+        /// <summary>
+        /// This activates the toggle_block method built into the InformedDot object. 
+        /// </summary>
         public static void Dot_Press(object sender, EventArgs e)
         {
-            ((InformedDot)sender).toggle_block();
+            ((InformedDot)sender).toggle_block();            
         }
 
+        /// <summary>
+        /// This is a work in progress and at the moment moves the boxes which have been turned off. However this is a away to get the coordinates
+        /// of the dot. This is also allowing for a future block_press to work.
+        /// </summary>
         public static void Block_Press(object sender, RoutedEventArgs e)
         {
-            System.Windows.MessageBox.Show("pressing");
+            ((TextBlock)sender).Margin = new Thickness(((TextBlock)sender).TransformToAncestor(Application.Current.MainWindow).Transform(new Point(0, 0)).X+10, ((TextBlock)sender).TransformToAncestor(Application.Current.MainWindow).Transform(new Point(0, 0)).Y, 0, 0);
         }
     }
 }
