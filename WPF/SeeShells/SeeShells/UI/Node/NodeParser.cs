@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace SeeShells.UI.Node
@@ -22,10 +24,11 @@ namespace SeeShells.UI.Node
             {
                 Ellipse dot = new Ellipse();
                 SetDotProperties(dot);
-                Rectangle block = new Rectangle();
-                SetBlockProperties(block);
+                TextBlock block = new TextBlock();
+                SetBlockProperties(block, aEvent);
 
-                Node node = new Node(aEvent, dot, block);
+                Node node = new Node(aEvent, block);
+                node.Click += Pages.TimelinePage.Dot_Press;
                 nodeList.Add(node);
             }
             
@@ -48,10 +51,16 @@ namespace SeeShells.UI.Node
         /// Sets up initial properties for a graphical block object
         /// </summary>
         /// <param name="block">graphical object that contains event details on a timeline</param>
-        private static void SetBlockProperties(Rectangle block)
+        private static void SetBlockProperties(TextBlock block, IEvent aEvent)
         {
-            /// TODO:
-            /// Set Properties.
+            foreach (KeyValuePair<string, string> property in aEvent.Parent.GetAllProperties())
+            {
+                block.Text += property.Key + "," + property.Value;
+            }
+            block.Foreground = Brushes.White;
+            block.Background = Brushes.Turquoise; // #5ec0ca
+            block.Height = 40;
+            block.Width = 100;
         }
     }
 }
