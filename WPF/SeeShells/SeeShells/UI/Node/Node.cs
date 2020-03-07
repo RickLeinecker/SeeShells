@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Shapes;
+﻿using System.Windows.Controls;
 
 namespace SeeShells.UI.Node
 {
@@ -12,7 +6,7 @@ namespace SeeShells.UI.Node
     {
         public IEvent aEvent;
         public InformedDot dot;
-        TextBlock block;
+        public TextBlock block;
 
         /// <summary>
         /// The Node is an object that stores event data and has graphical objects to be displayed on a timeline.

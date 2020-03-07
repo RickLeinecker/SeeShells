@@ -41,7 +41,7 @@ namespace SeeShells.UI.Node
                 //restore visibility of previously filtered events
                 foreach (var node in nodeList)
                 {
-                    node.dot.Visibility = System.Windows.Visibility.Visible;
+                    node.dot.Visibility = Visibility.Visible;
                 }
                 //reapply all remaining filters
                 foreach (INodeFilter filter in filterList.Values)

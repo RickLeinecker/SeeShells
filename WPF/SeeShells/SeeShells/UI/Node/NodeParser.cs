@@ -53,10 +53,13 @@ namespace SeeShells.UI.Node
         /// <param name="block">graphical object that contains event details on a timeline</param>
         private static void SetBlockProperties(TextBlock block, IEvent aEvent)
         {
-            foreach (KeyValuePair<string, string> property in aEvent.Parent.GetAllProperties())
-            {
-                block.Text += property.Key + "," + property.Value;
-            }
+            //foreach (KeyValuePair<string, string> property in aEvent.Parent.GetAllProperties())
+            //{
+            //  block.Text += property.Key + "," + property.Value;
+            //}
+            block.Text += aEvent.Name;
+            block.Text += aEvent.EventType;
+            block.Text += aEvent.EventTime;
             block.Foreground = Brushes.White;
             block.Background = Brushes.Turquoise; // #5ec0ca
             block.Height = 40;

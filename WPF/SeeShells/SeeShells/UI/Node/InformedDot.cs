@@ -3,7 +3,7 @@ using System.Windows.Controls;
 
 namespace SeeShells.UI.Node
 {   
-    public class InformedDot : System.Windows.Controls.Button
+    public class InformedDot : Button
     {
         public TextBlock block;
 
