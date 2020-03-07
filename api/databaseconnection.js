@@ -11,6 +11,25 @@ const pool = new Pool({
 });
 pool.connect();
 
+function userExists(username) {
+    return new Promise(function (resolve, reject) {
+        pool.query('SELECT * FROM logininfo WHERE username=$1', [username], (err, res) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+
+            if (res.rowCount > 0) {
+                resolve({
+                    result: 1,
+                });
+                return;
+            }
+
+            resolve({ result: 0 });
+        });
+    });
+}
 
 function userExistsAndIsApproved(username) {
     return new Promise(function (resolve, reject) {
@@ -320,6 +339,7 @@ module.exports = {
     pool,
     session,
     pgSession,
+    userExists,
     userExistsAndIsApproved,
     getUserByID,
     getUnapprovedUsers,

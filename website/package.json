@@ -12,7 +12,10 @@
     "bootstrap-vue": "^2.5.0",
     "core-js": "^3.6.4",
     "vue": "^2.6.11",
-    "vue-router": "^3.1.6"
+    "vue-password-strength-meter": "^1.7.1",
+    "vue-router": "^3.1.6",
+    "vue-session": "^1.0.0",
+    "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.2.0",
