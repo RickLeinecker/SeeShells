@@ -5,6 +5,7 @@ using SeeShells.UI.Node;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows.Controls;
 using System.Windows.Shapes;
 
 namespace SeeShellsTests.IO
@@ -31,9 +32,8 @@ namespace SeeShellsTests.IO
             CsvParsedShellItem ShellItem = new CsvParsedShellItem(shellItemProperties);
 
             Event aEvent = new Event("item1", DateTime.Now, ShellItem, "Access");
-            Ellipse dot = new Ellipse();
-            Rectangle block = new Rectangle();
-            Node aNode = new Node(aEvent, dot, block);
+            TextBlock block = new TextBlock();
+            Node aNode = new Node(aEvent, block);
             nodeList.Add(aNode);
 
             if (File.Exists("timeline.html"))

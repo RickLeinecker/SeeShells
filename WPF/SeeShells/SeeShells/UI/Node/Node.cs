@@ -18,7 +18,6 @@ namespace SeeShells.UI.Node
         /// The Node is an object that stores event data and has graphical objects to be displayed on a timeline.
         /// </summary>
         /// <param name="aEvent">object that stores event/shellbag data</param>
-        /// <param name="dot">object to represent an event on a timeline</param>
         /// <param name="block">object to display event details on a timeline</param>
         public Node(IEvent aEvent, TextBlock block)
         {
