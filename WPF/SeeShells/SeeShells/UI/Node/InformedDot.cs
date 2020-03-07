@@ -14,7 +14,8 @@ namespace SeeShells.UI.Node
         
         public InformedDot()
         {
-            this.block = null;
+            TextBlock block = new TextBlock();
+            this.block = block;
         }
         public InformedDot(TextBlock block)
         {

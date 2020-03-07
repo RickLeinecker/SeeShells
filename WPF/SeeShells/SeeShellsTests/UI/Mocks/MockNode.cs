@@ -19,6 +19,7 @@ namespace SeeShellsTests.UI.Mocks
         {
             AEvent = aEvent;
             Dot = dot;
+            dot.block = block;
             Block = block;
 
             dot.Visibility = System.Windows.Visibility.Visible;
