@@ -35,5 +35,30 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="DefaultPageStyle" TargetType="Page" >
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Page}">
+                        <WrapPanel Background="#FF343030">
+                            <ToolBarTray IsLocked="True" Background="Transparent">
+                                <ToolBar OverflowMode="Never" Loaded="Toolbar_Loaded" MinWidth="{Binding ActualWidth,
+                                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type WrapPanel}}}" Background="Transparent">
+                                    <Menu Background="Transparent">
+                                        <MenuItem Header="View" Foreground="DarkGray" >
+                                            <MenuItem Header="Home"/>
+                                            <MenuItem Header="Timeline"/>
+                                        </MenuItem>
+                                        <MenuItem Header="Help" Foreground="DarkGray">
+                                            <MenuItem Header="About SeeShells"/>
+                                        </MenuItem>
+                                    </Menu>
+                                </ToolBar>
+                            </ToolBarTray>
+                            <ContentPresenter/>
+                        </WrapPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Application.Resources>
 </Application>

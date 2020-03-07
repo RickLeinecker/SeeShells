@@ -1,9 +1,6 @@
 ﻿using SeeShells.UI.EventFilters;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 
 namespace SeeShells.UI.Node
 {
@@ -51,6 +48,15 @@ namespace SeeShells.UI.Node
                 {
                     filter.Apply(ref nodeList);
                 }
+            }
+        }
+
+        public void ClearAllFilters()
+        {
+            filterList.Clear();
+            foreach (var node in nodeList)
+            {
+                node.dot.Visibility = Visibility.Visible;
             }
         }
 

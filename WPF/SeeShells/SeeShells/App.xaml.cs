@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace SeeShells
 {
@@ -28,5 +29,19 @@ namespace SeeShells
         /// Collectin of <see cref="ShellItem"/> which is populated after a parsing operation.
         /// </summary>
         public static List<IShellItem> ShellItems { get; set; }
+
+        /// <summary>
+        /// Removes the toolbar overflow side button.
+        /// <see cref="https://stackoverflow.com/a/1051264"/>
+        /// </summary>
+        private void Toolbar_Loaded(object sender, RoutedEventArgs e)
+        {
+            ToolBar toolBar = sender as ToolBar;
+            var overflowGrid = toolBar.Template.FindName("OverflowGrid", toolBar) as FrameworkElement;
+            if (overflowGrid != null)
+            {
+                overflowGrid.Visibility = Visibility.Collapsed;
+            }
+        }
     }
 }
