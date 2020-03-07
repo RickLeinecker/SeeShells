@@ -10,6 +10,13 @@ var flash = require("connect-flash");
 var port = process.env.PORT || 3000;
 var app = express();
 
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', 'https://rickleinecker.github.io');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, GET');
+    next();
+});
+
 app.use(database.session({
     store: new database.pgSession({
         pool: database.pool,
@@ -93,7 +100,7 @@ app.post('/register', function (req, res) {;
     var username = String(req.body.username);
     var password = String(req.body.password);
 
-    let promise = database.userExistsAndIsApproved(username);
+    let promise = database.userExists(username);
     promise.then(
         function (value) {
             if (value.result == 0) {
