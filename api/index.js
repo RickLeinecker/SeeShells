@@ -89,7 +89,7 @@ app.use(passport.session());
 app.use(flash());
 
 app.get('/', function (req, res) {
-    res.send({ test: 'testing', hello: 'klayton', and: 'aleks', aswellas: 'bridget', andlastbutnotleast: 'yara' });
+    res.send({ success: 1 });
 });
 app.get('/notauthenticated', function (req, res) {
     res.send({ message: 'You must log in to perform this action.' });
