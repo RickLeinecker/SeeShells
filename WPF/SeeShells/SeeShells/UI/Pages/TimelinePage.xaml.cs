@@ -306,7 +306,7 @@ namespace SeeShells.UI.Pages
         }
 
         /// <summary>
-        /// This activates the toggle_block method built into the InformedDot object. 
+        /// This activates the toggle_block method built into the Node object. 
         /// </summary>
         public static void Dot_Press(object sender, EventArgs e)
         {
