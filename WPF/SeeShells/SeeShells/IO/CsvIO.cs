@@ -1,6 +1,8 @@
-﻿using SeeShells.ShellParser.ShellItems;
+﻿using CsvHelper;
+using SeeShells.ShellParser.ShellItems;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 
 namespace SeeShells.IO
@@ -53,7 +55,8 @@ namespace SeeShells.IO
                     String[] line = new String[keysArray.Length];
                     foreach (KeyValuePair<string, string> property in shellItem.GetAllProperties())
                     {
-                        line[keysMap[property.Key]] = property.Value.Replace("," , ""); // Any commas are filtered from the output
+                        line[keysMap[property.Key]] = "\"" + property.Value.Replace("\"", "\"\"") + "\""; // The whole value is enclosed in double quotes to retain any special characters.
+                                                                                                          // Any preexisting double quotes are enclosed in double quotes to preserve them.
                     }
                     writer.WriteLine((string.Join(",", line)));
                     writer.Flush();
@@ -70,23 +73,21 @@ namespace SeeShells.IO
         {
             List<IShellItem> retList = new List<IShellItem>();
             using (var reader = new StreamReader(filePath))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
             {
-                // Red the header which contains the property values
-                String headerLine = reader.ReadLine();
-                String[] propertyValues = headerLine.Split(',');
+                csv.Read();
+                csv.ReadHeader();
+                string[] propertyValues = csv.Context.HeaderRecord;
                 int propertyValuesCurrIndex = 0;
 
-                while (!reader.EndOfStream)
+                while (csv.Read())
                 {
-                    String shellItemLine = reader.ReadLine();
-                    String[] shellItemPropertyValues = shellItemLine.Split(',');
-                    
                     IDictionary<string, string> properties = new Dictionary<string, string>();
-                    foreach (String property in shellItemPropertyValues)
+                    for (int i = 0; i < csv.Context.Record.Length; i++)
                     {
-                        if(property != "")
+                        if(!csv.GetField(i).Equals(""))
                         {
-                            properties.Add(propertyValues[propertyValuesCurrIndex], property);
+                            properties.Add(propertyValues[propertyValuesCurrIndex], csv.GetField(i));
                         }
                         propertyValuesCurrIndex++;
                     }
@@ -94,7 +95,7 @@ namespace SeeShells.IO
                     retList.Add(new CsvParsedShellItem(properties));
                 }
             }
-                return retList;
+            return retList;
         }
     }
 }

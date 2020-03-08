@@ -47,5 +47,43 @@ namespace SeeShellsTests.IO
             List<IShellItem> shellItems = CsvIO.ImportCSVFile(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\TestResource\raw.csv");
             Assert.AreNotEqual(shellItems.Count, 0);
         }
+
+        /// <summary>
+        /// Tests if CSV file with special characters is exported and imported correctly
+        /// </summary>
+        [TestMethod()]
+        public void ExportAndImportCSVWithSpecialCharactersTest()
+        {
+            // Export
+            List<IShellItem> shellItems = new List<IShellItem>();
+            Dictionary<string, string> shellItemProperties = new Dictionary<string, string>();
+            shellItemProperties.Add("Size", "0");
+            shellItemProperties.Add("Type", "31");
+            shellItemProperties.Add("TypeName", "Some Type Name");
+            shellItemProperties.Add("Name", "Some Name, \n \"Name\"");
+            shellItemProperties.Add("ModifiedDate", "1/1/0001 12:00:00 AM");
+            shellItemProperties.Add("AccessedDate", "1/1/0001 12:00:00 AM");
+            shellItemProperties.Add("CreationDate", "1/1/0001 12:00:00 AM");
+            CsvParsedShellItem ShellItem = new CsvParsedShellItem(shellItemProperties);
+            shellItems.Add(ShellItem);
+
+            if (File.Exists("raw.csv"))
+            {
+                File.Delete("raw.csv");
+            }
+            CsvIO.OutputCSVFile(shellItems, "raw.csv");
+            Assert.IsTrue(File.Exists("raw.csv"));
+
+            // Import
+            List<IShellItem> importedShellItems = CsvIO.ImportCSVFile("raw.csv");
+            IDictionary<string, string> allProperties = importedShellItems[0].GetAllProperties();
+            Assert.IsTrue(allProperties["Size"].Equals("0"));
+            Assert.IsTrue(allProperties["Type"].Equals("31"));
+            Assert.IsTrue(allProperties["TypeName"].Equals("Some Type Name"));
+            Assert.IsTrue(allProperties["Name"].Equals("Some Name, \n \"Name\""));
+            Assert.IsTrue(allProperties["ModifiedDate"].Equals("1/1/0001 12:00:00 AM"));
+            Assert.IsTrue(allProperties["AccessedDate"].Equals("1/1/0001 12:00:00 AM"));
+            Assert.IsTrue(allProperties["CreationDate"].Equals("1/1/0001 12:00:00 AM"));
+        }
     }
 }
