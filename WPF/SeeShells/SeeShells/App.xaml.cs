@@ -16,6 +16,7 @@ using System.Windows.Navigation;
 using System.Reflection;
 using System.Windows.Resources;
 using SeeShells.UI.Pages;
+using System.Windows.Input;
 
 namespace SeeShells
 {

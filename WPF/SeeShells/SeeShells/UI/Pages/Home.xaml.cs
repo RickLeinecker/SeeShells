@@ -444,6 +444,7 @@ namespace SeeShells.UI.Pages
             return MessageBox.Show(message, messageBoxTitle, MessageBoxButton.YesNo, MessageBoxImage.Question);
         }
 
+
         private void EnableUIElements(bool value)
         {
             ParseButton.IsEnabled = value;
