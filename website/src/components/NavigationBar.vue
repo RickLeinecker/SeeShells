@@ -10,7 +10,7 @@
                 <b-navbar-nav>
                     <b-nav-item href="#">About</b-nav-item>
                     <b-nav-item href="#">Download the Program</b-nav-item>
-                    <b-nav-item href="#">Developer Team</b-nav-item>
+                    <b-nav-item href='#'>Team Members</b-nav-item>
                     <b-nav-item href="https://github.com/RickLeinecker/SeeShells">GitHub Page</b-nav-item>
                 </b-navbar-nav>
 
