@@ -56,8 +56,6 @@ namespace SeeShells.UI.Pages
         }
 
 
-        
-
         private void OfflineBrowseButton_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
@@ -460,9 +458,11 @@ namespace SeeShells.UI.Pages
             HelpButton.IsEnabled = value;
         }
 
+
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             App.NavigationService = NavigationService;
         }
+
     }
 }
