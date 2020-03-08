@@ -20,6 +20,7 @@ using System.Reflection;
 using NLog.Time;
 using SeeShells.ShellParser.Registry;
 using SeeShells.UI.Templates;
+using SeeShells.IO;
 
 namespace SeeShells.UI.Pages
 {
@@ -52,7 +53,7 @@ namespace SeeShells.UI.Pages
             HideOfflineRows();
 
         }
-        
+
 
         private void OfflineBrowseButton_Click(object sender, RoutedEventArgs e)
         {
@@ -288,12 +289,12 @@ namespace SeeShells.UI.Pages
             App.nodeCollection.nodeList.AddRange(NodeParser.GetNodes(events));
             stopwatch.Stop();
             logger.Info("Parsing Complete. ShellItems Parsed: " + App.ShellItems.Count + ". Time Elapsed: " + stopwatch.ElapsedMilliseconds / 1000 + " seconds");
-            
+
             //Restore UI
             ParseButton.Content = "Parse";
             EnableUIElements(true);
 
-            //Go to Timeline            
+            //Go to Timeline
             Mouse.OverrideCursor = Cursors.Arrow;
             if(timelinePage == null)
             {
@@ -322,8 +323,8 @@ namespace SeeShells.UI.Pages
             bool useRegistryHiveFiles = OfflineCheck.IsChecked.GetValueOrDefault(false);
             string osVersion = OSVersion.SelectedItem == null ? string.Empty : OSVersion.SelectedItem.ToString();
             //potentially long running operation, operate in another thread.
-            return await Task.Run(() => 
-            { 
+            return await Task.Run(() =>
+            {
 
                 List<IShellItem> retList = new List<IShellItem>();
 
@@ -395,7 +396,7 @@ namespace SeeShells.UI.Pages
                     showErrorMessage(location + " is an invalid location.", "Invalid Hive");
                     return false;
                 }
-            }          
+            }
 
             if (OSVersion.SelectedItem is null)
             {
@@ -442,7 +443,7 @@ namespace SeeShells.UI.Pages
         {
             return MessageBox.Show(message, messageBoxTitle, MessageBoxButton.YesNo, MessageBoxImage.Question);
         }
-        
+
         private void EnableUIElements(bool value)
         {
             ParseButton.IsEnabled = value;
@@ -457,5 +458,6 @@ namespace SeeShells.UI.Pages
             OSVersion.IsEnabled = value;
             HelpButton.IsEnabled = value;
         }
+
     }
 }

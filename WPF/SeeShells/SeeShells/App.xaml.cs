@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using System.Windows.Navigation;
 using SeeShells.IO;
 using SeeShells.ShellParser.ShellItems;
 using SeeShells.UI;
