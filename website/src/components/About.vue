@@ -2,6 +2,7 @@
     <div id="home">
         <h1>About Our Project</h1>
         <p align="left">
+            <br />
             SeeShells is essentially an information extract software. The objective is to
             create a standalone open source executable that can run both online and offline.
             It will extract and parse through Windows Registry information. This data will then
@@ -20,9 +21,12 @@
             condensed and easily understandable. We hope others will benefit from our
             interactive timeline generated from the ShellBag information and we hope to make
             a great impact on the digital forensics community.
+            <br />
+            <br />
         </p>
         <p/>
         <h2 align="left">Objectives of SeeShells</h2>
+        <p></p>
         <ul>
             <li align="left">
                 Create a standalone WPF application that can extract and parse ShellBags
