@@ -30,7 +30,7 @@
         methods: {
             onLogin(event) {
                 event.preventDefault();
-                var baseurl = 'http://localhost:3000/'; //https://seeshells.herokuapp.com/
+                var baseurl = 'https://seeshells.herokuapp.com/'; //http://localhost:3000/
                 var url = baseurl + 'login';
 
                 var jsonPayload = '{"username":"' + this.form.name + '", "password":"' + this.form.password + '"}';
@@ -45,6 +45,8 @@
 
                     if (result.success == 1) {
                         this.$session.start();
+                        this.$session.set('id', result.session);
+                        this.$session.set('user', result.user.id);
                         this.$router.push('/SeeShells/');
                         location.reload();
                     }
