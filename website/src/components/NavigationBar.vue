@@ -8,9 +8,9 @@
 
             <b-collapse id="nav-collapse" is-nav>
                 <b-navbar-nav>
-                    <b-nav-item href="#">About</b-nav-item>
+                    <router-link to='/SeeShells/about'><b-navbar-item>About</b-navbar-item></router-link>
                     <b-nav-item href="#">Download the Program</b-nav-item>
-                    <b-nav-item href='#'>Team Members</b-nav-item>
+                    <router-link to='/SeeShells/team'><b-navbar-item>Developer Team</b-navbar-item></router-link>
                     <b-nav-item href="https://github.com/RickLeinecker/SeeShells">GitHub Page</b-nav-item>
                 </b-navbar-nav>
 

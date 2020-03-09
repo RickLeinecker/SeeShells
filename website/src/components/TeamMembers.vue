@@ -1,19 +1,106 @@
 <template>
     <div id="team">
         <h1>Meet the Team</h1>
-        <p>
-            SeeShells is essentially an information extraction software.
-            The objective is to create a standalone open source executable that can run both online and offline.
-            It will extract and parse through Windows Registry information. This data will then be converted into two forms.
-            The first is a csv file that will contain all the raw data we obtain. The second is a human readable timeline.
-            The timeline will provide an interactive easier to read visualization of the data extracted from the windows registries,
-            which is otherwise difficult and time consuming to comb through and understand.
-        </p>
+        <h4 class="section-subheading text-muted">The SeeShells application is a Senior Design project built by five Computer Science students at UCF.</h4>
+        <div class="column">
+            <div class="card">
+                <img src="./../assets/logo.png" alt="Sara" style="width:100%">
+                <div class="container">
+                    <h2>Sara Frackiewicz</h2>
+                    <p class="title">Project Manager, API, and Website</p>
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="card">
+                <img src="./../assets/logo.png" alt="Klayton" style="width:100%">
+                <div class="container">
+                    <h2>
+                        Klayton Killough
+                    </h2>
+                    <p class="title">WPF</p>
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="card">
+                <img src="./../assets/logo.png" alt="Aleks" style="width:100%">
+                <div class="container">
+                    <h2>Aleksander Stoyanov</h2>
+                    <p class="title">WPF</p>
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="card">
+                <img src="./../assets/logo.png" alt="Bridget" style="width:100%">
+                <div class="container">
+                    <h2>Bridget Woodye</h2>
+                    <p class="title">WPF</p>
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="card">
+                <img src="./../assets/logo.png" alt="Yara" style="width:100%">
+                <div class="container">
+                    <h2>Yara As-Saidi</h2>
+                    <p class="title">WPF and Website</p>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
+<style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0;
+    }
+
+    html {
+        box-sizing: border-box;
+    }
+
+    *, *:before, *:after {
+        box-sizing: inherit;
+    }
+
+    .column {
+        float: left;
+        width: 33.3%;
+        margin-bottom: 16px;
+        padding: 0 8px;
+    }
+
+    .card {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        margin: 8px;
+    }
+
+    .container {
+        padding: 0 16px;
+    }
+
+        .container::after, .row::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+    .title {
+        color: grey;
+    }
+
+    @media screen and (max-width: 650px) {
+        .column {
+            width: 100%;
+            display: block;
+        }
+    }
+</style>
 <script>
-export default {
-  name: 'team'
-}
+    export default {
+        name: 'team'
+    }
 </script>
