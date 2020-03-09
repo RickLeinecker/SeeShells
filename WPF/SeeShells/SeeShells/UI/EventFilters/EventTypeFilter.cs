@@ -45,7 +45,7 @@ namespace SeeShells.UI.EventFilters {
 
                 if (!acceptableType)
                 {
-                    node.dot.Visibility = System.Windows.Visibility.Collapsed;
+                    node.Visibility = System.Windows.Visibility.Collapsed;
                 }
             }
         }

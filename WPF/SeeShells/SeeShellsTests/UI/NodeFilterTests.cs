@@ -18,7 +18,7 @@ namespace SeeShellsTests.UI.Tests
         private int countVisible(List<Node> nodes)
         {
             return (from node in nodes
-                    where node.dot.Visibility == System.Windows.Visibility.Visible
+                    where node.Visibility == System.Windows.Visibility.Visible
                     select node).Count();
         }
 
@@ -26,7 +26,7 @@ namespace SeeShellsTests.UI.Tests
         {
             foreach (var node in nodes)
             {
-                node.dot.Visibility = System.Windows.Visibility.Visible;
+                node.Visibility = System.Windows.Visibility.Visible;
             }
         }
 
