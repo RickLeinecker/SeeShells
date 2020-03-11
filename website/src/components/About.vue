@@ -1,5 +1,5 @@
 <template>
-    <div id="home">
+    <div id="about">
         <h1>About Our Project</h1>
         <p align="left">
             <br />
@@ -51,6 +51,6 @@
 
 <script>
 export default {
-  name: 'Home'
+  name: 'about'
 }
 </script>
