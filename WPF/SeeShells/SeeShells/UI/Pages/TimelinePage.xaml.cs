@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using SeeShells.IO;
 using SeeShells.UI.EventFilters;
+using SeeShells.UI.Node;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -225,7 +226,15 @@ namespace SeeShells.UI.Pages
                 KeepOriginalOrderForOverlap = true
             };
 
-
+            List<StackedNodes> stackedNodesList = GetStackedNodes(nodesCluster);
+            // Add all nodes that stack onto a timeline
+            foreach (StackedNodes stackedNode in stackedNodesList)
+            {
+                TimelinePanel.SetDate(stackedNode, stackedNode.events[0].EventTime);
+                stackedNode.Content = stackedNode.events.Count.ToString();
+                timelinePanel.Children.Add(stackedNode);
+            }
+            // Add all other nodes onto a timeline
             foreach (Node.Node node in nodesCluster)
             {
                 TimelinePanel.SetDate(node, node.aEvent.EventTime);
@@ -234,6 +243,50 @@ namespace SeeShells.UI.Pages
 
             Timelines.Children.Add(timelinePanel);
             AddTextBlockTimeStamp(beginDate, endDate);
+        }
+
+        /// <summary>
+        /// Gets all nodes that have the same EventTime out of a list that gets passed into the method and returns them in a list of StackedNodes.
+        /// The list that gets passed in has the nodes that would stack deleted from it.
+        /// </summary>
+        /// <param name="nodesCluster">a list of nodes</param>
+        /// <returns>list of StackedNodes and modifies the list of nodes that gets passed in</returns>
+        private List<StackedNodes> GetStackedNodes(List<Node.Node> nodesCluster)
+        {
+            List<StackedNodes> stackedNodesList = new List<StackedNodes>();
+            Node.Node previousNode = nodesCluster[0];
+            int i = 1;
+            while (i < nodesCluster.Count)
+            {
+                if (previousNode.aEvent.EventTime.Equals(nodesCluster[i].aEvent.EventTime))
+                {
+                    StackedNodes stackedNodes = new StackedNodes();
+                    stackedNodes.events.Add(previousNode.aEvent);
+                    while (i < nodesCluster.Count && previousNode.aEvent.EventTime.Equals(nodesCluster[i].aEvent.EventTime))
+                    {
+                        stackedNodes.events.Add(nodesCluster[i].aEvent);
+                        previousNode = nodesCluster[i];
+                        nodesCluster.RemoveAt(i - 1);
+                    }
+                    stackedNodesList.Add(stackedNodes);
+
+                    if (i < nodesCluster.Count) // If haven't reached the end of the list.
+                    {
+                        previousNode = nodesCluster[i];
+                        nodesCluster.RemoveAt(i - 1);
+                    }
+                    else
+                    {
+                        nodesCluster.RemoveAt(i - 1); 
+                    }
+                }
+                else
+                {
+                    previousNode = nodesCluster[i];
+                    i++;
+                }
+            }
+            return stackedNodesList;
         }
 
         /// <summary>
