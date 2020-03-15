@@ -45,6 +45,8 @@ passport.use(new LocalStrategy({ passReqToCallback: true},
                     let verifyPromise = security.verifyPassword(compare, salt, password);
                     verifyPromise.then(
                         function (result) {
+                            delete user['salt'];
+                            delete user['result'];
                             return done(null, user);
                         },
                         function (fail) {
@@ -80,7 +82,6 @@ passport.deserializeUser(function (id, done) {
     );
 });
 
-
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(require('sanitize').middleware);
@@ -89,12 +90,11 @@ app.use(passport.session());
 app.use(flash());
 
 app.get('/', function (req, res) {
-    res.send({ test: 'testing', hello: 'klayton', and: 'aleks', aswellas: 'bridget', andlastbutnotleast: 'yara' });
+    res.send({ success: 1 });
 });
 app.get('/notauthenticated', function (req, res) {
     res.send({ message: 'You must log in to perform this action.' });
 });
-
 
 app.post('/register', function (req, res) {;
     var username = String(req.body.username);
@@ -128,10 +128,11 @@ app.post('/register', function (req, res) {;
     );
 });
 
-app.post('/login', passport.authenticate('local', {
-    successRedirect: '/',
-    failureFlash: true
-}));
+app.post('/login', passport.authenticate('local'),
+    function (req, res) { // if this function is called, authentication was successful
+        res.send({ "success": 1, "session": req.session.id, "user": req.user});
+    }
+);
 
 app.post('/approveUser', function (req, res) {
     if (req.isAuthenticated()) {

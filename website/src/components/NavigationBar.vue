@@ -22,8 +22,12 @@
                         <template v-slot:button-content>
                             <em>Administrative</em>
                         </template>
-                        <b-dropdown-item><router-link to='/SeeShells/register'>Register</router-link></b-dropdown-item>
-                        <b-dropdown-item href="#">Login</b-dropdown-item>
+                        <div v-if="sessionExists">
+                            <LoggedIn></LoggedIn>
+                        </div>
+                        <div v-else>
+                            <LoggedOut></LoggedOut>
+                        </div>
                     </b-nav-item-dropdown>
                 </b-navbar-nav>
             </b-collapse>
@@ -32,9 +36,20 @@
 </template>
 
 <script>
+    import LoggedIn from './AdministrativeLoggedIn.vue';
+    import LoggedOut from './AdministrativeLoggedOut.vue';
+
     export default {
-        name: 'NavigationBar'
+        name: 'NavigationBar',
+        computed: {
+            sessionExists() { // define it here to make it reactive
+                return this.$session.exists();
+            }         
+        },
+        components: { LoggedIn, LoggedOut },
     }
+
+   
 </script>
 
 <style scoped>
