@@ -10,9 +10,9 @@ namespace SeeShells.UI.Node
 
         public StackedNodes()
         {
-            this.Width = 10;
-            this.Height = 10;
-            this.FontSize = 5;
+            this.Width = 20;
+            this.Height = 20;
+            this.FontSize = 10;
             this.FontWeight = FontWeights.Bold;
         }
 

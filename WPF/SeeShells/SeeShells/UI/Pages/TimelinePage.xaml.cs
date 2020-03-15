@@ -317,10 +317,10 @@ namespace SeeShells.UI.Pages
         {
             Line connectorLine = new Line();
             connectorLine.Stroke = Brushes.LightSteelBlue;
-            connectorLine.X1 = 5;
-            connectorLine.X2 = 5;
+            connectorLine.X1 = 10;
+            connectorLine.X2 = 10;
             connectorLine.Y1 = 0;
-            connectorLine.Y2 = 13;
+            connectorLine.Y2 = 15;
             connectorLine.StrokeThickness = 1;
 
             TimelinePanel.SetDate(connectorLine, eventTime);
@@ -342,8 +342,8 @@ namespace SeeShells.UI.Pages
             {
                 Line tick = new Line();
                 tick.Stroke = Brushes.Black;
-                tick.X1 = 5;
-                tick.X2 = 5;
+                tick.X1 = 10;
+                tick.X2 = 10;
                 tick.Y1 = 0;
                 tick.Y2 = 20;
                 tick.StrokeThickness = 1;

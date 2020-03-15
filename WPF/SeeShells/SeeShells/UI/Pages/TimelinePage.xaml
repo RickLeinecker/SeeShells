@@ -120,10 +120,10 @@
                             </Grid>
                             <ScrollViewer x:Name="TimelineScroll" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  Margin="0,0,0.333,163.667">
                                 <Grid x:Name="Timeline" Background="#292525" Width="Auto" Height="Auto">
+                                    <StackPanel x:Name="Timelines" Orientation="Horizontal"/>
                                     <StackPanel x:Name="TimeStamps" Orientation="Horizontal" Margin="0,97,0,0"/>
                                     <StackPanel x:Name="TicksBar" Orientation="Horizontal" Margin="0,43,0,0"/>
                                     <StackPanel x:Name="Ticks" Orientation="Horizontal" Margin="0,43,0,0"/>
-                                    <StackPanel x:Name="Timelines" Orientation="Horizontal"/>
                                 </Grid>
                             </ScrollViewer>
                         </Grid>
