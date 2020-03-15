@@ -39,12 +39,12 @@ namespace SeeShells.UI.EventFilters
                 {
                     if (!acceptableUsers.Contains(props[keyName]))
                     {
-                        node.dot.Visibility = Visibility.Collapsed;
+                        node.Visibility = Visibility.Collapsed;
                     }
                 }
                 else
                 {
-                    node.dot.Visibility = Visibility.Collapsed;
+                    node.Visibility = Visibility.Collapsed;
                 }
             }
         }
