@@ -57,7 +57,7 @@ function userExistsAndIsApproved(username) {
 
 function getUserByID(userID) {
     return new Promise(function (resolve, reject) {
-        pool.query('SELECT * FROM logininfo WHERE id=$1;', [userID], (err, res) => {
+        pool.query('SELECT id, username, password FROM logininfo WHERE id=$1;', [userID], (err, res) => {
             if (err) {
                 reject({});
                 return;
@@ -70,7 +70,7 @@ function getUserByID(userID) {
 
 function getUnapprovedUsers() {
     return new Promise(function (resolve, reject) {
-        pool.query('SELECT * FROM logininfo WHERE approved=FALSE;', (err, res) => {
+        pool.query('SELECT id, username FROM logininfo WHERE approved=FALSE;', (err, res) => {
             if (err) {
                 reject({});
                 return;
