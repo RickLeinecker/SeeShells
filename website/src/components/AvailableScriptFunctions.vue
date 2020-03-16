@@ -51,12 +51,3 @@
     }
 
 </script>
-
-
-<style scoped>
-    #functionDescriptions {
-        margin:auto;
-        width: 50%;
-    }
-
-</style>

@@ -66,7 +66,7 @@
                 else {
                     (document.getElementById('messages')).insertAdjacentHTML('afterend', '<div class="alert alert-danger alert-dismissible">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong>Passwords don\'t match! </strong>Re-enter the passwords. </div>');
                 }
-          }
+            }
         }
     }
 </script>

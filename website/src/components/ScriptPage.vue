@@ -1,21 +1,32 @@
 <template>
-    <div id="scripts" align="left">
+    <div id="scriptsHeader">
         <h1>Adding and Modifying scripts for the WPF application</h1>
-        <ExampleScript/>
+        <br />
+        <div id="scriptsContent">
+            <CurrentScript />
+            <br />
+            <ExampleScript />
+        </div>
     </div>
 </template>
 
 <script>
     import ExampleScript from './ExampleScript.vue';
+    import CurrentScript from './GetScript.vue';
 
     export default {
         name: 'Scripts',
-        components: { ExampleScript },
+        components: { ExampleScript, CurrentScript },
     }
 </script>
 
 <style>
-    #scripts {
+    #scriptsHeader {
         margin:50px;
+    }
+    #scriptsContent {
+        margin: auto;
+        height: 100%;
+        width: 60%;  
     }
 </style>
