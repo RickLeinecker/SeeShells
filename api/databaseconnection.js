@@ -277,6 +277,53 @@ function addScript(identifier, encodedscript) {
     });
 }
 
+function updateExistingScript(identifier, encodedscript) {
+    return new Promise(function (resolve, reject) {
+        pool.query('UPDATE scripts SET script=$1 WHERE typeidentifier=$2;', [encodedscript, identifier], (err, res) => {
+            if (err) {
+                reject(err);
+            }
+
+            resolve({ "message": "Success" });
+        });
+    });
+}
+
+function updateScript(identifier, encodedscript) {
+    return new Promise(function (resolve, reject) {
+        let promise = scriptForIdentifierDoesNotExist(identifier);
+        promise.then(
+            function () {
+                let addPromise = database.addScript(identifier, encodedscript);
+                addPromise.then(
+                    function (value) {
+                        resolve({ "success": 1 });
+                    },
+                    function (err) {
+                        reject({ "success": 0, "error": "Failed to add new script." });
+                    }
+                );
+            },
+            function (err) {
+                if (err.result >= 1) {
+                    let update = updateExistingScript(identifier, encodedscript);
+                    update.then(
+                        function () {
+                            resolve({ "success": 1 });
+                        },
+                        function () {
+                            reject({ "success": 0, "error": "Error in updating an existing script." });
+                        }
+                    );
+                }
+                else {
+                    reject({ "success": 0, "error": err.message });
+                }
+            }
+        );
+    });
+}
+
 function scriptForIdentifierDoesNotExist(identifier) {
     return new Promise(function (resolve, reject) {
         pool.query('SELECT id FROM scripts WHERE typeidentifier=$1;', [identifier], (err, res) => {
@@ -306,6 +353,30 @@ function getScripts(callback) {
         }
 
         callback(res.rows);
+    });
+}
+
+function getScript(identifier) {
+    return new Promise(function (resolve, reject) {
+        pool.query('SELECT id, script FROM scripts WHERE typeidentifier=$1;', [identifier], (err, res) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+
+            if (res.rowCount > 0) {
+                resolve({
+                    success: 1,
+                    script: res.rows[0].script
+                });
+                
+            }
+            else {
+                resolve({ "success": 0, result: "No script exists for this shell item identifier." });               
+            }
+
+            return;
+        });
     });
 }
 
@@ -354,9 +425,10 @@ module.exports = {
     getGUIDs,
     addGUID,
     GUIDDoesNotExist,
-    addScript,
+    updateScript,
     scriptForIdentifierDoesNotExist,
     getScripts,
+    getScript,
     getHelpInformation,
     updateHelpInformation
 }

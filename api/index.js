@@ -11,7 +11,7 @@ var port = process.env.PORT || 3000;
 var app = express();
 
 app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', 'https://rickleinecker.github.io');
+    res.setHeader('Access-Control-Allow-Origin', '*'); //https://rickleinecker.github.io
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     res.setHeader('Access-Control-Allow-Methods', 'POST, GET');
     next();
@@ -303,7 +303,7 @@ app.get('/getRegistryLocations', function (req, res) {
 });
 
 // scripts must be sent base 64 encoded to this endpoint
-app.post('/addScript', [
+app.post('/updateScript', [
     check('identifier').isNumeric().trim().escape(),
     check('script').isBase64().trim(),
 ], function (req, res) {
@@ -316,24 +316,13 @@ app.post('/addScript', [
         var identifier = String(req.body.identifier);
         var encodedscript = String(req.body.script);
 
-        let promise = database.scriptForIdentifierDoesNotExist(identifier);
+        let promise = database.updateScript(identifier, encodedscript);
         promise.then(
             function (value) {
-                let addPromise = database.addScript(identifier, encodedscript);
-                addPromise.then(
-                    function (value) {
-                        res.send({ "success": 1 });
-                    },
-                    function (err) {
-                        res.send({ "success": 0, "error": "Failed to add new script." });
-                    }
-                );
+                res.send({ "success": 1 });
             },
             function (err) {
-                if (err.result >= 1)
-                    res.send({ "success": 0, "error": "Script exists in the database already for this identifier." });
-                else
-                    res.send({ "success": 0, "error": err.message });
+                res.send({ "success": 0, "error": err.message });
             }
         );
     }
@@ -350,6 +339,27 @@ app.get('/getScripts',  function (req, res) {
         else
             res.send({ "success": 0, "error": "Failed to get any scripts" });
     });
+
+});
+
+app.get('/getScript', function (req, res) {
+
+    var identifier = req.query.identifier;
+
+    let promise = database.getScript(identifier);
+    promise.then(
+        function (results) {
+            if (results.success == 1) {
+                res.send({ "success": 1, "script": results.script });
+            }
+            else {
+                res.send({ "success": 0, "error": "No script exists for this identifier." });
+            }
+        },
+        function () {
+            res.send({ "success": 0, "error": "Failed to get script information." });
+        }
+    );
 
 });
 

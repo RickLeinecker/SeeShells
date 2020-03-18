@@ -1,6 +1,6 @@
 <template>
     <div id="scriptsHeader">
-        <h1>Adding and Modifying scripts for the WPF application</h1>
+        <h1>Adding and Modifying Scripts for the WPF application</h1>
         <br />
         <div id="scriptsContent">
             <CurrentScript />
