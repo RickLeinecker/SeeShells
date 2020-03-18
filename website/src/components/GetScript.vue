@@ -10,8 +10,10 @@
                          placeholder="Enter Lua script here to parse the shell item..."
                          v-model="text"
                          rows="10"></b-form-textarea>
-        <br/>
+        <br />
         <b-button @click="onSubmit" variant="primary">{{buttonText}}</b-button>
+        <br/>
+        <div id="messages"></div>
     </div>
 </template>
 
@@ -33,7 +35,7 @@
                 this.hexIdentifier = '0x' + (Number(this.identifier).toString(16)).toUpperCase();
                 if (this.identifier != 0) {
                     // get the existing script if it exists
-                    var baseurl = 'http://localhost:3000/'; //https://seeshells.herokuapp.com/
+                    var baseurl = 'https://seeshells.herokuapp.com/'; //http://localhost:3000/
                     var url = baseurl + 'getScript';
                     var params = 'identifier=' + this.identifier;
 
@@ -50,6 +52,7 @@
                             this.buttonText = 'Update script';
                         }
                         else {
+                            this.text = '';
                             this.buttonText = 'Submit new script';
                         }
                        
@@ -61,7 +64,39 @@
                 }
             },
             onSubmit() {
+                if (this.text == '')
+                    return;
 
+                var baseurl = 'https://seeshells.herokuapp.com/'; //http://localhost:3000/
+                var url = baseurl + 'updateScript';
+
+                var jsonPayload = '{"identifier":' + this.identifier + ', "script":"' + btoa(this.text) + '"}';
+
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", url, false);
+                xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+                xhr.setRequestHeader("X-Auth-Token", this.$session.get('session'));
+
+                try {
+                    xhr.send(jsonPayload);
+                    var result = JSON.parse(xhr.responseText);
+
+                    if (result.success == 1) {
+                        (document.getElementById('messages')).insertAdjacentHTML('afterend', '<div class="alert alert-success alert-dismissible">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong>Script saved! </strong>To use it in the desktop application, just update your script configuration file in the application. </div>');       
+                    }
+                    else if (result.message == "You must log in to perform this action.") {
+                            this.$session.destroy();
+                            this.$router.push('/SeeShells/login');
+                            location.reload();
+                    }
+                    else {
+                        (document.getElementById('messages')).insertAdjacentHTML('afterend', '<div class="alert alert-danger alert-dismissible">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong>Error! </strong> Failed to update the script. </div>');                    
+                    }
+                }
+                catch (err) { 
+                    console.log(err);
+                    (document.getElementById('messages')).insertAdjacentHTML('afterend', '<div class="alert alert-danger alert-dismissible">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong>Error! </strong> Failed to update the script. </div>');                    
+                }
             }
         }
     }

@@ -55,22 +55,39 @@ function userExistsAndIsApproved(username) {
     });
 }
 
-function getUserByID(userID) {
+function getSession(sid) {
     return new Promise(function (resolve, reject) {
-        pool.query('SELECT * FROM logininfo WHERE id=$1;', [userID], (err, res) => {
+        pool.query('SELECT * FROM session WHERE sid=$1;', [sid], (err, res) => {
             if (err) {
-                reject({});
+                reject(err);
                 return;
             }
 
-            resolve(res.rows);
+            if (res.rowCount > 0) {
+                resolve(true);
+                return;
+            }
+
+            resolve(false);
+        });
+    });
+}
+
+function destroySession(sid) {
+    return new Promise(function (resolve, reject) {
+        pool.query('DELETE FROM session WHERE sid=$1;', [sid], (err, res) => {
+            if (err) {
+                reject(err);
+            }
+
+            resolve({ "message": "success" });
         });
     });
 }
 
 function getUnapprovedUsers() {
     return new Promise(function (resolve, reject) {
-        pool.query('SELECT * FROM logininfo WHERE approved=FALSE;', (err, res) => {
+        pool.query('SELECT id, username FROM logininfo WHERE approved=FALSE;', (err, res) => {
             if (err) {
                 reject({});
                 return;
@@ -412,7 +429,8 @@ module.exports = {
     pgSession,
     userExists,
     userExistsAndIsApproved,
-    getUserByID,
+    getSession,
+    destroySession,
     getUnapprovedUsers,
     keysIDExists,
     addKeys,

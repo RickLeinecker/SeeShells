@@ -12,20 +12,22 @@
         name: 'LoggedIn',
         methods: {
             Logout() {
-                this.$session.destroy();
-                var baseurl = 'http://localhost:3000/'; //https://seeshells.herokuapp.com/
+                var baseurl = 'https://seeshells.herokuapp.com/'; //http://localhost:3000/
                 var url = baseurl + 'logout';
                 var xhr = new XMLHttpRequest();
                 xhr.open("GET", url, false);
                 xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+                xhr.setRequestHeader("X-Auth-Token", this.$session.get('session'));
 
                 try {
                     xhr.send();
                 }
                 catch (err) { 
-                        alert(err.message)
+                    alert(err.message)
                 }
 
+                this.$session.destroy();
+                this.$router.push('/SeeShells/');
                 location.reload();
             }
         }

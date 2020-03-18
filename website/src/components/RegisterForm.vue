@@ -74,7 +74,7 @@
 <style>
     #register{
         margin: auto;
-        margin-top:150px;
+        margin-top:100px;
         height: 100%;
         width: 40%;
     }
