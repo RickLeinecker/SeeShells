@@ -29,7 +29,14 @@ namespace SeeShells.UI.Pages
         public TimelinePage()
         {
             InitializeComponent();
-            BuildTimeline();
+            if (Home.timelinePage == null)
+            {
+                BuildTimeline();
+            }
+            else
+            {
+                Home.timelinePage.InitializeComponent();
+            }
         }
 
         private void AllStringFilter_TextChanged(object sender, TextChangedEventArgs e)

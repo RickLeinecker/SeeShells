@@ -45,8 +45,8 @@
                                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type WrapPanel}}}" Background="Transparent">
                                     <Menu Background="Transparent">
                                         <MenuItem Header="View" Foreground="DarkGray" >
-                                            <MenuItem Header="Home"/>
-                                            <MenuItem Header="Timeline"/>
+                                            <Hyperlink NavigateUri="/SeeShells;component/ui/pages/home.xaml">Home</Hyperlink>
+                                            <Hyperlink NavigateUri="/SeeShells;component/ui/pages/timelinepage.xaml">Timeline Page</Hyperlink>
                                         </MenuItem>
                                         <MenuItem Header="Help" Foreground="DarkGray">
                                             <MenuItem Header="About SeeShells"/>
