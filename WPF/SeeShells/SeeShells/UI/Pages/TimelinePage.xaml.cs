@@ -158,6 +158,7 @@ namespace SeeShells.UI.Pages
                 List<Node.Node> nodeList = new List<Node.Node>();
                 foreach (Node.Node node in App.nodeCollection.nodeList)
                 {
+                    node.Style = (Style)Resources["TimelineDot"];
                     if(node.Visibility == System.Windows.Visibility.Visible)
                     {
                         nodeList.Add(node);

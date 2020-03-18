@@ -9,7 +9,13 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="TimelinePage"
       Style="{StaticResource DefaultPageStyle}">
-
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\Templates\NodeStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
     <Grid>
         <Viewbox>
             <TabControl HorizontalAlignment="Left" Background="#FF343030" Height="592" Width="1113">
