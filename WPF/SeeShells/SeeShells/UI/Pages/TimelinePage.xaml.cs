@@ -35,7 +35,7 @@ namespace SeeShells.UI.Pages
             }
             else
             {
-                Home.timelinePage.InitializeComponent();
+                Home.timelinePage.RebuildTimeline();
             }
         }
 
