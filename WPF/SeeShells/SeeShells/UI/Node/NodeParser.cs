@@ -63,7 +63,6 @@ namespace SeeShells.UI.Node
             block.Background = Brushes.Turquoise; // #5ec0ca
             block.Height = 40;
             block.Width = 100;
-            block.MouseDown += Pages.TimelinePage.Block_Hover;
         }
     }
 }
