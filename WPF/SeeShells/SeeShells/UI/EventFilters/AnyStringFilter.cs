@@ -65,7 +65,7 @@ namespace SeeShells.UI.EventFilters
                     if (!seenParents[nEvent.Parent]) //aka !foundMatch
                     {
                         //nodes.Remove(node);
-                        node.dot.Visibility = System.Windows.Visibility.Collapsed;
+                        node.Visibility = System.Windows.Visibility.Collapsed;
                     }
                 }
                 else
@@ -107,7 +107,7 @@ namespace SeeShells.UI.EventFilters
                     //if we found a match add result
                     if (!foundMatch)
                     {
-                        node.dot.Visibility = System.Windows.Visibility.Collapsed;
+                        node.Visibility = System.Windows.Visibility.Collapsed;
 
                     }
                     seenParents.Add(nEvent.Parent, foundMatch);

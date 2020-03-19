@@ -34,7 +34,7 @@ namespace SeeShells.UI.EventFilters {
                 //if the event falls outside of our two DateTime bounds
                 if (DateTime.Compare(startDate, nEvent.EventTime) > 0 || DateTime.Compare(nEvent.EventTime, endDate) > 0)
                 {
-                    node.dot.Visibility = System.Windows.Visibility.Collapsed;
+                    node.Visibility = System.Windows.Visibility.Collapsed;
 
                 }
             }

@@ -24,7 +24,7 @@ namespace SeeShellsTests.UI.Mocks
             {
                 if (!acceptableNodes.Contains(node))
                 {
-                    node.dot.Visibility = Visibility.Collapsed;
+                    node.Visibility = Visibility.Collapsed;
                 }
             }
         }

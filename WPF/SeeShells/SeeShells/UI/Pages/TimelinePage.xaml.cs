@@ -1,12 +1,14 @@
 ﻿using Microsoft.Win32;
 using SeeShells.IO;
 using SeeShells.UI.EventFilters;
+using SeeShells.UI.Node;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Shapes;
 using Xceed.Wpf.Toolkit;
 using Xceed.Wpf.Toolkit.Primitives;
 
@@ -156,7 +158,7 @@ namespace SeeShells.UI.Pages
                 List<Node.Node> nodeList = new List<Node.Node>();
                 foreach (Node.Node node in App.nodeCollection.nodeList)
                 {
-                    if(node.dot.Visibility == System.Windows.Visibility.Visible)
+                    if(node.Visibility == System.Windows.Visibility.Visible)
                     {
                         nodeList.Add(node);
                     }
@@ -216,40 +218,198 @@ namespace SeeShells.UI.Pages
             DateTime beginDate = DateTimeRoundDown(nodesCluster[0].aEvent.EventTime, maxRealTimeSpan);
             DateTime endDate = beginDate.AddMinutes(1);
 
+            TimelinePanel timelinePanel = MakeTimelinePanel(beginDate, endDate);
+
+            List<StackedNodes> stackedNodesList = GetStackedNodes(nodesCluster);
+            // Add all nodes that stack onto a timeline
+            foreach (StackedNodes stackedNode in stackedNodesList)
+            {
+                TimelinePanel.SetDate(stackedNode, stackedNode.events[0].EventTime);
+                stackedNode.Content = stackedNode.events.Count.ToString();
+                timelinePanel.Children.Add(stackedNode);
+                ConnectNodeToTimeline(timelinePanel, stackedNode.events[0].EventTime);
+            }
+            // Add all other nodes onto a timeline
+            foreach (Node.Node node in nodesCluster)
+            {
+                TimelinePanel.SetDate(node, node.aEvent.EventTime);
+                timelinePanel.Children.Add(node);
+                ConnectNodeToTimeline(timelinePanel, node.aEvent.EventTime);
+            }
+
+            Timelines.Children.Add(timelinePanel);
+            Line separationLine = MakeTimelineSeparatingLine();
+            Timelines.Children.Add(separationLine);
+            AddTicks(beginDate, endDate);
+            AddTimeStamp(beginDate, endDate);
+        }
+
+        /// <summary>
+        /// Creates a TimelinePanel
+        /// </summary>
+        /// <param name="beginDate">begin date of timeline</param>
+        /// <param name="endDate">end date of timeline</param>
+        /// <returns>TimelinePanel that can space graphical objects according to time</returns>
+        private TimelinePanel MakeTimelinePanel(DateTime beginDate, DateTime endDate)
+        {
             TimelinePanel timelinePanel = new TimelinePanel
             {
                 UnitTimeSpan = new TimeSpan(0, 0, 0, 1),
-                UnitSize = App.nodeCollection.nodeList[0].dot.Width,
+                UnitSize = App.nodeCollection.nodeList[0].Width,
                 BeginDate = beginDate,
                 EndDate = endDate,
                 KeepOriginalOrderForOverlap = true
             };
 
-
-            foreach (Node.Node node in nodesCluster)
-            {
-                TimelinePanel.SetDate(node.dot, node.aEvent.EventTime);
-                timelinePanel.Children.Add(node.dot);
-            }
-
-            Timelines.Children.Add(timelinePanel);
-            AddTextBlockTimeStamp(beginDate, endDate);
+            return timelinePanel;
         }
 
         /// <summary>
-        /// Adds a timestamp for timeline.
+        /// Gets all nodes that have the same EventTime out of a list that gets passed into the method and returns them in a list of StackedNodes.
+        /// The list that gets passed in has the nodes that would stack deleted from it.
         /// </summary>
-        /// <param name="beginDate">the begin date of the time interval</param>
-        /// <param name="endDate">the end date of the time interval</param>
-        private void AddTextBlockTimeStamp(DateTime beginDate, DateTime endDate)
+        /// <param name="nodesCluster">a list of nodes</param>
+        /// <returns>list of StackedNodes and modifies the list of nodes that gets passed in</returns>
+        private List<StackedNodes> GetStackedNodes(List<Node.Node> nodesCluster)
         {
-            TextBlock textBlock = new TextBlock();
-            textBlock.Text = beginDate.ToString() + " - " + endDate.ToString();
-            textBlock.Height = 20;
-            textBlock.Width = endDate.Subtract(beginDate).TotalSeconds * App.nodeCollection.nodeList[0].dot.Width;
-            textBlock.Background = Brushes.LightSteelBlue;
+            List<StackedNodes> stackedNodesList = new List<StackedNodes>();
+            Node.Node previousNode = nodesCluster[0];
+            int i = 1;
+            while (i < nodesCluster.Count)
+            {
+                if (previousNode.aEvent.EventTime.Equals(nodesCluster[i].aEvent.EventTime))
+                {
+                    StackedNodes stackedNodes = new StackedNodes();
+                    stackedNodes.events.Add(previousNode.aEvent);
+                    while (i < nodesCluster.Count && previousNode.aEvent.EventTime.Equals(nodesCluster[i].aEvent.EventTime))
+                    {
+                        stackedNodes.events.Add(nodesCluster[i].aEvent);
+                        previousNode = nodesCluster[i];
+                        nodesCluster.RemoveAt(i - 1);
+                    }
+                    stackedNodesList.Add(stackedNodes);
 
-            TimeStamps.Children.Add(textBlock);
+                    if (i < nodesCluster.Count) // If haven't reached the end of the list.
+                    {
+                        previousNode = nodesCluster[i];
+                        nodesCluster.RemoveAt(i - 1);
+                    }
+                    else
+                    {
+                        nodesCluster.RemoveAt(i - 1); 
+                    }
+                }
+                else
+                {
+                    previousNode = nodesCluster[i];
+                    i++;
+                }
+            }
+            return stackedNodesList;
+        }
+
+        /// <summary>
+        /// Draws a line to connect a node to a timeline
+        /// </summary>
+        /// <param name="timelinePanel">timeline panel to hold and position connection lines</param>
+        /// <param name="eventTime">time used as position for where to draw a connecting line</param>
+        private void ConnectNodeToTimeline(TimelinePanel timelinePanel, DateTime eventTime)
+        {
+            Line connectorLine = new Line();
+            connectorLine.Stroke = Brushes.LightSteelBlue;
+            connectorLine.X1 = 10;
+            connectorLine.X2 = 10;
+            connectorLine.Y1 = 0;
+            connectorLine.Y2 = 15;
+            connectorLine.StrokeThickness = 1;
+
+            TimelinePanel.SetDate(connectorLine, eventTime);
+            timelinePanel.Children.Add(connectorLine);
+        }
+
+        /// <summary>
+        /// Draws ticks below the nodes to represent the seconds of each timeline interval
+        /// </summary>
+        /// <param name="beginDate">begin date of a timeline period</param>
+        /// <param name="endDate"> end date of a timeline period</param>
+        private void AddTicks(DateTime beginDate, DateTime endDate)
+        {
+            TimelinePanel timelinePanel = MakeTimelinePanel(beginDate, endDate);
+
+            AddTicksBar(beginDate, endDate);
+            int timePeriod = (int)endDate.Subtract(beginDate).TotalSeconds;
+            for (int i = 0; i < timePeriod; i++)
+            {
+                Line tick = new Line();
+                tick.Stroke = Brushes.Black;
+                tick.X1 = 10;
+                tick.X2 = 10;
+                tick.Y1 = 0;
+                tick.Y2 = 20;
+                tick.StrokeThickness = 1;
+
+                TimelinePanel.SetDate(tick, beginDate);
+                timelinePanel.Children.Add(tick);
+                beginDate = beginDate.AddSeconds(1);
+            }
+            Ticks.Children.Add(timelinePanel);
+
+            Line separationLine = MakeTimelineSeparatingLine();
+            separationLine.Visibility = Visibility.Hidden; // Hidden since this line is added only for proper spacing
+            Ticks.Children.Add(separationLine);
+        }
+
+        /// <summary>
+        /// Adds a rectangular bar behind the timeline ticks.
+        /// </summary>
+        /// <param name="beginDate">begin date of the time interval used to decide the size of the bar</param>
+        /// <param name="endDate">end date of the time interval used to decide the size of the bar</param>
+        private void AddTicksBar(DateTime beginDate, DateTime endDate)
+        {
+            Rectangle bar = new Rectangle();
+            bar.Height = 20;
+            bar.Width = (endDate.Subtract(beginDate).TotalSeconds * App.nodeCollection.nodeList[0].Width) + 12; // The added integer is to compensate for the margins and thickness of the line that separates the timelines. 
+            bar.Fill = Brushes.LightSteelBlue;
+            bar.Margin = new Thickness(0, 0, -1, 0);
+
+            TicksBar.Children.Add(bar);
+        }
+
+        /// <summary>
+        /// Adds time stamp that tells the time period of a timeline
+        /// </summary>
+        /// <param name="beginDate">the begin date of the timeline</param>
+        /// <param name="endDate">the end date of the timeline</param>
+        private void AddTimeStamp(DateTime beginDate, DateTime endDate)
+        {
+            TextBlock timeStamp = new TextBlock();
+            timeStamp.Text = beginDate.ToString() + " - " + endDate.ToString();
+            timeStamp.Foreground = Brushes.White;
+            timeStamp.Height = 20;
+            timeStamp.Width = (endDate.Subtract(beginDate).TotalSeconds * App.nodeCollection.nodeList[0].Width) + 12;
+            timeStamp.Margin = new Thickness(0, 0, -1, 0);
+
+            TimeStamps.Children.Add(timeStamp);
+        }
+
+        /// <summary>
+        /// Creates a line to be used as separation between timelines
+        /// </summary>
+        /// <returns>a line to visually separate timelines</returns>
+        private Line MakeTimelineSeparatingLine()
+        {
+            Line separatingLine = new Line();
+            separatingLine.Stroke = Brushes.LightSteelBlue;
+            separatingLine.X1 = 0;
+            separatingLine.X2 = 0;
+            separatingLine.Y1 = 43;
+            separatingLine.Y2 = 150;
+            separatingLine.StrokeThickness = 2;
+            separatingLine.HorizontalAlignment = HorizontalAlignment.Left;
+            separatingLine.VerticalAlignment = VerticalAlignment.Center;
+            separatingLine.Margin = new Thickness(5, 0, 5, 0);
+
+            return separatingLine;
         }
 
         /// <summary>
@@ -265,15 +425,21 @@ namespace SeeShells.UI.Pages
         }
 
         /// <summary>
-        /// Clears the children of all timeline related UI objects and builds timeline.
+        /// Clears all children of UI objects and rebuilds the timeline.
         /// </summary>
         public void RebuildTimeline()
         {
-            foreach(TimelinePanel timeline in Timelines.Children)
+            foreach (Object child in Timelines.Children)
             {
-                timeline.Children.Clear();
+                if(child is TimelinePanel) // Only TimelinePanel objects since Timelines also contains separating lines
+                {
+                    TimelinePanel timeline = (TimelinePanel)child;
+                    timeline.Children.Clear();
+                }
             }
             Timelines.Children.Clear();
+            Ticks.Children.Clear();
+            TicksBar.Children.Clear();
             TimeStamps.Children.Clear();
             BuildTimeline();
         }
@@ -303,6 +469,14 @@ namespace SeeShells.UI.Pages
                 string name2 = saveFileDialog2.FileName;
                 CsvIO.OutputCSVFile(App.ShellItems, name2);
             }
+        }
+
+        /// <summary>
+        /// This activates the toggle_block method built into the Node object. 
+        /// </summary>
+        public static void Dot_Press(object sender, EventArgs e)
+        {
+            ((Node.Node)sender).toggle_block();
         }
     }
 }
