@@ -142,6 +142,11 @@ namespace SeeShells.UI.Pages
 
         }
 
+        public static void click_line(object sender, EventArgs e)
+        {
+            System.Windows.MessageBox.Show("This is the textblock");
+        }
+
         /// <summary>
         /// Builds a timeline dynamically. Creates one timeline for each cluster of events.
         /// </summary>
@@ -156,12 +161,14 @@ namespace SeeShells.UI.Pages
                 }
 
                 List<Node.Node> nodeList = new List<Node.Node>();
+                List<TextBlock> blockList = new List<TextBlock>();
                 foreach (Node.Node node in App.nodeCollection.nodeList)
                 {
                     node.Style = (Style)Resources["TimelineDot"];
-                    if(node.Visibility == System.Windows.Visibility.Visible)
+                    if (node.Visibility == System.Windows.Visibility.Visible)
                     {
                         nodeList.Add(node);
+                        blockList.Add(node.block);
                     }
                 }
 
@@ -172,7 +179,9 @@ namespace SeeShells.UI.Pages
                 }
 
                 List<Node.Node> nodesCluster = new List<Node.Node>(); // Holds events for one timeline at a time.
+                List<TextBlock> blockCluster = new List<TextBlock>();
                 nodesCluster.Add(nodeList[0]);
+                blockCluster.Add(blockList[0]);
                 DateTime previousDate = nodeList[0].aEvent.EventTime;
                 DateTime realTimeStart = DateTimeRoundDown(previousDate, maxRealTimeSpan);
                 int nodeListSize = nodeList.Count;
@@ -182,19 +191,23 @@ namespace SeeShells.UI.Pages
                     if (TimeSpan.Compare(nodeList[i].aEvent.EventTime.Subtract(realTimeStart), maxRealTimeSpan) == -1) // Compare returns -1 if the first argument is less than the second
                     {
                         nodesCluster.Add(nodeList[i]);
+                        blockCluster.Add(blockList[i]);
                     }
                     else
                     {
                         AddTimeline(nodesCluster);
                         nodesCluster.Clear();
+                        blockCluster.Clear();
 
                         nodesCluster.Add(nodeList[i]);
+                        blockCluster.Add(blockList[i]);
                         previousDate = nodeList[i].aEvent.EventTime;
                         realTimeStart = DateTimeRoundDown(previousDate, maxRealTimeSpan);
                         if (i == nodeListSize - 1) // If it's the last event of nodeList.
                         {
                             AddTimeline(nodesCluster);
                             nodesCluster.Clear();
+                            blockCluster.Clear();
                         }
                     }
                 }
@@ -220,6 +233,7 @@ namespace SeeShells.UI.Pages
             DateTime endDate = beginDate.AddMinutes(1);
 
             TimelinePanel timelinePanel = MakeTimelinePanel(beginDate, endDate);
+            TimelinePanel blockPanel = MakeTimelinePanel(beginDate, endDate);
 
             List<StackedNodes> stackedNodesList = GetStackedNodes(nodesCluster);
             // Add all nodes that stack onto a timeline
@@ -235,15 +249,18 @@ namespace SeeShells.UI.Pages
             {
                 TimelinePanel.SetDate(node, node.aEvent.EventTime);
                 timelinePanel.Children.Add(node);
+                blockPanel.Children.Add(node.block);
                 ConnectNodeToTimeline(timelinePanel, node.aEvent.EventTime);
+                ConnectNodeToTimeline(blockPanel, node.aEvent.EventTime);
             }
-
             Timelines.Children.Add(timelinePanel);
+            Blocks.Children.Add(blockPanel);
             Line separationLine = MakeTimelineSeparatingLine();
             Timelines.Children.Add(separationLine);
             AddTicks(beginDate, endDate);
             AddTimeStamp(beginDate, endDate);
         }
+
 
         /// <summary>
         /// Creates a TimelinePanel
@@ -479,5 +496,6 @@ namespace SeeShells.UI.Pages
         {
             ((Node.Node)sender).toggle_block();
         }
+
     }
 }
