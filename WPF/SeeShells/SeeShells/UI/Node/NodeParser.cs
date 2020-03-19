@@ -39,8 +39,8 @@ namespace SeeShells.UI.Node
         /// <param name="node">Acta as a graphical object (button) to be placed on the timeline.</param>
         private static void SetNodeProperties(Node node)
         {
-            node.Width = 10;
-            node.Height = 10;
+            node.Width = 20;
+            node.Height = 20;
             node.Click += Pages.TimelinePage.Dot_Press;
         }
 
