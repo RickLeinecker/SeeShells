@@ -11,7 +11,7 @@ const routes = [
     { path: root, component: Home },
     { path: root + 'register', component: Register },
     { path: root + 'team', component: TeamMembers },
-    { path: root + 'about', component: About}
+    { path: root + 'about', component: About},
     { path: root + 'login', component: Login }
 ];
 
