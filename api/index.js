@@ -24,7 +24,7 @@ app.use(database.session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 30 * 60 * 1000, secure:false }, // 30 minutes
+    cookie: { maxAge: 30 * 60 * 1000, secure:true }, // 30 minutes
     unset: 'destroy',
     genid: (req) => {
         return security.generateSessionKey();
