@@ -11,6 +11,7 @@
                 <b-navbar-nav>
                     <b-nav-item href="#">Download the Program</b-nav-item>
                 </b-navbar-nav>
+                <!--styling found in menuitem tag-->
                 <router-link to='/SeeShells/team' tag="menuitem"><b-navbar-item>Developer Team</b-navbar-item></router-link>
                 <b-navbar-nav>
                     <b-nav-item href="https://github.com/RickLeinecker/SeeShells">GitHub Page</b-nav-item>
