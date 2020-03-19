@@ -30,6 +30,7 @@ namespace SeeShells.IO.Networking
         public const string SCRIPTS_ENDPOINT = "getScripts";
         private const string DEFAULT_SCRIPTS_FILENAME = "SeeShellsScripts.json";
 
+        public const string HELP_ENDPOINT = "getHelpInformation";
 
         /// <summary>
         /// Obtains a <see cref="RestClient"/> which is ready to send requests to the SeeShells API Server.
@@ -75,7 +76,8 @@ namespace SeeShells.IO.Networking
         public static async Task<string> GetGuids(string outputFilePath, IRestClient apiClient = null)
         {
             RestRequest guidRequest = new RestRequest(GUID_ENDPOINT, DataFormat.Json);
-            return  await PerformGET<IList<GUIDPair>>(guidRequest, outputFilePath, DEFAULT_GUID_FILENAME, apiClient);
+            IList<GUIDPair> data = await PerformGET<IList<GUIDPair>>(guidRequest, apiClient);
+            return WriteToFile(data, outputFilePath, DEFAULT_GUID_FILENAME);
         }
 
         /// <summary>
@@ -88,7 +90,8 @@ namespace SeeShells.IO.Networking
         public static async Task<string> GetOSRegistryLocations(string outputFilePath, IRestClient apiClient = null)
         {
             RestRequest guidRequest = new RestRequest(OS_REGISTRY_ENDPOINT, DataFormat.Json);
-            return await PerformGET<IList<RegistryLocations>>(guidRequest, outputFilePath, DEFAULT_OS_REGISTRY_FILENAME, apiClient);
+            IList<RegistryLocations> data = await PerformGET<IList<RegistryLocations>>(guidRequest, apiClient);
+            return WriteToFile(data, outputFilePath, DEFAULT_OS_REGISTRY_FILENAME);
         }
 
         /// <summary>
@@ -101,7 +104,23 @@ namespace SeeShells.IO.Networking
         public static async Task<string> GetScripts(string outputFilePath, IRestClient apiClient = null)
         {
             RestRequest scriptsRequest = new RestRequest(SCRIPTS_ENDPOINT, DataFormat.Json);
-            return await PerformGET<IList<ScriptPair>>(scriptsRequest, outputFilePath, DEFAULT_SCRIPTS_FILENAME, apiClient);
+            IList<ScriptPair> data = await PerformGET<IList<ScriptPair>>(scriptsRequest, apiClient);
+            return WriteToFile(data, outputFilePath, DEFAULT_SCRIPTS_FILENAME);
+        }
+        /// <summary>
+        /// Obtains the content for the help section of the WPF
+        /// </summary>
+        /// <param name="apiClient">A custom client to use for the GET operation.</param>
+        /// <returns>The help text received</returns>
+        public static async Task<string> GetHelp(IRestClient apiClient = null)
+        {
+            return await Task.Run(async () =>
+            {
+                RestRequest helpRequest = new RestRequest(HELP_ENDPOINT, DataFormat.Json);
+                IList<HelpItem> data = await PerformGET<IList<HelpItem>>(helpRequest, apiClient);
+
+                return data.First().GetHelpContent();
+            });
         }
 
 
@@ -109,13 +128,11 @@ namespace SeeShells.IO.Networking
         /// Performs a GET request on an API Endpoint
         /// </summary>
         /// <param name="restRequest">The Request to perform</param>
-        /// <param name="outputFilePath">Specific file path in which to save the results. If it doesnt exist it will be created</param>
-        /// <param name="defaultFileName">filename to be used if outputFilePath isnt defined</param>
         /// <param name="apiClient">The client to use for the GET operation.</param>
         /// <returns>An absolute filepath of the written file</returns>
         /// <exception cref="IOException"> When any networking or file error occurs during the operation.</exception>
         /// <typeparam name="T">A Object which can be serialized from json for validty checking.</typeparam>
-        private static async Task<string> PerformGET<T>(RestRequest restRequest, string outputFilePath, string defaultFileName, IRestClient apiClient)
+        private static async Task<T> PerformGET<T>(RestRequest restRequest, IRestClient apiClient)
         {
             if (apiClient == null)
             {
@@ -126,13 +143,10 @@ namespace SeeShells.IO.Networking
             if (response.ErrorException == null)
             {
                 CheckAPIError(response);
-                T jsonObj = JsonConvert.DeserializeObject<T>(UnwrapJSONContainer(response));
-                return WriteToFile<T>(jsonObj, outputFilePath, defaultFileName);
+                return JsonConvert.DeserializeObject<T>(UnwrapJSONContainer(response));
             }
-            else
-            { 
-                throw new APIException("Networking Error: " + response.ErrorException.Message, response.ErrorException);
-            }
+
+            throw new APIException("Networking Error: " + response.ErrorException.Message, response.ErrorException);
         }
 
         /// <summary>
@@ -155,11 +169,10 @@ namespace SeeShells.IO.Networking
                 
                 return Path.GetFullPath(curDirFilepath);
                 
-            } else
-            {
-                File.WriteAllText(outputFilePath, strJson);
-                return Path.GetFullPath(outputFilePath);
             }
+
+            File.WriteAllText(outputFilePath, strJson);
+            return Path.GetFullPath(outputFilePath);
         }
 
         /// <summary>

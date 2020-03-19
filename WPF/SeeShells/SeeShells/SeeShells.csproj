@@ -126,6 +126,7 @@
     <Compile Include="IO\Networking\APIException.cs" />
     <Compile Include="IO\Networking\JSON\APIError.cs" />
     <Compile Include="IO\Networking\JSON\GUIDPair.cs" />
+    <Compile Include="IO\Networking\JSON\HelpItem.cs" />
     <Compile Include="IO\Networking\JSON\RegistryLocations.cs" />
     <Compile Include="IO\Networking\JSON\ScriptPair.cs" />
     <Compile Include="ShellParser\Scripting\LuaShellItem.cs" />
