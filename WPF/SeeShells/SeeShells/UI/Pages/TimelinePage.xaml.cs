@@ -249,6 +249,7 @@ namespace SeeShells.UI.Pages
             {
                 TimelinePanel.SetDate(node, node.aEvent.EventTime);
                 timelinePanel.Children.Add(node);
+                TimelinePanel.SetDate(node.block, node.aEvent.EventTime);
                 blockPanel.Children.Add(node.block);
                 ConnectNodeToTimeline(timelinePanel, node.aEvent.EventTime);
                 ConnectNodeToTimeline(blockPanel, node.aEvent.EventTime);
