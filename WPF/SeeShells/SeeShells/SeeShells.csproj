@@ -184,6 +184,7 @@
     <Compile Include="ShellParser\ShellItems\ShellItem0x00.cs" />
     <Compile Include="ShellParser\ShellItems\SHITEM_UNKNOWNENTRY2.cs" />
     <Compile Include="UI\EventFilters\EventUserFilter.cs" />
+    <Compile Include="UI\Node\InfoBlock.cs" />
     <Compile Include="UI\Node\StackedNodes.cs" />
     <Compile Include="UI\Templates\CheckBoxWithLabel.xaml.cs">
       <DependentUpon>CheckBoxWithLabel.xaml</DependentUpon>

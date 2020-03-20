@@ -179,9 +179,7 @@ namespace SeeShells.UI.Pages
                 }
 
                 List<Node.Node> nodesCluster = new List<Node.Node>(); // Holds events for one timeline at a time.
-                List<TextBlock> blockCluster = new List<TextBlock>();
                 nodesCluster.Add(nodeList[0]);
-                blockCluster.Add(blockList[0]);
                 DateTime previousDate = nodeList[0].aEvent.EventTime;
                 DateTime realTimeStart = DateTimeRoundDown(previousDate, maxRealTimeSpan);
                 int nodeListSize = nodeList.Count;
@@ -191,23 +189,19 @@ namespace SeeShells.UI.Pages
                     if (TimeSpan.Compare(nodeList[i].aEvent.EventTime.Subtract(realTimeStart), maxRealTimeSpan) == -1) // Compare returns -1 if the first argument is less than the second
                     {
                         nodesCluster.Add(nodeList[i]);
-                        blockCluster.Add(blockList[i]);
                     }
                     else
                     {
                         AddTimeline(nodesCluster);
                         nodesCluster.Clear();
-                        blockCluster.Clear();
 
                         nodesCluster.Add(nodeList[i]);
-                        blockCluster.Add(blockList[i]);
                         previousDate = nodeList[i].aEvent.EventTime;
                         realTimeStart = DateTimeRoundDown(previousDate, maxRealTimeSpan);
                         if (i == nodeListSize - 1) // If it's the last event of nodeList.
                         {
                             AddTimeline(nodesCluster);
                             nodesCluster.Clear();
-                            blockCluster.Clear();
                         }
                     }
                 }
@@ -235,10 +229,19 @@ namespace SeeShells.UI.Pages
             TimelinePanel timelinePanel = MakeTimelinePanel(beginDate, endDate);
             TimelinePanel blockPanel = MakeTimelinePanel(beginDate, endDate);
 
+            // Add all blocks onto a timeline
+            foreach (Node.Node node in nodesCluster)
+            {
+                TimelinePanel.SetDate(node.block, node.aEvent.EventTime);
+                timelinePanel.Children.Add(node.block);
+                ConnectNodeToTimeline(blockPanel, node.aEvent.EventTime);
+            }
+
             List<StackedNodes> stackedNodesList = GetStackedNodes(nodesCluster);
             // Add all nodes that stack onto a timeline
             foreach (StackedNodes stackedNode in stackedNodesList)
             {
+                stackedNode.Click += Dot_Press;
                 TimelinePanel.SetDate(stackedNode, stackedNode.events[0].EventTime);
                 stackedNode.Content = stackedNode.events.Count.ToString();
                 timelinePanel.Children.Add(stackedNode);
@@ -249,11 +252,9 @@ namespace SeeShells.UI.Pages
             {
                 TimelinePanel.SetDate(node, node.aEvent.EventTime);
                 timelinePanel.Children.Add(node);
-                TimelinePanel.SetDate(node.block, node.aEvent.EventTime);
-                blockPanel.Children.Add(node.block);
                 ConnectNodeToTimeline(timelinePanel, node.aEvent.EventTime);
-                ConnectNodeToTimeline(blockPanel, node.aEvent.EventTime);
             }
+
             Timelines.Children.Add(timelinePanel);
             Blocks.Children.Add(blockPanel);
             Line separationLine = MakeTimelineSeparatingLine();
@@ -303,8 +304,10 @@ namespace SeeShells.UI.Pages
                     while (i < nodesCluster.Count && previousNode.aEvent.EventTime.Equals(nodesCluster[i].aEvent.EventTime))
                     {
                         stackedNodes.events.Add(nodesCluster[i].aEvent);
+                        stackedNodes.blocks.Add(nodesCluster[i].block);
                         previousNode = nodesCluster[i];
                         nodesCluster.RemoveAt(i - 1);
+
                     }
                     stackedNodesList.Add(stackedNodes);
 
@@ -495,7 +498,19 @@ namespace SeeShells.UI.Pages
         /// </summary>
         public static void Dot_Press(object sender, EventArgs e)
         {
-            ((Node.Node)sender).toggle_block();
+            if(sender.GetType() == typeof(Node.Node))
+            {
+                ((Node.Node)sender).toggle_block();
+            }
+            else if(sender.GetType() == typeof(StackedNodes))
+            {
+                ((StackedNodes)sender).ToggleBlock();
+            }
+        }
+
+        public static void Hover_Block(object sender, EventArgs e)
+        {
+            ((InfoBlock)sender).toggleInfo();
         }
 
     }

@@ -23,7 +23,7 @@ namespace SeeShells.UI.Node
             
             foreach(IEvent aEvent in eventList)
             {
-                TextBlock block = new TextBlock();
+                InfoBlock block = new InfoBlock();
                 SetBlockProperties(block, aEvent);
 
                 Node node = new Node(aEvent, block);
@@ -49,13 +49,9 @@ namespace SeeShells.UI.Node
         /// Sets up initial properties for a graphical block object
         /// </summary>
         /// <param name="block">graphical object that contains event details on a timeline</param>
-        private static void SetBlockProperties(TextBlock block, IEvent aEvent)
+        private static void SetBlockProperties(InfoBlock block, IEvent aEvent)
         {
-            // TODO 
-            // foreach (KeyValuePair<string, string> property in aEvent.Parent.GetAllProperties())
-            // {
-            // block.Text += property.Key + "," + property.Value;
-            // }
+            block.aEvent = aEvent;
             block.Text += aEvent.Name;
             block.Text += aEvent.EventTime;
             block.Text += aEvent.EventType;
@@ -63,6 +59,8 @@ namespace SeeShells.UI.Node
             block.Background = Brushes.Turquoise; // #5ec0ca
             block.Height = 40;
             block.Width = 100;
+            block.MouseEnter += Pages.TimelinePage.Hover_Block;
+            block.MouseLeave += Pages.TimelinePage.Hover_Block;
         }
     }
 }

@@ -12,14 +12,14 @@ namespace SeeShells.UI.Node
     public class Node : Button
     {
         public IEvent aEvent;
-        public TextBlock block;
+        public InfoBlock block;
 
         /// <summary>
         /// The Node is an object that stores event data and has graphical objects to be displayed on a timeline.
         /// </summary>
         /// <param name="aEvent">object that stores event/shellbag data</param>
         /// <param name="block">object to display event details on a timeline</param>
-        public Node(IEvent aEvent, TextBlock block)
+        public Node(IEvent aEvent, InfoBlock block)
         {
             this.aEvent = aEvent;
             this.block = block;
@@ -30,7 +30,6 @@ namespace SeeShells.UI.Node
         /// </summary>
         public void toggle_block()
         {
-            MessageBox.Show(block.Text);
             if (this.block.Visibility == Visibility.Collapsed)
             {
                 this.block.Visibility = Visibility.Visible;
