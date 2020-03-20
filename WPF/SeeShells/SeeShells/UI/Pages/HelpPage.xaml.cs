@@ -32,8 +32,8 @@ namespace SeeShells.UI.Pages
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private const string ReadmeFile = "README.md";
-        private static readonly string ReadmeLocation = Directory.GetCurrentDirectory() + '/' + ReadmeFile;
+        private const string HelpFile = "Help.md";
+        private static readonly string HelpFileLocation = Directory.GetCurrentDirectory() + '/' + HelpFile;
 
         public HelpPage()
         {
@@ -58,7 +58,7 @@ namespace SeeShells.UI.Pages
             string markdown = string.Empty;
             try
             {
-                markdown = File.ReadAllText(ReadmeLocation);
+                markdown = File.ReadAllText(HelpFileLocation);
             }
             catch (IOException ex)
             {
@@ -74,7 +74,7 @@ namespace SeeShells.UI.Pages
                 //update local file
                 try
                 {
-                    File.WriteAllText(ReadmeLocation, markdown);
+                    File.WriteAllText(HelpFileLocation, markdown);
                 }
                 catch (IOException ex)
                 {
@@ -88,7 +88,7 @@ namespace SeeShells.UI.Pages
 
                 //internal resource retrieval, see: https://stackoverflow.com/a/3314213
                 Assembly assembly = Assembly.GetExecutingAssembly();
-                string internalResourcePath = assembly.GetManifestResourceNames().Single(str => str.EndsWith(ReadmeFile));
+                string internalResourcePath = assembly.GetManifestResourceNames().Single(str => str.EndsWith(HelpFile));
                 using (Stream fileStream = assembly.GetManifestResourceStream(internalResourcePath))
                 {
                     using (StreamReader reader = new StreamReader(fileStream))
