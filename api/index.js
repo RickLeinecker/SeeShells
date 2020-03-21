@@ -9,7 +9,7 @@ var port = process.env.PORT || 3000;
 var app = express();
 
 app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', 'https://rickleinecker.github.io');
+    res.setHeader('Access-Control-Allow-Origin', '*'); //https://rickleinecker.github.io
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, X-Auth-Token, Content-Type, Accept');
     res.setHeader('Access-Control-Allow-Methods', 'POST, GET');
     res.setHeader('Access-Control-Allow-Credentials', true);
@@ -105,6 +105,19 @@ app.post('/login', function (req, res) {
             return done(err);
         }
 
+    );
+});
+
+app.get('/getNewUsers', function (req, res) {
+    let promise = database.getUnapprovedUsers();
+    promise.then(
+        function (results) {
+            res.send({ "success": 1, "json": results });
+        },
+        function (err) {
+            res.send({ "success": 0, "error": "Failed to get any existing new users." });
+
+        }
     );
 });
 
