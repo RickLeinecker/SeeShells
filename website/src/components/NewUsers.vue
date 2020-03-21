@@ -15,6 +15,15 @@
 
                 <tbody>
                     <!-- table generated here -->
+                    <tr v-for="item in userList" :key="item.id">
+                        <td>{{item.username}}</td>
+                        <td>
+                            <a class='btn btn-sm btn-primary' style='color:white;width:50px;' v-on:click="approveUser(item.id)">O</a>
+                        </td>
+                        <td>
+                            <a class='btn btn-sm btn-primary' style='color:white;width:50px;' v-on:click="rejectUser(item.id)">X</a>
+                        </td>
+                    </tr>
                 </tbody>
 
             </table>
@@ -31,11 +40,13 @@
         name: "NewUsers",
         data() {
             return {
-                baseurl: 'http://localhost:3000/' //https://seeshells.herokuapp.com/
+                baseurl: 'http://localhost:3000/', //https://seeshells.herokuapp.com/
+                userList: []
             }
         },
         methods: {
             populateTable() {
+                this.userList = [];
                 var url = this.baseurl + 'getNewUsers';
 
                 var xhr = new XMLHttpRequest();
@@ -47,15 +58,11 @@
                     var result = JSON.parse(xhr.responseText);
 
                     if (result.success == 1) {
-                        var table = document.getElementById("users");
                         var arr = Array.from(result.json);
-                        arr.forEach($.proxy(function (item, index) {
-                            this.addRowOnTable(table, item, index)
-                        }, this));
 
-                        //$(document).ready(function () {
-                        //    $('#users').DataTable();
-                        //});
+                        for (var i = 0; i < arr.length; i++) {
+                            this.userList.push({ id: arr[i].id, username: arr[i].username });
+                        }
                     }
 
                 }
@@ -64,26 +71,10 @@
                 }
             },
 
-            addRowOnTable(table, item, index) {
-                if (item != null) {
-
-                    $(table).find('tbody').append("<tr><td>" + item.username +
-                        "</td><td><a class='btn btn-sm btn-primary' style='color:white' v-on:click='approveUser('" + item.id +
-                        "')'>&nbsp;&nbsp;&nbsp;O&nbsp;&nbsp;&nbsp;</a> </td><td> <a class='btn btn-sm btn-primary' style='color:white' v-on:click='rejectUser('" +
-                        item.id + "')'>&nbsp;&nbsp;&nbsp;X&nbsp;&nbsp;&nbsp;</a> </td></tr>");
-
-                    ////var approvebtn = document.getElementById("approvebutton" + item.id);
-                    ////var rejectbtn = document.getElementById("rejectbutton" + item.id);
-                    ////approvebtn.onclick = function () { this.approveUser(item.id) };
-                    ////rejectbtn.onclick = function () { this.rejectUser(item.id) };
-
-                }
-            },
-
             approveUser(userID) {
                 var url = this.baseurl + 'approveUser';
 
-                var jsonPayload = '{"userID":' + userID + '"}';
+                var jsonPayload = '{"userID":' + userID + '}';
 
                 var xhr = new XMLHttpRequest();
                 xhr.open("POST", url, false);
@@ -109,10 +100,9 @@
             },
 
             rejectUser(userID) {
-                alert('test!');
                 var url = this.baseurl + 'rejectUser';
 
-                var jsonPayload = '{"userID":' + userID + '"}';
+                var jsonPayload = '{"userID":' + userID + '}';
 
                 var xhr = new XMLHttpRequest();
                 xhr.open("POST", url, false);
