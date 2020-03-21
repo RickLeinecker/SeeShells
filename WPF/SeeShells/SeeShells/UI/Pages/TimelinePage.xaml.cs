@@ -304,6 +304,7 @@ namespace SeeShells.UI.Pages
                 {
                     StackedNodes stackedNodes = new StackedNodes();
                     stackedNodes.events.Add(previousNode.aEvent);
+                    stackedNodes.blocks.Add(previousNode.block);
                     while (i < nodesCluster.Count && previousNode.aEvent.EventTime.Equals(nodesCluster[i].aEvent.EventTime))
                     {
                         stackedNodes.events.Add(nodesCluster[i].aEvent);
@@ -460,12 +461,15 @@ namespace SeeShells.UI.Pages
                 {
                     TimelinePanel timeline = (TimelinePanel)child;
                     timeline.Children.Clear();
+                    TimelinePanel blockPanel = (TimelinePanel)child;
+                    blockPanel.Children.Clear();
                 }
             }
             Timelines.Children.Clear();
             Ticks.Children.Clear();
             TicksBar.Children.Clear();
             TimeStamps.Children.Clear();
+            Blocks.Children.Clear();
             BuildTimeline();
         }
 
