@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using SeeShells.IO;
+using SeeShells.ShellParser.ShellItems;
 using SeeShells.UI.EventFilters;
 using SeeShells.UI.Node;
 using System;
@@ -231,15 +232,12 @@ namespace SeeShells.UI.Pages
             TimelinePanel blockPanel = MakeTimelinePanel(beginDate, endDate);
 
             // Add all blocks onto a timeline
-            ColumnDefinition col = new ColumnDefinition();
-            Timeline.ColumnDefinitions.Add(col);
             foreach (Node.Node node in nodesCluster)
             {
                 node.block.Style = (Style)Resources["TimelineBlock"];
                 TimelinePanel.SetDate(node.block, node.aEvent.EventTime);
                 blockPanel.Children.Add(node.block);
             }
-            Grid.SetColumn(blockPanel, Timeline.ColumnDefinitions.Count + 1);
 
             List<StackedNodes> stackedNodesList = GetStackedNodes(nodesCluster);
             // Add all nodes that stack onto a timeline
@@ -542,6 +540,5 @@ namespace SeeShells.UI.Pages
         {
             ((InfoBlock)sender).toggleInfo();
         }
-
     }
 }

@@ -20,7 +20,7 @@ namespace SeeShells.ShellParser.ShellItems
         DELETEGATE_ITEM = 0x74
     };
 
-    public class FILEENTRY_FRAGMENT : ShellItem
+    public class FILEENTRY_FRAGMENT : MockShellItem
     {
         public uint filesize { get; protected set; }
         public ushort fileattrs { get; protected set; }

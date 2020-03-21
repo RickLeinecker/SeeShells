@@ -49,7 +49,7 @@ namespace SeeShells.ShellParser.ShellItems
 
                 // Getting here means that the ShellItem is unidentified
                 logger.Info("Could not identify ShellItem 0x" + postfix);
-                return new ShellItem(buf);
+                return new MockShellItem(buf);
             }
 
             try
@@ -60,7 +60,7 @@ namespace SeeShells.ShellParser.ShellItems
             {
                 logger.Error(ex, "ShellItem0x" + postfix + " Failed to create\n" + "ShellItem Byte array:\n" + BitConverter.ToString(buf) + "\n" + ex.ToString());
             }
-            return new ShellItem(buf);
+            return new MockShellItem(buf);
         }
 
         public IEnumerable<IShellItem> Items()

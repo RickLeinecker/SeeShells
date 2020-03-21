@@ -8,7 +8,7 @@ using NLua;
 
 namespace SeeShells.ShellParser.Scripting
 {
-    public class LuaShellItem : ShellItem
+    public class LuaShellItem : MockShellItem
     {
         private readonly Lua state;
         private readonly string luascript;

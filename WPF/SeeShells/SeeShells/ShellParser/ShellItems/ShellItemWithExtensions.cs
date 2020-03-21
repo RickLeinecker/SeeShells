@@ -7,7 +7,7 @@ namespace SeeShells.ShellParser.ShellItems
     /// <summary>
     /// Indicates that this Shell Type can have 0 or more <see cref="IExtensionBlock"/> types included.
     /// </summary>
-    public class ShellItemWithExtensions : ShellItem
+    public class ShellItemWithExtensions : MockShellItem
     {
         public List<IExtensionBlock> ExtensionBlocks { get; private set; }
         

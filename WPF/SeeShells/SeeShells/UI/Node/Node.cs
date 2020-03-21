@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Shapes;
 using System.Windows.Controls;
 using System.Windows;
+using System.Windows.Media;
 
 namespace SeeShells.UI.Node
 {

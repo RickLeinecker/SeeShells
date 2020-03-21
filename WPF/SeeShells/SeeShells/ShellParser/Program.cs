@@ -85,7 +85,7 @@ namespace SeeShells.ShellParser
                         byte[] byteVal = (byte[])rk.GetValue(valueName);
                         SHITEMLIST l = new SHITEMLIST(byteVal, 0, null);
 
-                        foreach (ShellItem item in l.items())
+                        foreach (MockShellItem item in l.items())
                         {
                             if (path_prefix.Length == 0)
                                 path = item.Name;

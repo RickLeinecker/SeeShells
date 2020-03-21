@@ -6,7 +6,7 @@ namespace SeeShells.ShellParser.ShellItems
     /// Supposedly corresponds to ShellItem 0x23 (as originally given)- but 
     /// a conflicting signature appears here: https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item
     /// </summary>
-    public class SHITEM_UNKNOWNENTRY2 : ShellItem
+    public class SHITEM_UNKNOWNENTRY2 : MockShellItem
     {
         public string Guid { get; protected set; }
         public byte Flags { get; protected set; }
