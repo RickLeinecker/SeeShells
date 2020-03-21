@@ -12,7 +12,7 @@
         name: 'LoggedIn',
         methods: {
             Logout() {
-                var baseurl = 'http://localhost:3000/'; //https://seeshells.herokuapp.com/
+                var baseurl = 'https://seeshells.herokuapp.com/'; //http://localhost:3000/
                 var url = baseurl + 'logout';
                 var xhr = new XMLHttpRequest();
                 xhr.open("GET", url, false);

@@ -41,7 +41,7 @@
         name: "NewUsers",
         data() {
             return {
-                baseurl: 'http://localhost:3000/', //https://seeshells.herokuapp.com/
+                baseurl: 'https://seeshells.herokuapp.com/', //http://localhost:3000/
                 userList: []
             }
         },

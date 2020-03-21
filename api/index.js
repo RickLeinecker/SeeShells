@@ -9,7 +9,7 @@ var port = process.env.PORT || 3000;
 var app = express();
 
 app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*'); //https://rickleinecker.github.io
+    res.setHeader('Access-Control-Allow-Origin', 'https://rickleinecker.github.io');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, X-Auth-Token, Content-Type, Accept');
     res.setHeader('Access-Control-Allow-Methods', 'POST, GET');
     res.setHeader('Access-Control-Allow-Credentials', true);
