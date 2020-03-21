@@ -311,7 +311,7 @@ function updateScript(identifier, encodedscript) {
         let promise = scriptForIdentifierDoesNotExist(identifier);
         promise.then(
             function () {
-                let addPromise = database.addScript(identifier, encodedscript);
+                let addPromise = addScript(identifier, encodedscript);
                 addPromise.then(
                     function (value) {
                         resolve({ "success": 1 });
