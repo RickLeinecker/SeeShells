@@ -164,12 +164,13 @@ namespace SeeShells.UI.Pages
                 List<TextBlock> blockList = new List<TextBlock>();
                 foreach (Node.Node node in App.nodeCollection.nodeList)
                 {
-                    node.Style = (Style)Resources["TimelineDot"];
+                    node.Style = (Style)Resources["Node"];
                     if (node.Visibility == System.Windows.Visibility.Visible)
                     {
                         nodeList.Add(node);
                         blockList.Add(node.block);
                     }
+                    node.block.Visibility = Visibility.Collapsed;
                 }
 
                 if (nodeList.Count == 0)
@@ -233,8 +234,7 @@ namespace SeeShells.UI.Pages
             foreach (Node.Node node in nodesCluster)
             {
                 TimelinePanel.SetDate(node.block, node.aEvent.EventTime);
-                timelinePanel.Children.Add(node.block);
-                ConnectNodeToTimeline(blockPanel, node.aEvent.EventTime);
+                blockPanel.Children.Add(node.block);
             }
 
             List<StackedNodes> stackedNodesList = GetStackedNodes(nodesCluster);
@@ -242,6 +242,7 @@ namespace SeeShells.UI.Pages
             foreach (StackedNodes stackedNode in stackedNodesList)
             {
                 stackedNode.Click += Dot_Press;
+                stackedNode.Style = (Style)Resources["StackedNode"];
                 TimelinePanel.SetDate(stackedNode, stackedNode.events[0].EventTime);
                 stackedNode.Content = stackedNode.events.Count.ToString();
                 timelinePanel.Children.Add(stackedNode);
@@ -258,6 +259,8 @@ namespace SeeShells.UI.Pages
             Timelines.Children.Add(timelinePanel);
             Blocks.Children.Add(blockPanel);
             Line separationLine = MakeTimelineSeparatingLine();
+            Line blockSeperation = MakeTimelineSeparatingLine();
+            Blocks.Children.Add(blockSeperation);
             Timelines.Children.Add(separationLine);
             AddTicks(beginDate, endDate);
             AddTimeStamp(beginDate, endDate);

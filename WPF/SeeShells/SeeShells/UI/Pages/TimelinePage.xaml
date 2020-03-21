@@ -124,9 +124,7 @@
                                 <Viewbox Grid.ColumnSpan="2" Grid.Column="1" Margin="253.667,24,0.333,22.667" Grid.Row="2" Grid.RowSpan="2">
                                     <Button x:Name="download" Content="Download" Click="download_Click"/>
                                 </Viewbox>
-                                <TextBox Style="{StaticResource TimelineBlock}" Width="200" Height="200" Background="Red" Opacity="0" Text="Some TextBox" Grid.ColumnSpan="2" Grid.Column="1" Margin="153.2,-124,77.2,20.8" Grid.RowSpan="3"/>
-                                <Button Width="100" Height="50" VerticalAlignment="Top" x:Name="SomeButton" Grid.Column="1" Margin="29.2,29.8,125.2,0" Grid.Row="1" Grid.RowSpan="2"/>
-                            </Grid>
+                              </Grid>
                             <ScrollViewer x:Name="TimelineScroll" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  Margin="0,0,0.333,163.667">
                                 <Grid x:Name="Timeline" Background="#292525" Width="Auto" Height="Auto">
                                     <StackPanel x:Name="Blocks" Orientation="Horizontal" Margin="0,0,0.4,289.4"/>
