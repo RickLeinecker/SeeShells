@@ -4,7 +4,8 @@
         <div class="container-fluid">
 
             <!-- Page Content -->
-            <table id="users" class="table table-bordered" style="width:100%">
+            <h3 v-if="userList.length==0">No new users to approve!</h3>
+            <table v-else id="users" class="table table-bordered" style="width:100%">
                 <thead>
                     <tr>
                         <th>Username</th>
