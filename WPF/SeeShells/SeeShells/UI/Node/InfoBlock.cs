@@ -35,7 +35,7 @@ namespace SeeShells.UI.Node
         /// <summary>
         /// This enlarges the textblock so more information can be seen about the shellItem.
         /// </summary>
-        public void toggleInfo()
+        public void ToggleInfo()
         {
             if(this.Width > 300)
             {

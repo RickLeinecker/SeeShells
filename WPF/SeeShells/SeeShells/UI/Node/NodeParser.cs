@@ -42,7 +42,7 @@ namespace SeeShells.UI.Node
         {
             node.Width = 20;
             node.Height = 20;
-            node.Click += Pages.TimelinePage.Dot_Press;
+            node.Click += Pages.TimelinePage.DotPress;
         }
 
         /// <summary>
@@ -55,8 +55,8 @@ namespace SeeShells.UI.Node
             block.Text += aEvent.Name + "\n";
             block.Text += aEvent.EventTime + "\n";
             block.Text += aEvent.EventType + "\n";
-            block.MouseEnter += Pages.TimelinePage.Hover_Block;
-            block.MouseLeave += Pages.TimelinePage.Hover_Block;
+            block.MouseEnter += Pages.TimelinePage.HoverBlock;
+            block.MouseLeave += Pages.TimelinePage.HoverBlock;
         }
     }
 }

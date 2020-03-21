@@ -122,7 +122,7 @@
                                     <CheckBox x:Name="csvCheckBox" Content="CSV Raw Data" Foreground="White" Width="108"/>
                                 </Viewbox>
                                 <Viewbox Grid.ColumnSpan="2" Grid.Column="1" Margin="253.667,24,0.333,22.667" Grid.Row="2" Grid.RowSpan="2">
-                                    <Button x:Name="download" Content="Download" Click="download_Click"/>
+                                    <Button x:Name="download" Content="Download" Click="DownloadClick"/>
                                 </Viewbox>
                               </Grid>
                             <ScrollViewer x:Name="TimelineScroll" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  Margin="0,0,0.333,163.667">

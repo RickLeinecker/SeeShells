@@ -243,7 +243,7 @@ namespace SeeShells.UI.Pages
             // Add all nodes that stack onto a timeline
             foreach (StackedNodes stackedNode in stackedNodesList)
             {
-                stackedNode.Click += Dot_Press;
+                stackedNode.Click += DotPress;
                 stackedNode.Style = (Style)Resources["StackedNode"];
                 TimelinePanel.SetDate(stackedNode, stackedNode.events[0].EventTime);
                 stackedNode.Content = stackedNode.events.Count.ToString();
@@ -497,7 +497,7 @@ namespace SeeShells.UI.Pages
         /// <summary>
         /// This checks when the download button is hit, whether the HTML and/or the CSV checkbox is checked or not and calls the creation of HtmlOutput.
         /// </summary>
-        private void download_Click(object sender, RoutedEventArgs e)
+        private void DownloadClick(object sender, RoutedEventArgs e)
         {
             if (htmlCheckBox.IsChecked ?? false)
             {
@@ -524,11 +524,11 @@ namespace SeeShells.UI.Pages
         /// <summary>
         /// This activates the toggle_block method built into the Node object. 
         /// </summary>
-        public static void Dot_Press(object sender, EventArgs e)
+        public static void DotPress(object sender, EventArgs e)
         {
             if(sender.GetType() == typeof(Node.Node))
             {
-                ((Node.Node)sender).toggle_block();
+                ((Node.Node)sender).ToggleBlock();
             }
             else if(sender.GetType() == typeof(StackedNodes))
             {
@@ -536,9 +536,9 @@ namespace SeeShells.UI.Pages
             }
         }
 
-        public static void Hover_Block(object sender, EventArgs e)
+        public static void HoverBlock(object sender, EventArgs e)
         {
-            ((InfoBlock)sender).toggleInfo();
+            ((InfoBlock)sender).ToggleInfo();
         }
     }
 }

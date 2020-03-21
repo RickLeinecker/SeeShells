@@ -29,7 +29,7 @@ namespace SeeShells.UI.Node
         /// <summary>
         /// This is used to hide and show the block of information connected to each dot of information on the timeline.
         /// </summary>
-        public void toggle_block()
+        public void ToggleBlock()
         {
             if (this.block.Visibility == Visibility.Collapsed)
             {
