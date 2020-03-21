@@ -231,11 +231,15 @@ namespace SeeShells.UI.Pages
             TimelinePanel blockPanel = MakeTimelinePanel(beginDate, endDate);
 
             // Add all blocks onto a timeline
+            ColumnDefinition col = new ColumnDefinition();
+            Timeline.ColumnDefinitions.Add(col);
             foreach (Node.Node node in nodesCluster)
             {
+                node.block.Style = (Style)Resources["TimelineBlock"];
                 TimelinePanel.SetDate(node.block, node.aEvent.EventTime);
                 blockPanel.Children.Add(node.block);
             }
+            Grid.SetColumn(blockPanel, Timeline.ColumnDefinitions.Count + 1);
 
             List<StackedNodes> stackedNodesList = GetStackedNodes(nodesCluster);
             // Add all nodes that stack onto a timeline
@@ -259,7 +263,7 @@ namespace SeeShells.UI.Pages
             Timelines.Children.Add(timelinePanel);
             Blocks.Children.Add(blockPanel);
             Line separationLine = MakeTimelineSeparatingLine();
-            Line blockSeperation = MakeTimelineSeparatingLine();
+            Line blockSeperation = MakeBlockPanelSeparation();
             Blocks.Children.Add(blockSeperation);
             Timelines.Children.Add(separationLine);
             AddTicks(beginDate, endDate);
@@ -436,6 +440,25 @@ namespace SeeShells.UI.Pages
             separatingLine.Margin = new Thickness(5, 0, 5, 0);
 
             return separatingLine;
+        }
+
+        /// <summary>
+        /// Creates a space to seperate the multiple timelines
+        /// </summary>
+        /// <returns>A appropriate space to separate the block panels on the timelines</returns>
+        private Line MakeBlockPanelSeparation()
+        {
+            Line separatingSpace = new Line();
+            separatingSpace.X1 = 0;
+            separatingSpace.X2 = 0;
+            separatingSpace.Y1 = 43;
+            separatingSpace.Y2 = 150;
+            separatingSpace.StrokeThickness = 2;
+            separatingSpace.HorizontalAlignment = HorizontalAlignment.Left;
+            separatingSpace.VerticalAlignment = VerticalAlignment.Center;
+            separatingSpace.Margin = new Thickness(5, 0, 5, 0);
+
+            return separatingSpace;
         }
 
         /// <summary>

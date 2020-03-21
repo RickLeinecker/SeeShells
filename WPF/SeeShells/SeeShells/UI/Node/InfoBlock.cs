@@ -36,19 +36,19 @@ namespace SeeShells.UI.Node
         /// </summary>
         public void toggleInfo()
         {
-            if(this.Width > 400)
+            if(this.Width > 300)
             {
                 this.Text = "";
                 this.Width = 150;
-                this.Height = 100;
-                this.Text += this.aEvent.Name;
-                this.Text += this.aEvent.EventTime;
-                this.Text += this.aEvent.EventType;
+                this.Height = 70;
+                this.Text += this.aEvent.Name + "\n";
+                this.Text += this.aEvent.EventTime + "\n";
+                this.Text += this.aEvent.EventType + "\n";
             }
             else
             {
                 this.Width = 450;
-                this.Height = 300;
+                this.Height = 250;
                 this.Text = "";
                 foreach (KeyValuePair<string, string> property in this.aEvent.Parent.GetAllProperties())
                 {

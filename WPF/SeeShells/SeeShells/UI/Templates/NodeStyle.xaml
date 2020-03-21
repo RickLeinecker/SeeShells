@@ -2,25 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:SeeShells.UI.Templates">
 
-    <Style BasedOn="{StaticResource {x:Type Button}}"
-           TargetType="Button"
-           x:Key="TimelineDot">
-        <Setter Property="OverridesDefaultStyle" Value="True"/>
-        <Setter Property="Margin" Value="2"/>
-        <Setter Property="Background" Value="#FF6DB4EF"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Grid>
-                        <Ellipse Fill="Blue" Width="10" Height="10"/>
-                        <ContentPresenter x:Name="content" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-
     <Style x:Key="Node" TargetType="{x:Type Button}">
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -143,6 +124,18 @@
         </Setter>
     </Style>
 
+    <Style BasedOn="{StaticResource {x:Type TextBlock}}"
+           TargetType="TextBlock"
+           x:Key="TimelineBlock">
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="Margin" Value="2"/>
+        <Setter Property="Background" Value="#397367"/>
+        <Setter Property="Height" Value="70"/>
+        <Setter Property="Width" Value="150"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Padding" Value="10,10,10,10"/>
+        <Setter Property="TextAlignment" Value="Center"/>
+    </Style>
 
 
 </ResourceDictionary>

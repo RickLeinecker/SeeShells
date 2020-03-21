@@ -52,13 +52,9 @@ namespace SeeShells.UI.Node
         private static void SetBlockProperties(InfoBlock block, IEvent aEvent)
         {
             block.aEvent = aEvent;
-            block.Text += aEvent.Name;
-            block.Text += aEvent.EventTime;
-            block.Text += aEvent.EventType;
-            block.Foreground = Brushes.White;
-            block.Background = Brushes.Turquoise; // #5ec0ca
-            block.Height = 40;
-            block.Width = 100;
+            block.Text += aEvent.Name + "\n";
+            block.Text += aEvent.EventTime + "\n";
+            block.Text += aEvent.EventType + "\n";
             block.MouseEnter += Pages.TimelinePage.Hover_Block;
             block.MouseLeave += Pages.TimelinePage.Hover_Block;
         }
