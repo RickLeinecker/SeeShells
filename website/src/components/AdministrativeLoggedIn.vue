@@ -1,6 +1,6 @@
 <template>
     <div id='items'>
-        <b-dropdown-item>Approve New Admins</b-dropdown-item>
+        <b-dropdown-item><router-link to='/SeeShells/approveusers'>Approve New Admins</router-link></b-dropdown-item>
         <b-dropdown-item><router-link to='/SeeShells/scripts'>Modify Scripts</router-link></b-dropdown-item>
         <b-dropdown-item v-on:click="Logout">Logout</b-dropdown-item>
     </div>
