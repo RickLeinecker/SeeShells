@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using System.Reflection;
+using System.Windows.Resources;
 
 namespace SeeShells
 {
@@ -32,6 +33,10 @@ namespace SeeShells
         /// Collectin of <see cref="ShellItem"/> which is populated after a parsing operation.
         /// </summary>
         public static List<IShellItem> ShellItems { get; set; }
+
+        public static TimelinePage TimelinePage;
+
+        public static NavigationService NavigationService;
 
         /// <summary>
         /// Removes the toolbar overflow side button.

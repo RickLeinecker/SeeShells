@@ -306,7 +306,10 @@ namespace SeeShells.UI.Pages
                 timelinePage.RebuildTimeline();
                 NavigationService.Navigate(timelinePage);
             }
-            
+
+            App.NavigationService = NavigationService;
+            App.TimelinePage = timelinePage;
+
 
         }
 

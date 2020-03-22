@@ -35,10 +35,12 @@ namespace SeeShells.UI.Templates
                 MessageBoxImage image = MessageBoxImage.Information;
                 string caption = "Error";
                 MessageBox.Show(message, caption, MessageBoxButton.OK, image);
+
             }
             else
             {
-                
+                App.NavigationService.Navigate(App.TimelinePage);
+
             }
         }
     }
