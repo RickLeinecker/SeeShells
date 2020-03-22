@@ -44,15 +44,7 @@
                             <ToolBarTray IsLocked="True" Background="Transparent">
                                 <ToolBar OverflowMode="Never" Loaded="Toolbar_Loaded" MinWidth="{Binding ActualWidth,
                                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type WrapPanel}}}" Background="Transparent">
-                                    <Menu Background="Transparent">
-                                        <MenuItem Header="View" Foreground="DarkGray" >
-                                            <Hyperlink NavigateUri="/SeeShells;component/ui/pages/home.xaml" Foreground="Black">Home</Hyperlink>
-                                            <template:Switch/>
-                                        </MenuItem>
-                                        <MenuItem Header="Help" Foreground="DarkGray" >
-                                            <Hyperlink NavigateUri="/SeeShells;component/ui/pages/helppage.xaml" Foreground="Black">About</Hyperlink>
-                                        </MenuItem>
-                                    </Menu>
+                                    <template:Switch/>
                                 </ToolBar>
                             </ToolBarTray>
                             <ContentPresenter/>

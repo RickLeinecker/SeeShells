@@ -7,6 +7,14 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <MenuItem Header="Timeline Page" Click="MenuItem_Click"/>
+        <Menu Background="Transparent">
+            <MenuItem Header="View" Foreground="DarkGray" >
+                <Hyperlink NavigateUri="/SeeShells;component/ui/pages/home.xaml" Foreground="Black">Home</Hyperlink>
+                <MenuItem x:Name="timeline" Header="Timeline Page" Click="MenuItem_Click" Foreground="Black" />
+            </MenuItem>
+            <MenuItem Header="Help" Foreground="DarkGray" >
+                <Hyperlink NavigateUri="/SeeShells;component/ui/pages/helppage.xaml" Foreground="Black">About</Hyperlink>
+            </MenuItem>
+        </Menu>
     </Grid>
 </UserControl>

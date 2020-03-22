@@ -34,7 +34,8 @@ namespace SeeShells
         /// </summary>
         public static List<IShellItem> ShellItems { get; set; }
 
-        public static TimelinePage TimelinePage;
+        public static Dictionary<string, Page> pages = new Dictionary<string, Page>();
+
 
         public static NavigationService NavigationService;
 

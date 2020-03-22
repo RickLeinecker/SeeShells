@@ -308,7 +308,7 @@ namespace SeeShells.UI.Pages
             }
 
             App.NavigationService = NavigationService;
-            App.TimelinePage = timelinePage;
+            App.pages.Add("timelinepage", timelinePage);
 
 
         }

@@ -31,16 +31,19 @@ namespace SeeShells.UI.Templates
         {
             if (Home.timelinePage == null)
             {
-                string message = "Warning: Please press the parse button at least once";
-                MessageBoxImage image = MessageBoxImage.Information;
-                string caption = "Error";
-                MessageBox.Show(message, caption, MessageBoxButton.OK, image);
+                timeline.IsEnabled = false;
 
             }
             else
             {
-                App.NavigationService.Navigate(App.TimelinePage);
+                foreach(var el in App.pages)
+                {
+                    if (el.Key.Contains("timelinepage"))
+                    {
+                        App.NavigationService.Navigate(el.Value);
 
+                    }
+                }
             }
         }
     }
