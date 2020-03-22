@@ -26,7 +26,7 @@ namespace SeeShells
         public static NodeCollection nodeCollection = new NodeCollection();
 
         /// <summary>
-        /// Collectin of <see cref=MockShellItem"/> which is populated after a parsing operation.
+        /// Collection of <see cref="ShellItem"/> which is populated after a parsing operation.
         /// </summary>
         public static List<IShellItem> ShellItems { get; set; }
 
