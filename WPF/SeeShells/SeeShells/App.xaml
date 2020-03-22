@@ -49,7 +49,7 @@
                                             <MenuItem Header="Timeline"/>
                                         </MenuItem>
                                         <MenuItem Header="Help" Foreground="DarkGray">
-                                            <MenuItem Header="About SeeShells"/>
+                                            <MenuItem Header="About SeeShells" Click="About_OnClick"/>
                                         </MenuItem>
                                     </Menu>
                                 </ToolBar>

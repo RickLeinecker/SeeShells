@@ -7,6 +7,7 @@ using System.Configuration;
 using System.Data;
 using System.Windows;
 using System.Windows.Controls;
+using SeeShells.UI.Pages;
 
 namespace SeeShells
 {
@@ -42,6 +43,11 @@ namespace SeeShells
             {
                 overflowGrid.Visibility = Visibility.Collapsed;
             }
+        }
+
+        private void About_OnClick(object sender, RoutedEventArgs e)
+        {
+            new AboutWindow().ShowDialog();
         }
     }
 }
