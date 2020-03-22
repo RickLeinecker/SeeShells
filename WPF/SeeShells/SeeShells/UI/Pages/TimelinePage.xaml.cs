@@ -44,10 +44,22 @@ namespace SeeShells.UI.Pages
             }
         }
 
+        private void ClearEventContentFilter_Click(object sender, RoutedEventArgs e)
+        {
+            AllStringFilterTextBlock.Clear();
+            RegexCheckBox.IsChecked = false;
+        }
+
         private void UpdateDateFilter(object sender, SelectionChangedEventArgs e)
         {
             UpdateFilter("DateFilter", new DateRangeFilter(startDatePicker.SelectedDate, endDatePicker.SelectedDate));
 
+        }
+
+        private void ClearDateFilter_Click(object sender, RoutedEventArgs e)
+        {
+            startDatePicker.SelectedDate = null;
+            endDatePicker.SelectedDate = null;
         }
 
         private void UpdateFilter(string filterIdentifer, INodeFilter newFilter)
@@ -90,6 +102,11 @@ namespace SeeShells.UI.Pages
             emitter.ItemsSource = eventTypeList;
         }
 
+        private void ClearEventTypeFilter_Click(object sender, RoutedEventArgs e)
+        {
+            EventTypeFilter.SelectedItems.Clear();
+        }
+
         private void EventUserFilter_OnItemSelectionChanged(object sender, ItemSelectionChangedEventArgs e)
         {
             CheckComboBox emitter = (CheckComboBox)sender;
@@ -117,6 +134,11 @@ namespace SeeShells.UI.Pages
             emitter.ItemsSource = eventUserList;
         }
 
+        private void ClearUserFilter_Click(object sender, RoutedEventArgs e)
+        {
+            EventUserFilter.SelectedItems.Clear();
+        }
+
         private void EventParentTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             //TODO can only be implememented from a context menu option (e.g. right click) which allows us to get the actual event
@@ -141,6 +163,11 @@ namespace SeeShells.UI.Pages
             TextBox emitter = (TextBox)sender;
             UpdateFilter("EventName", new EventNameFilter(emitter.Text));
 
+        }
+
+        private void ClearEventNameFilter_Click(object sender, RoutedEventArgs e)
+        {
+            EventNameFilter.Clear();
         }
 
         /// <summary>
