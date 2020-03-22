@@ -262,8 +262,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\README.md">
-      <Link>resources\README.md</Link>
+    <EmbeddedResource Include="..\Help.md">
+      <Link>resources\Help.md</Link>
     </EmbeddedResource>
     <None Include="app.config" />
     <Content Include="NLog.config">
