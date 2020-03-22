@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using SeeShells.IO;
+using SeeShells.ShellParser.ShellItems;
 using SeeShells.UI.EventFilters;
 using SeeShells.UI.Node;
 using System;
@@ -156,12 +157,16 @@ namespace SeeShells.UI.Pages
                 }
 
                 List<Node.Node> nodeList = new List<Node.Node>();
+                List<TextBlock> blockList = new List<TextBlock>();
                 foreach (Node.Node node in App.nodeCollection.nodeList)
                 {
-                    if(node.Visibility == System.Windows.Visibility.Visible)
+                    node.Style = (Style)Resources["Node"];
+                    if (node.Visibility == System.Windows.Visibility.Visible)
                     {
                         nodeList.Add(node);
+                        blockList.Add(node.block);
                     }
+                    node.block.Visibility = Visibility.Collapsed;
                 }
 
                 if (nodeList.Count == 0)
@@ -219,11 +224,22 @@ namespace SeeShells.UI.Pages
             DateTime endDate = beginDate.AddMinutes(1);
 
             TimelinePanel timelinePanel = MakeTimelinePanel(beginDate, endDate);
+            TimelinePanel blockPanel = MakeTimelinePanel(beginDate, endDate);
+
+            // Add all blocks onto a timeline
+            foreach (Node.Node node in nodesCluster)
+            {
+                node.block.Style = (Style)Resources["TimelineBlock"];
+                TimelinePanel.SetDate(node.block, node.aEvent.EventTime);
+                blockPanel.Children.Add(node.block);
+            }
 
             List<StackedNodes> stackedNodesList = GetStackedNodes(nodesCluster);
             // Add all nodes that stack onto a timeline
             foreach (StackedNodes stackedNode in stackedNodesList)
             {
+                stackedNode.Click += DotPress;
+                stackedNode.Style = (Style)Resources["StackedNode"];
                 TimelinePanel.SetDate(stackedNode, stackedNode.events[0].EventTime);
                 stackedNode.Content = stackedNode.events.Count.ToString();
                 timelinePanel.Children.Add(stackedNode);
@@ -238,11 +254,15 @@ namespace SeeShells.UI.Pages
             }
 
             Timelines.Children.Add(timelinePanel);
+            Blocks.Children.Add(blockPanel);
             Line separationLine = MakeTimelineSeparatingLine();
+            Line blockSeperation = MakeBlockPanelSeparation();
+            Blocks.Children.Add(blockSeperation);
             Timelines.Children.Add(separationLine);
             AddTicks(beginDate, endDate);
             AddTimeStamp(beginDate, endDate);
         }
+
 
         /// <summary>
         /// Creates a TimelinePanel
@@ -281,11 +301,14 @@ namespace SeeShells.UI.Pages
                 {
                     StackedNodes stackedNodes = new StackedNodes();
                     stackedNodes.events.Add(previousNode.aEvent);
+                    stackedNodes.blocks.Add(previousNode.block);
                     while (i < nodesCluster.Count && previousNode.aEvent.EventTime.Equals(nodesCluster[i].aEvent.EventTime))
                     {
                         stackedNodes.events.Add(nodesCluster[i].aEvent);
+                        stackedNodes.blocks.Add(nodesCluster[i].block);
                         previousNode = nodesCluster[i];
                         nodesCluster.RemoveAt(i - 1);
+
                     }
                     stackedNodesList.Add(stackedNodes);
 
@@ -413,6 +436,25 @@ namespace SeeShells.UI.Pages
         }
 
         /// <summary>
+        /// Creates a space to seperate the multiple timelines
+        /// </summary>
+        /// <returns>A appropriate space to separate the block panels on the timelines</returns>
+        private Line MakeBlockPanelSeparation()
+        {
+            Line separatingSpace = new Line();
+            separatingSpace.X1 = 0;
+            separatingSpace.X2 = 0;
+            separatingSpace.Y1 = 43;
+            separatingSpace.Y2 = 150;
+            separatingSpace.StrokeThickness = 2;
+            separatingSpace.HorizontalAlignment = HorizontalAlignment.Left;
+            separatingSpace.VerticalAlignment = VerticalAlignment.Center;
+            separatingSpace.Margin = new Thickness(5, 0, 5, 0);
+
+            return separatingSpace;
+        }
+
+        /// <summary>
         /// Rounds down a DateTime to the nearest TimeSpan
         /// </summary>
         /// <param name="date">date to round down</param>
@@ -437,17 +479,26 @@ namespace SeeShells.UI.Pages
                     timeline.Children.Clear();
                 }
             }
+            foreach (Object child in Blocks.Children)
+            {
+                if (child is TimelinePanel) // Only TimelinePanel objects since Timelines also contains separating lines
+                {
+                    TimelinePanel blockPanel = (TimelinePanel)child;
+                    blockPanel.Children.Clear();
+                }
+            }
             Timelines.Children.Clear();
             Ticks.Children.Clear();
             TicksBar.Children.Clear();
             TimeStamps.Children.Clear();
+            Blocks.Children.Clear();
             BuildTimeline();
         }
 
         /// <summary>
         /// This checks when the download button is hit, whether the HTML and/or the CSV checkbox is checked or not and calls the creation of HtmlOutput.
         /// </summary>
-        private void download_Click(object sender, RoutedEventArgs e)
+        private void DownloadClick(object sender, RoutedEventArgs e)
         {
             if (htmlCheckBox.IsChecked ?? false)
             {
@@ -474,9 +525,21 @@ namespace SeeShells.UI.Pages
         /// <summary>
         /// This activates the toggle_block method built into the Node object. 
         /// </summary>
-        public static void Dot_Press(object sender, EventArgs e)
+        public static void DotPress(object sender, EventArgs e)
         {
-            ((Node.Node)sender).toggle_block();
+            if(sender.GetType() == typeof(Node.Node))
+            {
+                ((Node.Node)sender).ToggleBlock();
+            }
+            else if(sender.GetType() == typeof(StackedNodes))
+            {
+                ((StackedNodes)sender).ToggleBlock();
+            }
+        }
+
+        public static void HoverBlock(object sender, EventArgs e)
+        {
+            ((InfoBlock)sender).ToggleInfo();
         }
     }
 }

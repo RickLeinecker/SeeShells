@@ -7,6 +7,7 @@ namespace SeeShells.UI.Node
     public class StackedNodes : Button
     {
         public List<IEvent> events = new List<IEvent>();
+        public List<InfoBlock> blocks = new List<InfoBlock>();
 
         public StackedNodes()
         {
@@ -19,6 +20,21 @@ namespace SeeShells.UI.Node
         public void Add(IEvent aEvent)
         {
             events.Add(aEvent);
+        }
+
+        public void ToggleBlock()
+        {
+            foreach(InfoBlock block in this.blocks)
+            {
+                if (block.Visibility == Visibility.Collapsed)
+                {
+                    block.Visibility = Visibility.Visible;
+                }
+                else if (block.Visibility == Visibility.Visible)
+                {
+                    block.Visibility = Visibility.Collapsed;
+                }
+            }
         }
     }
 }

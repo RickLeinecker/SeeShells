@@ -185,6 +185,7 @@
     <Compile Include="ShellParser\ShellItems\ShellItem0x00.cs" />
     <Compile Include="ShellParser\ShellItems\SHITEM_UNKNOWNENTRY2.cs" />
     <Compile Include="UI\EventFilters\EventUserFilter.cs" />
+    <Compile Include="UI\Node\InfoBlock.cs" />
     <Compile Include="UI\Node\StackedNodes.cs" />
     <Compile Include="UI\Templates\CheckBoxWithLabel.xaml.cs">
       <DependentUpon>CheckBoxWithLabel.xaml</DependentUpon>
@@ -237,6 +238,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Pages\TimelinePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Templates\NodeStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
