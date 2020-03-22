@@ -7,10 +7,11 @@ using System.Windows.Shapes;
 using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Controls.Primitives;
 
 namespace SeeShells.UI.Node
 {
-    public class Node : Button
+    public class Node : ToggleButton
     {
         public IEvent aEvent;
         public InfoBlock block;

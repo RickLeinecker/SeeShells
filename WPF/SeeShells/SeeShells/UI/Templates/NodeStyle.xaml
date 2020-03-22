@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:SeeShells.UI.Templates">
 
-    <Style x:Key="Node" TargetType="{x:Type Button}">
+    <Style x:Key="Node" TargetType="{x:Type ToggleButton}">
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Padding" Value="1"/>
@@ -10,7 +10,7 @@
         <Setter Property="Width" Value="25"/>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Button}">
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
                     <Grid x:Name="grid">
                         <Border x:Name="border" CornerRadius="8" BorderBrush="White" BorderThickness="2">
                             <Border.Background>
@@ -63,7 +63,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="StackedNode" TargetType="{x:Type Button}">
+    <Style x:Key="StackedNode" TargetType="{x:Type ToggleButton}">
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Padding" Value="1"/>
@@ -71,7 +71,7 @@
         <Setter Property="Width" Value="30"/>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Button}">
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
                     <Grid x:Name="grid">
                         <Border x:Name="border" CornerRadius="8" BorderBrush="White" BorderThickness="2">
                             <Border.Background>
@@ -130,6 +130,19 @@
         <Setter Property="OverridesDefaultStyle" Value="True"/>
         <Setter Property="Margin" Value="2"/>
         <Setter Property="Background" Value="#397367"/>
+        <Setter Property="Height" Value="70"/>
+        <Setter Property="Width" Value="200"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Padding" Value="10,10,10,10"/>
+        <Setter Property="TextAlignment" Value="Center"/>
+    </Style>
+
+    <Style BasedOn="{StaticResource {x:Type TextBlock}}"
+           TargetType="TextBlock"
+           x:Key="LitUpBlock">
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="Margin" Value="2"/>
+        <Setter Property="Background" Value="#005B9A"/>
         <Setter Property="Height" Value="70"/>
         <Setter Property="Width" Value="200"/>
         <Setter Property="Foreground" Value="White"/>
