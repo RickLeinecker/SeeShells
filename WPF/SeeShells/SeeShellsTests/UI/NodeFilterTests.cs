@@ -321,7 +321,7 @@ namespace SeeShellsTests.UI.Tests
             //test no name
             resetVisibility(testList);
             new EventUserFilter().Apply(ref testList);
-            Assert.AreEqual(0, countVisible(testList));
+            Assert.AreEqual(3, countVisible(testList));
             Assert.AreEqual(startListSize, testList.Count);
 
             //test multiName

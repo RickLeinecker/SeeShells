@@ -12,10 +12,10 @@ namespace SeeShellsTests.UI.Mocks
 {
     class MockNode : Node
     {
-        public MockNode(IEvent aEvent) : this(aEvent, new TextBlock())
+        public MockNode(IEvent aEvent) : this(aEvent, new InfoBlock())
         {
         }
-        public MockNode(IEvent aEvent, TextBlock block) : base(aEvent, block)
+        public MockNode(IEvent aEvent, InfoBlock block) : base(aEvent, block)
         {
             AEvent = aEvent;
             Block = block;

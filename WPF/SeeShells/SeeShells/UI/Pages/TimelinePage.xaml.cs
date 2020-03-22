@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using SeeShells.IO;
+using SeeShells.ShellParser.ShellItems;
 using SeeShells.UI.EventFilters;
 using SeeShells.UI.Node;
 using System;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Shapes;
 using Xceed.Wpf.Toolkit;
 using Xceed.Wpf.Toolkit.Primitives;
 
@@ -42,10 +44,22 @@ namespace SeeShells.UI.Pages
             }
         }
 
+        private void ClearEventContentFilter_Click(object sender, RoutedEventArgs e)
+        {
+            AllStringFilterTextBlock.Clear();
+            RegexCheckBox.IsChecked = false;
+        }
+
         private void UpdateDateFilter(object sender, SelectionChangedEventArgs e)
         {
             UpdateFilter("DateFilter", new DateRangeFilter(startDatePicker.SelectedDate, endDatePicker.SelectedDate));
 
+        }
+
+        private void ClearDateFilter_Click(object sender, RoutedEventArgs e)
+        {
+            startDatePicker.SelectedDate = null;
+            endDatePicker.SelectedDate = null;
         }
 
         private void UpdateFilter(string filterIdentifer, INodeFilter newFilter)
@@ -88,6 +102,11 @@ namespace SeeShells.UI.Pages
             emitter.ItemsSource = eventTypeList;
         }
 
+        private void ClearEventTypeFilter_Click(object sender, RoutedEventArgs e)
+        {
+            EventTypeFilter.SelectedItems.Clear();
+        }
+
         private void EventUserFilter_OnItemSelectionChanged(object sender, ItemSelectionChangedEventArgs e)
         {
             CheckComboBox emitter = (CheckComboBox)sender;
@@ -113,6 +132,11 @@ namespace SeeShells.UI.Pages
             }
 
             emitter.ItemsSource = eventUserList;
+        }
+
+        private void ClearUserFilter_Click(object sender, RoutedEventArgs e)
+        {
+            EventUserFilter.SelectedItems.Clear();
         }
 
         private void EventParentTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -141,6 +165,11 @@ namespace SeeShells.UI.Pages
 
         }
 
+        private void ClearEventNameFilter_Click(object sender, RoutedEventArgs e)
+        {
+            EventNameFilter.Clear();
+        }
+
         /// <summary>
         /// Builds a timeline dynamically. Creates one timeline for each cluster of events.
         /// </summary>
@@ -155,12 +184,16 @@ namespace SeeShells.UI.Pages
                 }
 
                 List<Node.Node> nodeList = new List<Node.Node>();
+                List<TextBlock> blockList = new List<TextBlock>();
                 foreach (Node.Node node in App.nodeCollection.nodeList)
                 {
-                    if(node.Visibility == System.Windows.Visibility.Visible)
+                    node.Style = (Style)Resources["Node"];
+                    if (node.Visibility == System.Windows.Visibility.Visible)
                     {
                         nodeList.Add(node);
+                        blockList.Add(node.block);
                     }
+                    node.block.Visibility = Visibility.Collapsed;
                 }
 
                 if (nodeList.Count == 0)
@@ -217,6 +250,59 @@ namespace SeeShells.UI.Pages
             DateTime beginDate = DateTimeRoundDown(nodesCluster[0].aEvent.EventTime, maxRealTimeSpan);
             DateTime endDate = beginDate.AddMinutes(1);
 
+            TimelinePanel timelinePanel = MakeTimelinePanel(beginDate, endDate);
+            TimelinePanel blockPanel = MakeTimelinePanel(beginDate, endDate);
+
+            // Add all blocks onto a timeline
+            foreach (Node.Node node in nodesCluster)
+            {
+                node.block.Style = (Style)Resources["TimelineBlock"];
+                TimelinePanel.SetDate(node.block, node.aEvent.EventTime);
+                blockPanel.Children.Add(node.block);
+            }
+
+            List<StackedNodes> stackedNodesList = GetStackedNodes(nodesCluster);
+            // Add all nodes that stack onto a timeline
+            foreach (StackedNodes stackedNode in stackedNodesList)
+            {
+                stackedNode.Click += DotPress;
+                stackedNode.MouseEnter += HoverStackedNodes;
+                stackedNode.MouseLeave += HoverStackedNodes;
+                stackedNode.Style = (Style)Resources["StackedNode"];
+                TimelinePanel.SetDate(stackedNode, stackedNode.events[0].EventTime);
+                stackedNode.Content = stackedNode.events.Count.ToString();
+                timelinePanel.Children.Add(stackedNode);
+                ConnectNodeToTimeline(timelinePanel, stackedNode.events[0].EventTime);
+            }
+            // Add all other nodes onto a timeline
+            foreach (Node.Node node in nodesCluster)
+            {
+                node.MouseEnter += HoverNode;
+                node.MouseLeave += HoverNode;
+                TimelinePanel.SetDate(node, node.aEvent.EventTime);
+                timelinePanel.Children.Add(node);
+                ConnectNodeToTimeline(timelinePanel, node.aEvent.EventTime);
+            }
+
+            Timelines.Children.Add(timelinePanel);
+            Blocks.Children.Add(blockPanel);
+            Line separationLine = MakeTimelineSeparatingLine();
+            Line blockSeperation = MakeBlockPanelSeparation();
+            Blocks.Children.Add(blockSeperation);
+            Timelines.Children.Add(separationLine);
+            AddTicks(beginDate, endDate);
+            AddTimeStamp(beginDate, endDate);
+        }
+
+
+        /// <summary>
+        /// Creates a TimelinePanel
+        /// </summary>
+        /// <param name="beginDate">begin date of timeline</param>
+        /// <param name="endDate">end date of timeline</param>
+        /// <returns>TimelinePanel that can space graphical objects according to time</returns>
+        private TimelinePanel MakeTimelinePanel(DateTime beginDate, DateTime endDate)
+        {
             TimelinePanel timelinePanel = new TimelinePanel
             {
                 UnitTimeSpan = new TimeSpan(0, 0, 0, 1),
@@ -226,23 +312,7 @@ namespace SeeShells.UI.Pages
                 KeepOriginalOrderForOverlap = true
             };
 
-            List<StackedNodes> stackedNodesList = GetStackedNodes(nodesCluster);
-            // Add all nodes that stack onto a timeline
-            foreach (StackedNodes stackedNode in stackedNodesList)
-            {
-                TimelinePanel.SetDate(stackedNode, stackedNode.events[0].EventTime);
-                stackedNode.Content = stackedNode.events.Count.ToString();
-                timelinePanel.Children.Add(stackedNode);
-            }
-            // Add all other nodes onto a timeline
-            foreach (Node.Node node in nodesCluster)
-            {
-                TimelinePanel.SetDate(node, node.aEvent.EventTime);
-                timelinePanel.Children.Add(node);
-            }
-
-            Timelines.Children.Add(timelinePanel);
-            AddTextBlockTimeStamp(beginDate, endDate);
+            return timelinePanel;
         }
 
         /// <summary>
@@ -262,11 +332,14 @@ namespace SeeShells.UI.Pages
                 {
                     StackedNodes stackedNodes = new StackedNodes();
                     stackedNodes.events.Add(previousNode.aEvent);
+                    stackedNodes.blocks.Add(previousNode.block);
                     while (i < nodesCluster.Count && previousNode.aEvent.EventTime.Equals(nodesCluster[i].aEvent.EventTime))
                     {
                         stackedNodes.events.Add(nodesCluster[i].aEvent);
+                        stackedNodes.blocks.Add(nodesCluster[i].block);
                         previousNode = nodesCluster[i];
                         nodesCluster.RemoveAt(i - 1);
+
                     }
                     stackedNodesList.Add(stackedNodes);
 
@@ -290,19 +363,126 @@ namespace SeeShells.UI.Pages
         }
 
         /// <summary>
-        /// Adds a timestamp for timeline.
+        /// Draws a line to connect a node to a timeline
         /// </summary>
-        /// <param name="beginDate">the begin date of the time interval</param>
-        /// <param name="endDate">the end date of the time interval</param>
-        private void AddTextBlockTimeStamp(DateTime beginDate, DateTime endDate)
+        /// <param name="timelinePanel">timeline panel to hold and position connection lines</param>
+        /// <param name="eventTime">time used as position for where to draw a connecting line</param>
+        private void ConnectNodeToTimeline(TimelinePanel timelinePanel, DateTime eventTime)
         {
-            TextBlock textBlock = new TextBlock();
-            textBlock.Text = beginDate.ToString() + " - " + endDate.ToString();
-            textBlock.Height = 20;
-            textBlock.Width = endDate.Subtract(beginDate).TotalSeconds * App.nodeCollection.nodeList[0].Width;
-            textBlock.Background = Brushes.LightSteelBlue;
+            Line connectorLine = new Line();
+            connectorLine.Stroke = Brushes.LightSteelBlue;
+            connectorLine.X1 = 10;
+            connectorLine.X2 = 10;
+            connectorLine.Y1 = 0;
+            connectorLine.Y2 = 15;
+            connectorLine.StrokeThickness = 1;
 
-            TimeStamps.Children.Add(textBlock);
+            TimelinePanel.SetDate(connectorLine, eventTime);
+            timelinePanel.Children.Add(connectorLine);
+        }
+
+        /// <summary>
+        /// Draws ticks below the nodes to represent the seconds of each timeline interval
+        /// </summary>
+        /// <param name="beginDate">begin date of a timeline period</param>
+        /// <param name="endDate"> end date of a timeline period</param>
+        private void AddTicks(DateTime beginDate, DateTime endDate)
+        {
+            TimelinePanel timelinePanel = MakeTimelinePanel(beginDate, endDate);
+
+            AddTicksBar(beginDate, endDate);
+            int timePeriod = (int)endDate.Subtract(beginDate).TotalSeconds;
+            for (int i = 0; i < timePeriod; i++)
+            {
+                Line tick = new Line();
+                tick.Stroke = Brushes.Black;
+                tick.X1 = 10;
+                tick.X2 = 10;
+                tick.Y1 = 0;
+                tick.Y2 = 20;
+                tick.StrokeThickness = 1;
+
+                TimelinePanel.SetDate(tick, beginDate);
+                timelinePanel.Children.Add(tick);
+                beginDate = beginDate.AddSeconds(1);
+            }
+            Ticks.Children.Add(timelinePanel);
+
+            Line separationLine = MakeTimelineSeparatingLine();
+            separationLine.Visibility = Visibility.Hidden; // Hidden since this line is added only for proper spacing
+            Ticks.Children.Add(separationLine);
+        }
+
+        /// <summary>
+        /// Adds a rectangular bar behind the timeline ticks.
+        /// </summary>
+        /// <param name="beginDate">begin date of the time interval used to decide the size of the bar</param>
+        /// <param name="endDate">end date of the time interval used to decide the size of the bar</param>
+        private void AddTicksBar(DateTime beginDate, DateTime endDate)
+        {
+            Rectangle bar = new Rectangle();
+            bar.Height = 20;
+            bar.Width = (endDate.Subtract(beginDate).TotalSeconds * App.nodeCollection.nodeList[0].Width) + 12; // The added integer is to compensate for the margins and thickness of the line that separates the timelines. 
+            bar.Fill = Brushes.LightSteelBlue;
+            bar.Margin = new Thickness(0, 0, -1, 0);
+
+            TicksBar.Children.Add(bar);
+        }
+
+        /// <summary>
+        /// Adds time stamp that tells the time period of a timeline
+        /// </summary>
+        /// <param name="beginDate">the begin date of the timeline</param>
+        /// <param name="endDate">the end date of the timeline</param>
+        private void AddTimeStamp(DateTime beginDate, DateTime endDate)
+        {
+            TextBlock timeStamp = new TextBlock();
+            timeStamp.Text = beginDate.ToString() + " - " + endDate.ToString();
+            timeStamp.Foreground = Brushes.White;
+            timeStamp.Height = 20;
+            timeStamp.Width = (endDate.Subtract(beginDate).TotalSeconds * App.nodeCollection.nodeList[0].Width) + 12;
+            timeStamp.Margin = new Thickness(0, 0, -1, 0);
+
+            TimeStamps.Children.Add(timeStamp);
+        }
+
+        /// <summary>
+        /// Creates a line to be used as separation between timelines
+        /// </summary>
+        /// <returns>a line to visually separate timelines</returns>
+        private Line MakeTimelineSeparatingLine()
+        {
+            Line separatingLine = new Line();
+            separatingLine.Stroke = Brushes.LightSteelBlue;
+            separatingLine.X1 = 0;
+            separatingLine.X2 = 0;
+            separatingLine.Y1 = 43;
+            separatingLine.Y2 = 150;
+            separatingLine.StrokeThickness = 2;
+            separatingLine.HorizontalAlignment = HorizontalAlignment.Left;
+            separatingLine.VerticalAlignment = VerticalAlignment.Center;
+            separatingLine.Margin = new Thickness(5, 0, 5, 0);
+
+            return separatingLine;
+        }
+
+        /// <summary>
+        /// Creates a space to seperate the multiple timelines
+        /// </summary>
+        /// <returns>A appropriate space to separate the block panels on the timelines</returns>
+        private Line MakeBlockPanelSeparation()
+        {
+            Line separatingSpace = new Line();
+            separatingSpace.X1 = 0;
+            separatingSpace.X2 = 0;
+            separatingSpace.Y1 = 43;
+            separatingSpace.Y2 = 150;
+            separatingSpace.StrokeThickness = 2;
+            separatingSpace.HorizontalAlignment = HorizontalAlignment.Left;
+            separatingSpace.VerticalAlignment = VerticalAlignment.Center;
+            separatingSpace.Margin = new Thickness(5, 0, 5, 0);
+
+            return separatingSpace;
         }
 
         /// <summary>
@@ -318,23 +498,38 @@ namespace SeeShells.UI.Pages
         }
 
         /// <summary>
-        /// Clears the children of all timeline related UI objects and builds timeline.
+        /// Clears all children of UI objects and rebuilds the timeline.
         /// </summary>
         public void RebuildTimeline()
         {
-            foreach(TimelinePanel timeline in Timelines.Children)
+            foreach (Object child in Timelines.Children)
             {
-                timeline.Children.Clear();
+                if(child is TimelinePanel) // Only TimelinePanel objects since Timelines also contains separating lines
+                {
+                    TimelinePanel timeline = (TimelinePanel)child;
+                    timeline.Children.Clear();
+                }
+            }
+            foreach (Object child in Blocks.Children)
+            {
+                if (child is TimelinePanel) // Only TimelinePanel objects since Timelines also contains separating lines
+                {
+                    TimelinePanel blockPanel = (TimelinePanel)child;
+                    blockPanel.Children.Clear();
+                }
             }
             Timelines.Children.Clear();
+            Ticks.Children.Clear();
+            TicksBar.Children.Clear();
             TimeStamps.Children.Clear();
+            Blocks.Children.Clear();
             BuildTimeline();
         }
 
         /// <summary>
         /// This checks when the download button is hit, whether the HTML and/or the CSV checkbox is checked or not and calls the creation of HtmlOutput.
         /// </summary>
-        private void download_Click(object sender, RoutedEventArgs e)
+        private void DownloadClick(object sender, RoutedEventArgs e)
         {
             if (htmlCheckBox.IsChecked ?? false)
             {
@@ -361,9 +556,65 @@ namespace SeeShells.UI.Pages
         /// <summary>
         /// This activates the toggle_block method built into the Node object. 
         /// </summary>
-        public static void Dot_Press(object sender, EventArgs e)
+        public static void DotPress(object sender, EventArgs e)
         {
-            ((Node.Node)sender).toggle_block();
+            if(sender.GetType() == typeof(Node.Node))
+            {
+                ((Node.Node)sender).ToggleBlock();
+            }
+            else if(sender.GetType() == typeof(StackedNodes))
+            {
+                ((StackedNodes)sender).ToggleBlock();
+            }
+        }
+
+        /// <summary>
+        /// This activates the block of text to expand and show more information. 
+        /// </summary>
+        public static void HoverBlock(object sender, EventArgs e)
+        {
+            ((InfoBlock)sender).ToggleInfo();
+        }
+
+        /// <summary>
+        /// This is the Node version of this function to change the color of the blocks whose node is hovered over. 
+        /// </summary>
+        public void HoverNode(Object sender, EventArgs e)
+        {
+            if (((Node.Node)sender).IsChecked == true)
+            {
+                if (((Node.Node)sender).block.Style == (Style)Resources["TimelineBlock"])
+                {
+                    // change color
+                    ((Node.Node)sender).block.Style = (Style)Resources["LitUpBlock"];
+                }
+                else
+                {
+                    ((Node.Node)sender).block.Style = (Style)Resources["TimelineBlock"];
+                }
+            }
+        }
+
+        /// <summary>
+        /// This is the StackedNode version of this function to change the color of the blocks whose StackedNode is hovered over. 
+        /// </summary>
+        public void HoverStackedNodes(Object sender, EventArgs e)
+        {
+            if (((StackedNodes)sender).IsChecked == true)
+            {
+                foreach(InfoBlock block in ((StackedNodes)sender).blocks)
+                {
+                    if (block.Style == (Style)Resources["TimelineBlock"])
+                    {
+                        // change color
+                        block.Style = (Style)Resources["LitUpBlock"];
+                    }
+                    else
+                    {
+                        block.Style = (Style)Resources["TimelineBlock"];
+                    }
+                }
+            }
         }
     }
 }

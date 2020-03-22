@@ -55,15 +55,32 @@ function userExistsAndIsApproved(username) {
     });
 }
 
-function getUserByID(userID) {
+function getSession(sid) {
     return new Promise(function (resolve, reject) {
-        pool.query('SELECT id, username, password FROM logininfo WHERE id=$1;', [userID], (err, res) => {
+        pool.query('SELECT * FROM session WHERE sid=$1;', [sid], (err, res) => {
             if (err) {
-                reject({});
+                reject(err);
                 return;
             }
 
-            resolve(res.rows);
+            if (res.rowCount > 0) {
+                resolve(true);
+                return;
+            }
+
+            resolve(false);
+        });
+    });
+}
+
+function destroySession(sid) {
+    return new Promise(function (resolve, reject) {
+        pool.query('DELETE FROM session WHERE sid=$1;', [sid], (err, res) => {
+            if (err) {
+                reject(err);
+            }
+
+            resolve({ "message": "success" });
         });
     });
 }
@@ -277,6 +294,53 @@ function addScript(identifier, encodedscript) {
     });
 }
 
+function updateExistingScript(identifier, encodedscript) {
+    return new Promise(function (resolve, reject) {
+        pool.query('UPDATE scripts SET script=$1 WHERE typeidentifier=$2;', [encodedscript, identifier], (err, res) => {
+            if (err) {
+                reject(err);
+            }
+
+            resolve({ "message": "Success" });
+        });
+    });
+}
+
+function updateScript(identifier, encodedscript) {
+    return new Promise(function (resolve, reject) {
+        let promise = scriptForIdentifierDoesNotExist(identifier);
+        promise.then(
+            function () {
+                let addPromise = addScript(identifier, encodedscript);
+                addPromise.then(
+                    function (value) {
+                        resolve({ "success": 1 });
+                    },
+                    function (err) {
+                        reject({ "success": 0, "error": "Failed to add new script." });
+                    }
+                );
+            },
+            function (err) {
+                if (err.result >= 1) {
+                    let update = updateExistingScript(identifier, encodedscript);
+                    update.then(
+                        function () {
+                            resolve({ "success": 1 });
+                        },
+                        function () {
+                            reject({ "success": 0, "error": "Error in updating an existing script." });
+                        }
+                    );
+                }
+                else {
+                    reject({ "success": 0, "error": err.message });
+                }
+            }
+        );
+    });
+}
+
 function scriptForIdentifierDoesNotExist(identifier) {
     return new Promise(function (resolve, reject) {
         pool.query('SELECT id FROM scripts WHERE typeidentifier=$1;', [identifier], (err, res) => {
@@ -306,6 +370,30 @@ function getScripts(callback) {
         }
 
         callback(res.rows);
+    });
+}
+
+function getScript(identifier) {
+    return new Promise(function (resolve, reject) {
+        pool.query('SELECT id, script FROM scripts WHERE typeidentifier=$1;', [identifier], (err, res) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+
+            if (res.rowCount > 0) {
+                resolve({
+                    success: 1,
+                    script: res.rows[0].script
+                });
+                
+            }
+            else {
+                resolve({ "success": 0, result: "No script exists for this shell item identifier." });               
+            }
+
+            return;
+        });
     });
 }
 
@@ -341,7 +429,8 @@ module.exports = {
     pgSession,
     userExists,
     userExistsAndIsApproved,
-    getUserByID,
+    getSession,
+    destroySession,
     getUnapprovedUsers,
     keysIDExists,
     addKeys,
@@ -354,9 +443,10 @@ module.exports = {
     getGUIDs,
     addGUID,
     GUIDDoesNotExist,
-    addScript,
+    updateScript,
     scriptForIdentifierDoesNotExist,
     getScripts,
+    getScript,
     getHelpInformation,
     updateHelpInformation
 }

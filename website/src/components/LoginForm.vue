@@ -45,8 +45,7 @@
 
                     if (result.success == 1) {
                         this.$session.start();
-                        this.$session.set('id', result.session);
-                        this.$session.set('user', result.user.id);
+                        this.$session.set('session', result.session);
                         this.$router.push('/SeeShells/');
                         location.reload();
                     }
@@ -65,6 +64,7 @@
 <style>
     #login {
         margin: auto;
+        margin-top:100px;
         height: 100%;
         width: 40%;
     }

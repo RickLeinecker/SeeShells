@@ -51,6 +51,12 @@
     <Reference Include="KeraLua, Version=1.0.24.0, Culture=neutral, PublicKeyToken=6a194c04b9c89217, processorArchitecture=MSIL">
       <HintPath>..\packages\KeraLua.1.0.24\lib\net45\KeraLua.dll</HintPath>
     </Reference>
+    <Reference Include="Markdig, Version=0.18.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Markdig.0.18.0\lib\net40\Markdig.dll</HintPath>
+    </Reference>
+    <Reference Include="Markdig.Wpf, Version=0.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Markdig.Wpf.0.3.1\lib\net452\Markdig.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -73,6 +79,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard1.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
@@ -120,6 +127,7 @@
     <Compile Include="IO\Networking\APIException.cs" />
     <Compile Include="IO\Networking\JSON\APIError.cs" />
     <Compile Include="IO\Networking\JSON\GUIDPair.cs" />
+    <Compile Include="IO\Networking\JSON\HelpItem.cs" />
     <Compile Include="IO\Networking\JSON\RegistryLocations.cs" />
     <Compile Include="IO\Networking\JSON\ScriptPair.cs" />
     <Compile Include="ShellParser\Scripting\LuaShellItem.cs" />
@@ -178,7 +186,11 @@
     <Compile Include="ShellParser\ShellItems\ShellItem0x00.cs" />
     <Compile Include="ShellParser\ShellItems\SHITEM_UNKNOWNENTRY2.cs" />
     <Compile Include="UI\EventFilters\EventUserFilter.cs" />
+    <Compile Include="UI\Node\InfoBlock.cs" />
     <Compile Include="UI\Node\StackedNodes.cs" />
+    <Compile Include="UI\Windows\AboutWindow.xaml.cs">
+      <DependentUpon>AboutWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Templates\CheckBoxWithLabel.xaml.cs">
       <DependentUpon>CheckBoxWithLabel.xaml</DependentUpon>
     </Compile>
@@ -207,6 +219,10 @@
       <DependentUpon>Switch.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\ViewModels\FileLocations.cs" />
+    <Page Include="UI\Windows\AboutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\Templates\CheckBoxWithLabel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -237,6 +253,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Templates\Switch.xaml">
+    <Page Include="UI\Templates\NodeStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -255,12 +272,17 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="resources\xceedLogo.png" />
     <EmbeddedResource Include="resources\defaultOS.json" />
     <Resource Include="SeeShellsSolid.ico" />
     <Resource Include="SeeShells.ico" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Help.md">
+      <Link>resources\Help.md</Link>
     </EmbeddedResource>
     <None Include="app.config" />
     <Content Include="NLog.config">
