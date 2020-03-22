@@ -53,7 +53,7 @@ namespace SeeShells.UI.Node
                 this.Text = "";
                 foreach (KeyValuePair<string, string> property in this.aEvent.Parent.GetAllProperties())
                 {
-                    this.Text += property.Key + "," + property.Value;
+                    this.Text += property.Key + " : " + property.Value;
                     this.Text += "\n";
                 }
             }
