@@ -5,7 +5,7 @@ namespace SeeShells.ShellParser.ShellItems
     /// <summary>
     /// Control Panel Shell Item, with a constant GUID for identification.
     /// </summary>
-    public class ShellItem0x71 : MockShellItem
+    public class ShellItem0x71 : ShellItem
     {
         public string Guid { get; protected set; }
         public byte Flags { get; protected set; }

@@ -13,9 +13,9 @@ namespace SeeShells.ShellParser.ShellItems
         {
         }
 
-        MockShellItem get_item(int off)
+        ShellItem get_item(int off)
         {
-            MockShellItem item = null;
+            ShellItem item = null;
             int _type = unpack_byte(off + 2);
             if ((_type & 0x70) == (int)SHITEMTYPE.FILE_ENTRY)
             {
@@ -62,13 +62,13 @@ namespace SeeShells.ShellParser.ShellItems
             }
             else
             {
-                item = new MockShellItem(buf, off);
+                item = new ShellItem(buf, off);
             }
 
             return item;
         }
 
-        public IEnumerable<MockShellItem> items()
+        public IEnumerable<ShellItem> items()
         {
             int off = offset;
             int size = 0;
@@ -79,7 +79,7 @@ namespace SeeShells.ShellParser.ShellItems
                 if (size == 0)
                     break;
 
-                MockShellItem item = get_item(off);
+                ShellItem item = get_item(off);
 
                 size = item.Size;
 

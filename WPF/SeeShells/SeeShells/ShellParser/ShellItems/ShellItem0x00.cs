@@ -2,7 +2,7 @@
 
 namespace SeeShells.ShellParser.ShellItems
 {
-    public class ShellItem0x00 : MockShellItem
+    public class ShellItem0x00 : ShellItem
     {
         public string Guid { get; protected set; }
         public override string TypeName { get => "Unknown"; }

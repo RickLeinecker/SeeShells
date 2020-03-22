@@ -2,7 +2,7 @@
 
 namespace SeeShells.ShellParser.ShellItems
 {
-    public class ShellItem0x1F : MockShellItem
+    public class ShellItem0x1F : ShellItem
     {
         private int off_folderid;
         public string guid { get; protected set; }

@@ -6,7 +6,7 @@ namespace SeeShells.ShellParser.ShellItems
     /// Network Location Shell Item
     /// </summary>
     /// https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#35-network-location-shell-item
-    public class ShellItem0x40 : MockShellItem
+    public class ShellItem0x40 : ShellItem
     {
         public byte Flags { get; protected set; }
         public string Location { get; protected set; }

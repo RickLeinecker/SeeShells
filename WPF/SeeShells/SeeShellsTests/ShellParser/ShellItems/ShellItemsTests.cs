@@ -215,7 +215,7 @@ namespace SeeShellsTests.ShellParser.ShellItems
         [TestMethod()]
         public void ShellItemRegistryDecoratorTest()
         {
-            var shellItem = new UI.Mocks.MockShellItem("Test", 0x99);
+            var shellItem = new MockShellItem("Test", 0x99);
             var regKey = new RegistryKeyWrapper(null, "testUser", "testPath");
 
             int existingPropCount = shellItem.GetAllProperties().Count;

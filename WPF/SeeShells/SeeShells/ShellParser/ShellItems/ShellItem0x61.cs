@@ -7,7 +7,7 @@ namespace SeeShells.ShellParser.ShellItems
     /// URI Shell Type
     /// </summary>
     /// https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#37-uri-shell-item
-    public class ShellItem0x61 : MockShellItem
+    public class ShellItem0x61 : ShellItem
     {
         public string Uri { get; protected set; }
         public string FTPHostname { get; protected set; }

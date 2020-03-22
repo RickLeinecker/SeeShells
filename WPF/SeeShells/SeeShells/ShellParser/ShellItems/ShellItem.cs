@@ -6,7 +6,7 @@ using System.Text;
 
 namespace SeeShells.ShellParser.ShellItems
 {
-    public class MockShellItem : Block, IShellItem
+    public class ShellItem : Block, IShellItem
     {
         public virtual ushort Size { get; protected set; }
         public virtual byte Type { get; protected set; }
@@ -56,14 +56,14 @@ namespace SeeShells.ShellParser.ShellItems
             }
         }
         [System.Obsolete("Deprecated. Use 1-parameter Constructor. Offset parameter has no effect.")]
-        public MockShellItem(byte[] buf, int offset)
+        public ShellItem(byte[] buf, int offset)
             : base(buf, offset)
         {
             Type = unpack_byte(0x02);
             Size = unpack_word(0x00);
         }
 
-        public MockShellItem(byte[] buf) : base(buf, 0) {
+        public ShellItem(byte[] buf) : base(buf, 0) {
             Type = unpack_byte(0x02);
             Size = unpack_word(0x00);
         }
