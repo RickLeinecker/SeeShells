@@ -482,6 +482,12 @@ namespace SeeShells.UI.Pages
                 {
                     TimelinePanel timeline = (TimelinePanel)child;
                     timeline.Children.Clear();
+                }
+            }
+            foreach (Object child in Blocks.Children)
+            {
+                if (child is TimelinePanel) // Only TimelinePanel objects since Timelines also contains separating lines
+                {
                     TimelinePanel blockPanel = (TimelinePanel)child;
                     blockPanel.Children.Clear();
                 }

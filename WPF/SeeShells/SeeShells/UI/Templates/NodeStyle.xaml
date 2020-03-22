@@ -131,7 +131,7 @@
         <Setter Property="Margin" Value="2"/>
         <Setter Property="Background" Value="#397367"/>
         <Setter Property="Height" Value="70"/>
-        <Setter Property="Width" Value="150"/>
+        <Setter Property="Width" Value="200"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="Padding" Value="10,10,10,10"/>
         <Setter Property="TextAlignment" Value="Center"/>

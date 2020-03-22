@@ -40,7 +40,7 @@ namespace SeeShells.UI.Node
             if(this.Width > 300)
             {
                 this.Text = "";
-                this.Width = 150;
+                this.Width = 200;
                 this.Height = 70;
                 this.Text += this.aEvent.Name + "\n";
                 this.Text += this.aEvent.EventTime + "\n";
