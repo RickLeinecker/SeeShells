@@ -244,6 +244,8 @@ namespace SeeShells.UI.Pages
             foreach (StackedNodes stackedNode in stackedNodesList)
             {
                 stackedNode.Click += DotPress;
+                stackedNode.MouseEnter += HoverStackedNodes;
+                stackedNode.MouseLeave += HoverStackedNodes;
                 stackedNode.Style = (Style)Resources["StackedNode"];
                 TimelinePanel.SetDate(stackedNode, stackedNode.events[0].EventTime);
                 stackedNode.Content = stackedNode.events.Count.ToString();
@@ -253,6 +255,8 @@ namespace SeeShells.UI.Pages
             // Add all other nodes onto a timeline
             foreach (Node.Node node in nodesCluster)
             {
+                node.MouseEnter += HoverNode;
+                node.MouseLeave += HoverNode;
                 TimelinePanel.SetDate(node, node.aEvent.EventTime);
                 timelinePanel.Children.Add(node);
                 ConnectNodeToTimeline(timelinePanel, node.aEvent.EventTime);
@@ -542,9 +546,53 @@ namespace SeeShells.UI.Pages
             }
         }
 
+        /// <summary>
+        /// This activates the block of text to expand and show more information. 
+        /// </summary>
         public static void HoverBlock(object sender, EventArgs e)
         {
             ((InfoBlock)sender).ToggleInfo();
+        }
+
+        /// <summary>
+        /// This is the Node version of this function to change the color of the blocks whose node is hovered over. 
+        /// </summary>
+        public void HoverNode(Object sender, EventArgs e)
+        {
+            if (((Node.Node)sender).IsChecked == true)
+            {
+                if (((Node.Node)sender).block.Style == (Style)Resources["TimelineBlock"])
+                {
+                    // change color
+                    ((Node.Node)sender).block.Style = (Style)Resources["LitUpBlock"];
+                }
+                else
+                {
+                    ((Node.Node)sender).block.Style = (Style)Resources["TimelineBlock"];
+                }
+            }
+        }
+
+        /// <summary>
+        /// This is the StackedNode version of this function to change the color of the blocks whose StackedNode is hovered over. 
+        /// </summary>
+        public void HoverStackedNodes(Object sender, EventArgs e)
+        {
+            if (((StackedNodes)sender).IsChecked == true)
+            {
+                foreach(InfoBlock block in ((StackedNodes)sender).blocks)
+                {
+                    if (block.Style == (Style)Resources["TimelineBlock"])
+                    {
+                        // change color
+                        block.Style = (Style)Resources["LitUpBlock"];
+                    }
+                    else
+                    {
+                        block.Style = (Style)Resources["TimelineBlock"];
+                    }
+                }
+            }
         }
     }
 }

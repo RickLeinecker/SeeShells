@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 
 namespace SeeShells.UI.Node
 {
-    public class StackedNodes : Button
+    public class StackedNodes : ToggleButton
     {
         public List<IEvent> events = new List<IEvent>();
         public List<InfoBlock> blocks = new List<InfoBlock>();
