@@ -143,11 +143,6 @@ namespace SeeShells.UI.Pages
 
         }
 
-        public static void click_line(object sender, EventArgs e)
-        {
-            System.Windows.MessageBox.Show("This is the textblock");
-        }
-
         /// <summary>
         /// Builds a timeline dynamically. Creates one timeline for each cluster of events.
         /// </summary>
