@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using NLog;
+using SeeShells.UI.Pages;
 
 namespace SeeShells
 {
@@ -20,10 +21,9 @@ namespace SeeShells
     /// 
     public partial class MainWindow : Window
     {
-
         public MainWindow()
         {
             InitializeComponent();
-        }
+        } 
     }
 }

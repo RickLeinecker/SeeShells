@@ -129,9 +129,6 @@
                         </Grid>
                     </Grid>
                 </TabItem>
-                <TabItem Header="Help">
-
-                </TabItem>
             </TabControl>
         </Viewbox>
     </Grid>

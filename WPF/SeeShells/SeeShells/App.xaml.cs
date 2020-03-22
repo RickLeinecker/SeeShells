@@ -1,12 +1,15 @@
 ﻿using SeeShells.ShellParser.ShellItems;
 using SeeShells.UI;
 using SeeShells.UI.Node;
+using SeeShells.UI.Pages;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Navigation;
+using System.Reflection;
 
 namespace SeeShells
 {
@@ -36,7 +39,7 @@ namespace SeeShells
         /// </summary>
         private void Toolbar_Loaded(object sender, RoutedEventArgs e)
         {
-            ToolBar toolBar = sender as ToolBar;
+            System.Windows.Controls.ToolBar toolBar = sender as System.Windows.Controls.ToolBar;
             var overflowGrid = toolBar.Template.FindName("OverflowGrid", toolBar) as FrameworkElement;
             if (overflowGrid != null)
             {

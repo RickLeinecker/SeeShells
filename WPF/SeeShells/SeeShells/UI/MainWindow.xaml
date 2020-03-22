@@ -9,11 +9,9 @@
     <Window.RenderTransform>
         <ScaleTransform ScaleX="{Binding ZoomX}" ScaleY="{Binding ZoomY}"/>
     </Window.RenderTransform>
+
     <Grid>
-        <Frame Source="Pages/Home.xaml">
-
+        <Frame NavigationUIVisibility="Hidden" Source="Pages/Home.xaml">
         </Frame>
-        
-
     </Grid>
 </Window>
