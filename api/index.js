@@ -9,7 +9,7 @@ var port = process.env.PORT || 3000;
 var app = express();
 
 app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*'); //https://rickleinecker.github.io
+    res.setHeader('Access-Control-Allow-Origin', 'https://rickleinecker.github.io');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, X-Auth-Token, Content-Type, Accept');
     res.setHeader('Access-Control-Allow-Methods', 'POST, GET');
     res.setHeader('Access-Control-Allow-Credentials', true);
@@ -220,7 +220,42 @@ app.post('/addGUID', function (req, res) {
                         );
                     },
                     function (err) {
-                        res.send({ "success": 0, "error": "GUID exists in the database already." });
+                        let addPromise = database.updateGUID(guid, name);
+                        addPromise.then(
+                            function (value) {
+                                res.send({ "success": 1 });
+                            },
+                            function (err) {
+                                res.send({ "success": 0, "error": "Failed to update GUID." });
+                            }
+                        );
+                    }
+                );
+            }
+            else {
+                res.redirect('/notauthenticated');
+            }
+        },
+        function (err) {
+            res.redirect('/notauthenticated');
+        }
+    )
+});
+
+app.post('/deleteGUID', function (req, res) {
+    let promise = database.getSession(req.header('x-auth-token'));
+    promise.then(
+        function (result) {
+            if (result == true) {
+                var id = String(req.body.id);
+
+                let addPromise = database.deleteGUID(id);
+                addPromise.then(
+                    function (value) {
+                        res.send({ "success": 1 });
+                    },
+                    function (err) {
+                        res.send({ "success": 0, "error": "Failed to delete GUID." });
                     }
                 );
             }

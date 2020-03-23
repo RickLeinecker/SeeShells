@@ -7,7 +7,7 @@ import VueSession from 'vue-session'
 import App from './App.vue'
 import routes from './routes';
 
-Vue.config.productionTip = false
+Vue.config.productionTip = true
 Vue.prototype.$baseurl = (Vue.config.productionTip) ? 'https://seeshells.herokuapp.com/' : 'http://localhost:3000/'
 
 Vue.use(BootstrapVue)

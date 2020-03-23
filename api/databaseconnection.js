@@ -241,7 +241,7 @@ function getRegistryLocations() {
 }
 
 function getGUIDs(callback) {
-    pool.query('SELECT guid, name FROM guids;', (err, res) => {
+    pool.query('SELECT id, guid, name FROM guids;', (err, res) => {
         if (err) {
             callback({});
         }
@@ -258,6 +258,30 @@ function addGUID(guid, name) {
             }
 
             resolve({ "message": "Success" });
+        });
+    });
+}
+
+function updateGUID(guid, name) {
+    return new Promise(function (resolve, reject) {
+        pool.query('UPDATE guids SET name=$1 WHERE guid=$2;', [name, guid], (err, res) => {
+            if (err) {
+                reject(err);
+            }
+
+            resolve({ "message": "Success" });
+        });
+    });
+}
+
+function deleteGUID(id) {
+    return new Promise(function (resolve, reject) {
+        pool.query('DELETE FROM guids WHERE id=$1;', [id], (err, res) => {
+            if (err) {
+                reject(err);
+            }
+
+            resolve({ "message": "success" });
         });
     });
 }
@@ -442,6 +466,8 @@ module.exports = {
     getRegistryLocations,
     getGUIDs,
     addGUID,
+    updateGUID,
+    deleteGUID,
     GUIDDoesNotExist,
     updateScript,
     scriptForIdentifierDoesNotExist,
