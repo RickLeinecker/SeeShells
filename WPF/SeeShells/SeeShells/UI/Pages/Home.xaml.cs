@@ -37,6 +37,7 @@ namespace SeeShells.UI.Pages
 
         public static TimelinePage timelinePage;
 
+
         public Home()
         {
             InitializeComponent();
@@ -51,9 +52,11 @@ namespace SeeShells.UI.Pages
             this.DataContext = locations;
             UpdateOSVersionList();
             HideOfflineRows();
-
+            
         }
 
+
+        
 
         private void OfflineBrowseButton_Click(object sender, RoutedEventArgs e)
         {
@@ -264,7 +267,6 @@ namespace SeeShells.UI.Pages
             return openFileDialog.FileName;
         }
 
-
         private async void ParseButton_Click(object sender, RoutedEventArgs e)
         {
             if (!ConfigurationFilesAreValid())
@@ -307,14 +309,12 @@ namespace SeeShells.UI.Pages
                 timelinePage.RebuildTimeline();
                 NavigationService.Navigate(timelinePage);
             }
-
             App.NavigationService = NavigationService;
             if (!(App.pages.ContainsKey("timelinepage")))
             {
                 App.pages.Add("timelinepage", timelinePage);
 
             }
-
 
         }
 
@@ -460,5 +460,9 @@ namespace SeeShells.UI.Pages
             HelpButton.IsEnabled = value;
         }
 
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            App.NavigationService = NavigationService;
+        }
     }
 }

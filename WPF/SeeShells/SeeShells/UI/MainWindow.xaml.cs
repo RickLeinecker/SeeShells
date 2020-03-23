@@ -12,6 +12,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using NLog;
 using SeeShells.UI.Pages;
+using SeeShells.UI.Templates;
 
 namespace SeeShells
 {
