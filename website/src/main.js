@@ -8,6 +8,7 @@ import App from './App.vue'
 import routes from './routes';
 
 Vue.config.productionTip = false
+Vue.prototype.$baseurl = (Vue.config.productionTip) ? 'https://seeshells.herokuapp.com/' : 'http://localhost:3000/'
 
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
