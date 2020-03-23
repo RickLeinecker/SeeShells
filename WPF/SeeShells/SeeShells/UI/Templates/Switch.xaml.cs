@@ -30,7 +30,7 @@ namespace SeeShells.UI.Templates
         {
             InitializeComponent();
         }
-        
+
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (Home.timelinePage == null)
@@ -71,6 +71,47 @@ namespace SeeShells.UI.Templates
         private void About_OnClick(object sender, RoutedEventArgs e)
         {
             new AboutWindow().ShowDialog();
+        private void Import_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (Home.timelinePage == null)
+            {
+                csvimport.IsEnabled = false;
+            }
+            else
+            {
+                csvimport.IsEnabled = true;
+                OpenFileDialog openFileDialog = new OpenFileDialog
+                {
+                    InitialDirectory = Directory.GetCurrentDirectory(),
+                    Filter = "CSV File (*.csv)|*.csv"
+                };
+
+                if (openFileDialog.ShowDialog() != true)
+                    return;
+                var file = openFileDialog.FileName;
+                if (App.ShellItems != null)
+                {
+                    App.ShellItems.Clear();
+                }
+                if (App.nodeCollection.nodeList != null)
+                {
+                    App.nodeCollection.nodeList.Clear();
+                }
+
+                App.ShellItems = CsvIO.ImportCSVFile(file);
+                List<IEvent> events = EventParser.GetEvents(App.ShellItems);
+                App.nodeCollection.ClearAllFilters();
+                App.nodeCollection.nodeList.AddRange(NodeParser.GetNodes(events));
+
+                Home.timelinePage.RebuildTimeline();
+                string timelinePageKey = "timelinepage";
+                if (App.pages.ContainsKey(timelinePageKey))
+                {
+                    App.NavigationService.Navigate(App.pages[timelinePageKey]);
+                }
+            }
+
         }
         private void Import_Click(object sender, RoutedEventArgs e)
         {
