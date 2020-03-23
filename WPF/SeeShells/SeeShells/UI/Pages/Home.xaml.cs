@@ -56,6 +56,8 @@ namespace SeeShells.UI.Pages
         }
 
 
+        
+
         private void OfflineBrowseButton_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
