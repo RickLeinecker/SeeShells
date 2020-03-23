@@ -7,6 +7,7 @@ using System.Configuration;
 using System.Data;
 using System.Windows;
 using System.Windows.Controls;
+using SeeShells.UI.Pages;
 
 namespace SeeShells
 {
@@ -26,7 +27,7 @@ namespace SeeShells
         public static NodeCollection nodeCollection = new NodeCollection();
 
         /// <summary>
-        /// Collectin of <see cref="ShellItem"/> which is populated after a parsing operation.
+        /// Collection of <see cref="ShellItem"/> which is populated after a parsing operation.
         /// </summary>
         public static List<IShellItem> ShellItems { get; set; }
 
@@ -42,6 +43,11 @@ namespace SeeShells
             {
                 overflowGrid.Visibility = Visibility.Collapsed;
             }
+        }
+
+        private void About_OnClick(object sender, RoutedEventArgs e)
+        {
+            new AboutWindow().ShowDialog();
         }
     }
 }

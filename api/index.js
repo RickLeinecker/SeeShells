@@ -108,6 +108,19 @@ app.post('/login', function (req, res) {
     );
 });
 
+app.get('/getNewUsers', function (req, res) {
+    let promise = database.getUnapprovedUsers();
+    promise.then(
+        function (results) {
+            res.send({ "success": 1, "json": results });
+        },
+        function (err) {
+            res.send({ "success": 0, "error": "Failed to get any existing new users." });
+
+        }
+    );
+});
+
 app.post('/approveUser', function (req, res) {
     let promise = database.getSession(req.header('x-auth-token'));
     promise.then(

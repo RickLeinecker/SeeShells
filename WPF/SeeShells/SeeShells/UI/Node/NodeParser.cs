@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -22,7 +23,7 @@ namespace SeeShells.UI.Node
             
             foreach(IEvent aEvent in eventList)
             {
-                TextBlock block = new TextBlock();
+                InfoBlock block = new InfoBlock();
                 SetBlockProperties(block, aEvent);
 
                 Node node = new Node(aEvent, block);
@@ -41,27 +42,21 @@ namespace SeeShells.UI.Node
         {
             node.Width = 20;
             node.Height = 20;
-            node.Click += Pages.TimelinePage.Dot_Press;
+            node.Click += Pages.TimelinePage.DotPress;
         }
 
         /// <summary>
         /// Sets up initial properties for a graphical block object
         /// </summary>
         /// <param name="block">graphical object that contains event details on a timeline</param>
-        private static void SetBlockProperties(TextBlock block, IEvent aEvent)
+        private static void SetBlockProperties(InfoBlock block, IEvent aEvent)
         {
-            // TODO 
-            // foreach (KeyValuePair<string, string> property in aEvent.Parent.GetAllProperties())
-            // {
-            // block.Text += property.Key + "," + property.Value;
-            // }
-            block.Text += aEvent.Name;
-            block.Text += aEvent.EventTime;
-            block.Text += aEvent.EventType;
-            block.Foreground = Brushes.White;
-            block.Background = Brushes.Turquoise; // #5ec0ca
-            block.Height = 40;
-            block.Width = 100;
+            block.aEvent = aEvent;
+            block.Text += aEvent.Name + "\n";
+            block.Text += aEvent.EventTime + "\n";
+            block.Text += aEvent.EventType + "\n";
+            block.MouseEnter += Pages.TimelinePage.HoverBlock;
+            block.MouseLeave += Pages.TimelinePage.HoverBlock;
         }
     }
 }

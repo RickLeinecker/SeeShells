@@ -79,6 +79,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard1.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
@@ -185,7 +186,11 @@
     <Compile Include="ShellParser\ShellItems\ShellItem0x00.cs" />
     <Compile Include="ShellParser\ShellItems\SHITEM_UNKNOWNENTRY2.cs" />
     <Compile Include="UI\EventFilters\EventUserFilter.cs" />
+    <Compile Include="UI\Node\InfoBlock.cs" />
     <Compile Include="UI\Node\StackedNodes.cs" />
+    <Compile Include="UI\Windows\AboutWindow.xaml.cs">
+      <DependentUpon>AboutWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Templates\CheckBoxWithLabel.xaml.cs">
       <DependentUpon>CheckBoxWithLabel.xaml</DependentUpon>
     </Compile>
@@ -211,6 +216,10 @@
       <DependentUpon>TimelinePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\ViewModels\FileLocations.cs" />
+    <Page Include="UI\Windows\AboutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\Templates\CheckBoxWithLabel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -240,6 +249,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UI\Templates\NodeStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -255,15 +268,17 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="resources\xceedLogo.png" />
     <EmbeddedResource Include="resources\defaultOS.json" />
     <Resource Include="SeeShellsSolid.ico" />
     <Resource Include="SeeShells.ico" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\README.md">
-      <Link>resources\README.md</Link>
+    <EmbeddedResource Include="..\Help.md">
+      <Link>resources\Help.md</Link>
     </EmbeddedResource>
     <None Include="app.config" />
     <Content Include="NLog.config">
