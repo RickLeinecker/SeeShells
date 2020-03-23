@@ -36,13 +36,10 @@ namespace SeeShells.UI.Templates
             }
             else
             {
-                foreach(var el in App.pages)
+                string timelinePageKey = "timelinepage";
+                if (App.pages.ContainsKey(timelinePageKey))
                 {
-                    if (el.Key.Contains("timelinepage"))
-                    {
-                        App.NavigationService.Navigate(el.Value);
-
-                    }
+                    App.NavigationService.Navigate(App.pages[timelinePageKey]);
                 }
             }
         }
