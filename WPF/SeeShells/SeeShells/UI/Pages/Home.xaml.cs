@@ -308,7 +308,11 @@ namespace SeeShells.UI.Pages
             }
 
             App.NavigationService = NavigationService;
-            App.pages.Add("timelinepage", timelinePage);
+            if (!(App.pages.ContainsKey("timelinepage")))
+            {
+                App.pages.Add("timelinepage", timelinePage);
+
+            }
 
 
         }
