@@ -295,7 +295,6 @@ namespace SeeShells.UI.Pages
             AddTimeStamp(beginDate, endDate);
         }
 
-
         /// <summary>
         /// Creates a TimelinePanel
         /// </summary>
@@ -316,6 +315,12 @@ namespace SeeShells.UI.Pages
             return timelinePanel;
         }
 
+        /// <summary>
+        /// Creates a TimelinePanel for Blocks
+        /// </summary>
+        /// <param name="beginDate">begin date of timeline</param>
+        /// <param name="endDate">end date of timeline</param>
+        /// <returns>TimelinePanel that can space Blocks according to time</returns>
         private TimelinePanel MakeBlockPanel(DateTime beginDate, DateTime endDate)
         {
             TimelinePanel timelinePanel = new TimelinePanel
