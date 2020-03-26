@@ -14,7 +14,7 @@
             </MenuItem>
             <MenuItem Header="Help" Foreground="DarkGray">
                 <MenuItem Header="Help page" Click="Help_Click" Foreground="Black"/>
-                <MenuItem Header="About" Foreground="Black"/>
+                <MenuItem Header="About" Click="About_OnClick" Foreground="Black"/>
             </MenuItem>
         </Menu>
     </Grid>

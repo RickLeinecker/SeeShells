@@ -62,5 +62,10 @@ namespace SeeShells.UI.Templates
                 App.NavigationService.Navigate(App.pages[helppage]);
             }
         }
+
+        private void About_OnClick(object sender, RoutedEventArgs e)
+        {
+            new AboutWindow().ShowDialog();
+        }
     }
 }
