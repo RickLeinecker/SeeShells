@@ -21,9 +21,19 @@ namespace SeeShells
     /// 
     public partial class MainWindow : Window
     {
+        private Home home = new Home();
+        private HelpPage helpPage = new HelpPage();
         public MainWindow()
         {
             InitializeComponent();
-        } 
+            mainframe.Navigate(home);
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            App.NavigationService = mainframe.NavigationService;
+            App.pages.Add("homepage", home);
+            App.pages.Add("helppage", helpPage);
+        }
     }
 }

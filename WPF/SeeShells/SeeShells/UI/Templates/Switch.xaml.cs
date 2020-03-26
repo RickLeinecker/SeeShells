@@ -43,5 +43,24 @@ namespace SeeShells.UI.Templates
                 }
             }
         }
+
+        private void Home_Click(object sender, RoutedEventArgs e)
+        {
+            string homepage = "homepage";
+            if (App.pages.ContainsKey(homepage))
+            {
+                App.NavigationService.Navigate(App.pages[homepage]);
+            }
+
+        }
+
+        private void Help_Click(object sender, RoutedEventArgs e)
+        {
+            string helppage = "helppage";
+            if (App.pages.ContainsKey(helppage))
+            {
+                App.NavigationService.Navigate(App.pages[helppage]);
+            }
+        }
     }
 }

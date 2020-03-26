@@ -9,12 +9,12 @@
     <Grid>
         <Menu Background="Transparent">
             <MenuItem Header="View" Foreground="DarkGray" >
-                <Hyperlink NavigateUri="/SeeShells;component/ui/pages/home.xaml" Foreground="Black">Home</Hyperlink>
+                <MenuItem Header="Home" Click="Home_Click" Foreground="Black"/>
                 <MenuItem x:Name="timeline" Header="Timeline Page" Click="MenuItem_Click" Foreground="Black" />
             </MenuItem>
             <MenuItem Header="Help" Foreground="DarkGray">
-                <Hyperlink NavigateUri="/SeeShells;component/ui/pages/helppage.xaml" Foreground="Black" >Help</Hyperlink>
-                <Hyperlink Foreground="Black">About</Hyperlink>
+                <MenuItem Header="Help page" Click="Help_Click" Foreground="Black"/>
+                <MenuItem Header="About" Foreground="Black"/>
             </MenuItem>
         </Menu>
     </Grid>
