@@ -53,10 +53,5 @@ namespace SeeShells
                 overflowGrid.Visibility = Visibility.Collapsed;
             }
         }
-
-        private void About_OnClick(object sender, RoutedEventArgs e)
-        {
-            new AboutWindow().ShowDialog();
-        }
     }
 }
