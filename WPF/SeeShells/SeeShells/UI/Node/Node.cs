@@ -6,20 +6,22 @@ using System.Threading.Tasks;
 using System.Windows.Shapes;
 using System.Windows.Controls;
 using System.Windows;
+using System.Windows.Media;
+using System.Windows.Controls.Primitives;
 
 namespace SeeShells.UI.Node
 {
-    public class Node : Button
+    public class Node : ToggleButton
     {
         public IEvent aEvent;
-        public TextBlock block;
+        public InfoBlock block;
 
         /// <summary>
         /// The Node is an object that stores event data and has graphical objects to be displayed on a timeline.
         /// </summary>
         /// <param name="aEvent">object that stores event/shellbag data</param>
         /// <param name="block">object to display event details on a timeline</param>
-        public Node(IEvent aEvent, TextBlock block)
+        public Node(IEvent aEvent, InfoBlock block)
         {
             this.aEvent = aEvent;
             this.block = block;
@@ -28,9 +30,8 @@ namespace SeeShells.UI.Node
         /// <summary>
         /// This is used to hide and show the block of information connected to each dot of information on the timeline.
         /// </summary>
-        public void toggle_block()
+        public void ToggleBlock()
         {
-            MessageBox.Show(block.Text);
             if (this.block.Visibility == Visibility.Collapsed)
             {
                 this.block.Visibility = Visibility.Visible;

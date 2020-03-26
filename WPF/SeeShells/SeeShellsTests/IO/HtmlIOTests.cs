@@ -32,7 +32,7 @@ namespace SeeShellsTests.IO
             CsvParsedShellItem ShellItem = new CsvParsedShellItem(shellItemProperties);
 
             Event aEvent = new Event("item1", DateTime.Now, ShellItem, "Access");
-            TextBlock block = new TextBlock();
+            InfoBlock block = new InfoBlock();
             Node aNode = new Node(aEvent, block);
             nodeList.Add(aNode);
 
