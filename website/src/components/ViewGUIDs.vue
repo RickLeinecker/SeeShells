@@ -5,7 +5,7 @@
 
             <!-- Page Content -->
             <h3 v-if="guidList.length==0">No GUIDS to view!</h3>
-            <table v-else id="users" class="table table-bordered" style="width:100%">
+            <table v-else id="guidTable" class="table table-bordered" style="width:100%">
                 <thead>
                     <tr>
                         <th>GUID</th>
@@ -54,8 +54,6 @@
                 try {
                     xhr.send(null);
                     var result = JSON.parse(xhr.responseText);
-
-                    console.log(result);
 
                     if (result.success == 1) {
                         var arr = Array.from(result.json);

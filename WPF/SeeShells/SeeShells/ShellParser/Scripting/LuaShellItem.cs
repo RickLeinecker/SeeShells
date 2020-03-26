@@ -10,16 +10,18 @@ namespace SeeShells.ShellParser.Scripting
 {
     public class LuaShellItem : ShellItem
     {
+        private readonly int identifier;
         private readonly Lua state;
         private readonly string luascript;
         Dictionary<string, string> properties = new Dictionary<string, string>();
         private bool skipParsing = false;
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public LuaShellItem(byte[] buf, string luascript) : base(buf)
+        public LuaShellItem(byte[] buf, int identifier, string luascript) : base(buf)
         {
             try
             {
+                this.identifier = identifier;
                 state = new Lua();
                 state.LoadCLRPackage();
                 state.DoString(@" import ('System', 'SeeShells', 'SeeShells.ShellParser.ShellItems', 'SeeShells.ShellParser') ");
@@ -128,7 +130,16 @@ namespace SeeShells.ShellParser.Scripting
             if (!PropertiesAreParsedAlready())
             {
                 var prop = base.GetAllProperties();
-                ParseShellItem();
+
+                try
+                {
+                    ParseShellItem();
+                }
+                catch (Exception ex)
+                {
+                    skipParsing = true;
+                    logger.Error(ex, "Error with the Lua script for items with the identifier: " + identifier + "\nException: " + ex.Message);
+                }
             }
 
             return properties;
