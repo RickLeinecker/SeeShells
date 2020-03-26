@@ -3,7 +3,7 @@
         <h1>About SeeShells</h1>
         <p align="left" style="font-size:x-large">
             <br />
-            SeeShells is essentially an information extraction software. The objective is to
+            SeeShells is an information extraction software. The objective is to
             create a standalone open source executable that can run both online and offline.
             It extracts and parses through Windows Registry information. This data
             is then converted into two forms. The first is a csv file that contains all the raw data we obtain from the registry.
