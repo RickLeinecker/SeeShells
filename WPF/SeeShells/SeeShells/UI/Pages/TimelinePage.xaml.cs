@@ -28,10 +28,13 @@ namespace SeeShells.UI.Pages
 
         private TimeSpan maxRealTimeSpan = new TimeSpan(0, 0, 1, 0); // Max time in one timeline (1 min).
 
+        private static TimelinePage timelinePage;
+
         public TimelinePage()
         {
             InitializeComponent();
             BuildTimeline();
+            timelinePage = this;
         }
 
         private void AllStringFilter_TextChanged(object sender, TextChangedEventArgs e)
@@ -62,7 +65,7 @@ namespace SeeShells.UI.Pages
             endDatePicker.SelectedDate = null;
         }
 
-        private void UpdateFilter(string filterIdentifer, INodeFilter newFilter)
+        private static void UpdateFilter(string filterIdentifer, INodeFilter newFilter)
         {
             //remove the current filter that exists
             App.nodeCollection.RemoveEventFilter(filterIdentifer);
@@ -71,7 +74,7 @@ namespace SeeShells.UI.Pages
             App.nodeCollection.AddEventFilter(filterIdentifer, newFilter);
 
             //rebuild the timeline according to the new filters
-            this.RebuildTimeline();
+            timelinePage.RebuildTimeline();
         }
 
         /// <summary>
@@ -139,23 +142,24 @@ namespace SeeShells.UI.Pages
             EventUserFilter.SelectedItems.Clear();
         }
 
-        private void EventParentTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        public static void EventParentContextMenu_Click(object sender, RoutedEventArgs e)
         {
-            //TODO can only be implememented from a context menu option (e.g. right click) which allows us to get the actual event
-            TextBox emitter = (TextBox)sender;
+            MenuItem menuItem = sender as MenuItem;
+            IShellItem parent = (IShellItem)menuItem.Tag;
+            timelinePage.EventParentTextBox.Text = "Filtering by: " + parent.Name;
+            UpdateFilter(EVENT_PARENT_IDENTIFER, new EventParentFilter(parent));
+        }
+
+        private void EventParentClearButton_Click(object sender, RoutedEventArgs e)
+        {
             UpdateFilter(EVENT_PARENT_IDENTIFER, new EventParentFilter());
+            EventParentTextBox.Text = string.Empty;
         }
 
         private void RegexCheckBox_Click(object sender, RoutedEventArgs e)
         {
             //force fire a text changed event for the textbox so that the filter gets updated
             AllStringFilter_TextChanged(AllStringFilterTextBlock, new TextChangedEventArgs(e.RoutedEvent, UndoAction.None));
-        }
-
-        private void EventParentClearButton_Click(object sender, RoutedEventArgs e)
-        {
-            App.nodeCollection.RemoveEventFilter(EVENT_PARENT_IDENTIFER);
-            EventParentTextBox.Text = string.Empty;
         }
 
         private void EventNameFilter_TextChanged(object sender, TextChangedEventArgs e)
