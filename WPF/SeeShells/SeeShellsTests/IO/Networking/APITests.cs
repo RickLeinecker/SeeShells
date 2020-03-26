@@ -156,6 +156,50 @@ namespace SeeShellsTests.IO.Networking
 
         }
 
+        /// <summary>
+        /// Checks the functionality of the <see cref="API.GetHelp(string, IRestClient)"/> function
+        /// </summary>
+        [TestMethod()]
+        public void GetHelpTest()
+        {
+            string returnJSON = File.ReadAllText(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\TestResource\sampleHelpResponse.json");
+            string serializedText = File.ReadAllText(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\TestResource\sampleHelp.md");
+
+            using (new MockServer(TEST_PORT, API.HELP_ENDPOINT, (req, rsp, prm) => returnJSON))
+            {
+                var apiClient = new RestClient(TEST_URL);
+
+                var helpContent = API.GetHelp(apiClient).Result;
+
+                Assert.IsNotNull(apiClient);
+                Assert.AreEqual(serializedText, helpContent);
+            }
+
+        }
+        /// <summary>
+        /// Tests the exception throwing when <see cref="API.GetHelp(string, IRestClient)"/> fails.
+        /// </summary>
+        [TestMethod()]
+        public void GetHelp_ServerErrorTest()
+        {
+            string returnJSON = File.ReadAllText(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\TestResource\sampleAPIError.json");
+
+            using (new MockServer(TEST_PORT, API.HELP_ENDPOINT, (req, rsp, prm) => returnJSON))
+            {
+                var apiClient = new RestClient(TEST_URL);
+
+                try
+                {
+                    var helpResult = API.GetHelp(apiClient).Result;
+                    Assert.Fail("Expected Exception"); //expect exception
+                }
+                catch (AggregateException ex)
+                {
+                    Assert.AreEqual(new APIException("").GetType(), ex.InnerException.GetType());
+                }
+            }
+
+        }
 
     }
 }

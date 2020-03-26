@@ -25,6 +25,11 @@ namespace SeeShells.UI.EventFilters
 
         public void Apply(ref List<Node.Node> nodes)
         {
+            if (acceptableUsers.Count == 0)
+            {
+                return; //dont apply filter if no users to filter on
+            }
+
             //iterate backwards because iterating forwards would be an issue with a list of changing size.
             for (int i = nodes.Count - 1; i >= 0; i--) 
             {

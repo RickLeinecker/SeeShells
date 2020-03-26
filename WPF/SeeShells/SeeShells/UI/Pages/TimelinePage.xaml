@@ -38,21 +38,24 @@
                                         </Style>
                                     </StackPanel.Resources>
 
-                                    <Border>
+                                    <Border Height="85" Width="346">
                                         <StackPanel x:Name="DateFilterPanel">
                                             <Label Content="Event Date Filter"/>
                                             <StackPanel Orientation="Horizontal">
-                                                <StackPanel Margin="0,0,5,0">
+                                                <StackPanel Margin="0,0,0,0" Width="145">
                                                     <Label Content="Start Date"/>
                                                     <!--TODO: set the start date to the first date in the node by default-->
                                                     <!--TODO: limit the user's date selection to the first event and last event-->
                                                     <DatePicker x:Name="startDatePicker" SelectedDateChanged="UpdateDateFilter" IsTodayHighlighted="False" />
                                                 </StackPanel>
-                                                <StackPanel Margin="5,0,0,0">
+                                                <StackPanel Margin="5,0,0,0" Width="145">
                                                     <Label Content="End Date"/>
                                                     <!--TODO: Dont let the user select a date eariler than startDate-->
                                                     <!--TODO: limit the user's date selection to the first event and last event-->
-                                                    <DatePicker x:Name="endDatePicker" SelectedDateChanged="UpdateDateFilter" IsTodayHighlighted="False"  />
+                                                    <DatePicker x:Name="endDatePicker" SelectedDateChanged="UpdateDateFilter" IsTodayHighlighted="False" />
+                                                </StackPanel>
+                                                <StackPanel Margin="4,23,0,0">
+                                                    <Button Click="ClearDateFilter_Click" Content="Clear"/>
                                                 </StackPanel>
                                             </StackPanel>
                                         </StackPanel>
@@ -61,15 +64,26 @@
                                     <Border>
                                         <StackPanel>
                                             <Label Content="Event Name Filter"/>
-                                            <TextBox x:Name="EventNameFilter" TextWrapping="Wrap"  TextChanged="EventNameFilter_TextChanged" Margin="5,0"/>
+                                           
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBox x:Name="EventNameFilter" TextWrapping="Wrap"  TextChanged="EventNameFilter_TextChanged" Margin="5,0" Width="289"/>
+                                                <Button Click="ClearEventNameFilter_Click">Clear</Button>
+                                            </StackPanel>
                                         </StackPanel>
                                     </Border>
 
                                     <Border>
                                         <StackPanel>
                                             <Label Content="Event Content Filter"/>
-                                            <TextBox x:Name="AllStringFilterTextBlock" TextWrapping="Wrap" TextChanged="AllStringFilter_TextChanged" Margin="5,0"/>
-                                            <CheckBox x:Name="RegexCheckBox" Content="Use Regex" Click="RegexCheckBox_Click" Foreground="White" HorizontalAlignment="Right" Margin="0,1,5,0"/>
+                                            <StackPanel Orientation="Horizontal">
+                                                <StackPanel>
+                                                <TextBox x:Name="AllStringFilterTextBlock" TextWrapping="Wrap" TextChanged="AllStringFilter_TextChanged" Margin="5,0" Width="289"/>
+                                                    <CheckBox x:Name="RegexCheckBox" Content="Use Regex" Click="RegexCheckBox_Click" Foreground="White" HorizontalAlignment="Right" Margin="0,1,5,0"/>
+                                                </StackPanel>
+                                            <StackPanel>
+                                                <Button Click="ClearEventContentFilter_Click">Clear</Button>
+                                            </StackPanel>
+                                            </StackPanel>
                                         </StackPanel>
                                     </Border>
 
@@ -77,23 +91,31 @@
                                         <StackPanel>
                                             <Label Content="Event Parent Filter"/>
                                             <!--TODO: This filter should be used if someone right clicks or something on an event. to "filter by parent"-->
-                                            <DockPanel>
-                                                <Button x:Name="EventParentClearButton" Click="EventParentClearButton_Click" Content="Clear" DockPanel.Dock="Right"/>
-                                                <TextBox x:Name="EventParentTextBox"  TextChanged="EventParentTextBox_TextChanged" HorizontalAlignment="Stretch" DockPanel.Dock="Left" Margin="5,0" IsEnabled="False"/>
-                                            </DockPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <DockPanel>
+                                                    <TextBox x:Name="EventParentTextBox" HorizontalAlignment="Stretch" DockPanel.Dock="Left" Margin="5,0" IsEnabled="False" Width="289"/>
+                                                </DockPanel>
+                                            <Button x:Name="EventParentClearButton" Click="EventParentClearButton_Click">Clear</Button>
+                                            </StackPanel>
                                         </StackPanel>
                                     </Border>
 
                                     <Border>
                                         <StackPanel>
                                             <Label Content="Event Type Filter"/>
-                                            <xctk:CheckComboBox x:Name="EventTypeFilter" ItemSelectionChanged="EventTypeFilter_OnItemSelectionChanged"  Opened="EventTypeFilter_DropDownOpened" Margin="5,0"/>
+                                            <StackPanel Orientation="Horizontal">
+                                                <xctk:CheckComboBox x:Name="EventTypeFilter" ItemSelectionChanged="EventTypeFilter_OnItemSelectionChanged"  Opened="EventTypeFilter_DropDownOpened" Margin="5,0" Width="289"/>
+                                                <Button Click="ClearEventTypeFilter_Click">Clear</Button>
+                                            </StackPanel>
                                         </StackPanel>
                                     </Border>
-                                    <Border>
+                                    <Border Height="63">
                                         <StackPanel>
                                             <Label Content="User Filter"/>
-                                            <xctk:CheckComboBox x:Name="EventUserFilter" ItemSelectionChanged="EventUserFilter_OnItemSelectionChanged"  Opened="EventUserFilter_DropDownOpened" Margin="5,0"/>
+                                            <StackPanel Orientation="Horizontal">
+                                                <xctk:CheckComboBox x:Name="EventUserFilter" ItemSelectionChanged="EventUserFilter_OnItemSelectionChanged"  Opened="EventUserFilter_DropDownOpened" Margin="5,0" Width="289"/>
+                                                <Button Click="ClearUserFilter_Click">Clear</Button>
+                                            </StackPanel>
                                         </StackPanel>
                                     </Border>
 
@@ -124,7 +146,7 @@
                                 <Viewbox Grid.ColumnSpan="2" Grid.Column="1" Margin="253.667,24,0.333,22.667" Grid.Row="2" Grid.RowSpan="2">
                                     <Button x:Name="download" Content="Download" Click="DownloadClick"/>
                                 </Viewbox>
-                              </Grid>
+                            </Grid>
                             <ScrollViewer x:Name="TimelineScroll" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  Margin="0,0,0.333,163.667">
                                 <Grid x:Name="Timeline" Background="#292525" Width="Auto" Height="Auto">
                                     <Grid.RowDefinitions>
