@@ -35,8 +35,7 @@
                 this.hexIdentifier = '0x' + (Number(this.identifier).toString(16)).toUpperCase();
                 if (this.identifier != 0) {
                     // get the existing script if it exists
-                    var baseurl = 'https://seeshells.herokuapp.com/'; //http://localhost:3000/
-                    var url = baseurl + 'getScript';
+                    var url = this.$baseurl + 'getScript';
                     var params = 'identifier=' + this.identifier;
 
                     var xhr = new XMLHttpRequest();
@@ -67,8 +66,7 @@
                 if (this.text == '')
                     return;
 
-                var baseurl = 'https://seeshells.herokuapp.com/'; //http://localhost:3000/
-                var url = baseurl + 'updateScript';
+                var url = this.$baseurl + 'updateScript';
 
                 var jsonPayload = '{"identifier":' + this.identifier + ', "script":"' + btoa(this.text) + '"}';
 

@@ -28,10 +28,13 @@ namespace SeeShells.UI.Pages
 
         private TimeSpan maxRealTimeSpan = new TimeSpan(0, 0, 1, 0); // Max time in one timeline (1 min).
 
+        private static TimelinePage timelinePage;
+
         public TimelinePage()
         {
             InitializeComponent();
             BuildTimeline();
+            timelinePage = this;
         }
 
         private void AllStringFilter_TextChanged(object sender, TextChangedEventArgs e)
@@ -62,7 +65,7 @@ namespace SeeShells.UI.Pages
             endDatePicker.SelectedDate = null;
         }
 
-        private void UpdateFilter(string filterIdentifer, INodeFilter newFilter)
+        private static void UpdateFilter(string filterIdentifer, INodeFilter newFilter)
         {
             //remove the current filter that exists
             App.nodeCollection.RemoveEventFilter(filterIdentifer);
@@ -71,7 +74,7 @@ namespace SeeShells.UI.Pages
             App.nodeCollection.AddEventFilter(filterIdentifer, newFilter);
 
             //rebuild the timeline according to the new filters
-            this.RebuildTimeline();
+            timelinePage.RebuildTimeline();
         }
 
         /// <summary>
@@ -139,23 +142,24 @@ namespace SeeShells.UI.Pages
             EventUserFilter.SelectedItems.Clear();
         }
 
-        private void EventParentTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        public static void EventParentContextMenu_Click(object sender, RoutedEventArgs e)
         {
-            //TODO can only be implememented from a context menu option (e.g. right click) which allows us to get the actual event
-            TextBox emitter = (TextBox)sender;
+            MenuItem menuItem = sender as MenuItem;
+            IShellItem parent = (IShellItem)menuItem.Tag;
+            timelinePage.EventParentTextBox.Text = "Filtering by: " + parent.Name;
+            UpdateFilter(EVENT_PARENT_IDENTIFER, new EventParentFilter(parent));
+        }
+
+        private void EventParentClearButton_Click(object sender, RoutedEventArgs e)
+        {
             UpdateFilter(EVENT_PARENT_IDENTIFER, new EventParentFilter());
+            EventParentTextBox.Text = string.Empty;
         }
 
         private void RegexCheckBox_Click(object sender, RoutedEventArgs e)
         {
             //force fire a text changed event for the textbox so that the filter gets updated
             AllStringFilter_TextChanged(AllStringFilterTextBlock, new TextChangedEventArgs(e.RoutedEvent, UndoAction.None));
-        }
-
-        private void EventParentClearButton_Click(object sender, RoutedEventArgs e)
-        {
-            App.nodeCollection.RemoveEventFilter(EVENT_PARENT_IDENTIFER);
-            EventParentTextBox.Text = string.Empty;
         }
 
         private void EventNameFilter_TextChanged(object sender, TextChangedEventArgs e)
@@ -251,7 +255,7 @@ namespace SeeShells.UI.Pages
             DateTime endDate = beginDate.AddMinutes(1);
 
             TimelinePanel timelinePanel = MakeTimelinePanel(beginDate, endDate);
-            TimelinePanel blockPanel = MakeTimelinePanel(beginDate, endDate);
+            TimelinePanel blockPanel = MakeBlockPanel(beginDate, endDate);
 
             // Add all blocks onto a timeline
             foreach (Node.Node node in nodesCluster)
@@ -285,6 +289,7 @@ namespace SeeShells.UI.Pages
             }
 
             Timelines.Children.Add(timelinePanel);
+
             Blocks.Children.Add(blockPanel);
             Line separationLine = MakeTimelineSeparatingLine();
             Line blockSeperation = MakeBlockPanelSeparation();
@@ -293,7 +298,6 @@ namespace SeeShells.UI.Pages
             AddTicks(beginDate, endDate);
             AddTimeStamp(beginDate, endDate);
         }
-
 
         /// <summary>
         /// Creates a TimelinePanel
@@ -307,6 +311,26 @@ namespace SeeShells.UI.Pages
             {
                 UnitTimeSpan = new TimeSpan(0, 0, 0, 1),
                 UnitSize = App.nodeCollection.nodeList[0].Width,
+                BeginDate = beginDate,
+                EndDate = endDate,
+                KeepOriginalOrderForOverlap = true
+            };
+
+            return timelinePanel;
+        }
+
+        /// <summary>
+        /// Creates a TimelinePanel for Blocks
+        /// </summary>
+        /// <param name="beginDate">begin date of timeline</param>
+        /// <param name="endDate">end date of timeline</param>
+        /// <returns>TimelinePanel that can space Blocks according to time</returns>
+        private TimelinePanel MakeBlockPanel(DateTime beginDate, DateTime endDate)
+        {
+            TimelinePanel timelinePanel = new TimelinePanel
+            {
+                UnitTimeSpan = new TimeSpan(0, 0, 0, 10),
+                UnitSize = 200,
                 BeginDate = beginDate,
                 EndDate = endDate,
                 KeepOriginalOrderForOverlap = true
@@ -474,7 +498,7 @@ namespace SeeShells.UI.Pages
         {
             Line separatingSpace = new Line();
             separatingSpace.X1 = 0;
-            separatingSpace.X2 = 0;
+            separatingSpace.X2 = 1;
             separatingSpace.Y1 = 43;
             separatingSpace.Y2 = 150;
             separatingSpace.StrokeThickness = 2;

@@ -1,6 +1,7 @@
 <template>
     <div id='items'>
         <b-dropdown-item><router-link to='/SeeShells/approveusers'>Approve New Admins</router-link></b-dropdown-item>
+        <b-dropdown-item><router-link to='/SeeShells/guids'>Modify GUIDs</router-link></b-dropdown-item>
         <b-dropdown-item><router-link to='/SeeShells/scripts'>Modify Scripts</router-link></b-dropdown-item>
         <b-dropdown-item v-on:click="Logout">Logout</b-dropdown-item>
     </div>
@@ -12,8 +13,7 @@
         name: 'LoggedIn',
         methods: {
             Logout() {
-                var baseurl = 'https://seeshells.herokuapp.com/'; //http://localhost:3000/
-                var url = baseurl + 'logout';
+                var url = this.$baseurl + 'logout';
                 var xhr = new XMLHttpRequest();
                 xhr.open("GET", url, false);
                 xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");

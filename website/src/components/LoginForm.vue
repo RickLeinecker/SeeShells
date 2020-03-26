@@ -30,8 +30,7 @@
         methods: {
             onLogin(event) {
                 event.preventDefault();
-                var baseurl = 'https://seeshells.herokuapp.com/'; //http://localhost:3000/
-                var url = baseurl + 'login';
+                var url = this.$baseurl + 'login';
 
                 var jsonPayload = '{"username":"' + this.form.name + '", "password":"' + this.form.password + '"}';
 

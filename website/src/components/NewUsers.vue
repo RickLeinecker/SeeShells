@@ -41,14 +41,13 @@
         name: "NewUsers",
         data() {
             return {
-                baseurl: 'https://seeshells.herokuapp.com/', //http://localhost:3000/
                 userList: []
             }
         },
         methods: {
             populateTable() {
                 this.userList = [];
-                var url = this.baseurl + 'getNewUsers';
+                var url = this.$baseurl + 'getNewUsers';
 
                 var xhr = new XMLHttpRequest();
                 xhr.open("GET", url, false);
@@ -73,7 +72,7 @@
             },
 
             approveUser(userID) {
-                var url = this.baseurl + 'approveUser';
+                var url = this.$baseurl + 'approveUser';
 
                 var jsonPayload = '{"userID":' + userID + '}';
 
@@ -101,7 +100,7 @@
             },
 
             rejectUser(userID) {
-                var url = this.baseurl + 'rejectUser';
+                var url = this.$baseurl + 'rejectUser';
 
                 var jsonPayload = '{"userID":' + userID + '}';
 

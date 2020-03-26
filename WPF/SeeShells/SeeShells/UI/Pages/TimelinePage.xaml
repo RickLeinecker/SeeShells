@@ -86,14 +86,16 @@
                                     </StackPanel>
                                 </Border>
 
-                                <Border>
-                                    <StackPanel>
-                                        <Label Content="Event Parent Filter"/>
-                                        <!--TODO: This filter should be used if someone right clicks or something on an event. to "filter by parent"-->
-                                        <StackPanel Orientation="Horizontal">
-                                            <DockPanel>
-                                                <TextBox x:Name="EventParentTextBox"  TextChanged="EventParentTextBox_TextChanged" HorizontalAlignment="Stretch" DockPanel.Dock="Left" Margin="5,0" IsEnabled="False" Width="289"/>
-                                            </DockPanel>
+
+                                    <Border>
+                                        <StackPanel>
+                                            <Label Content="Event Parent Filter"/>
+                                            <!--TODO: This filter should be used if someone right clicks or something on an event. to "filter by parent"-->
+                                            <StackPanel Orientation="Horizontal">
+                                                <DockPanel>
+                                                    <TextBox x:Name="EventParentTextBox" HorizontalAlignment="Stretch" DockPanel.Dock="Left" Margin="5,0" IsEnabled="False" Width="289"/>
+                                                </DockPanel>
+
                                             <Button x:Name="EventParentClearButton" Click="EventParentClearButton_Click">Clear</Button>
                                         </StackPanel>
                                     </StackPanel>

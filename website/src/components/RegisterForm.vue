@@ -34,13 +34,11 @@
         },
         methods: {
             onRegister(event) {
-                event.preventDefault();
-                var baseurl = 'https://seeshells.herokuapp.com/';
-                
+                event.preventDefault();            
 
                 if (this.form.password == this.form.passwordconfirm) {
                     var jsonPayload = '{"username":"' + this.form.name + '", "password":"' + this.form.password + '"}';
-                    var url = baseurl + 'register';
+                    var url = this.$baseurl + 'register';
 
                     var xhr = new XMLHttpRequest();
                     xhr.open("POST", url, false);
