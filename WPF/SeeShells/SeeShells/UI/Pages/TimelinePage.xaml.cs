@@ -255,7 +255,7 @@ namespace SeeShells.UI.Pages
             DateTime endDate = beginDate.AddMinutes(1);
 
             TimelinePanel timelinePanel = MakeTimelinePanel(beginDate, endDate);
-            TimelinePanel blockPanel = MakeTimelinePanel(beginDate, endDate);
+            TimelinePanel blockPanel = MakeBlockPanel(beginDate, endDate);
 
             // Add all blocks onto a timeline
             foreach (Node.Node node in nodesCluster)
@@ -289,6 +289,7 @@ namespace SeeShells.UI.Pages
             }
 
             Timelines.Children.Add(timelinePanel);
+
             Blocks.Children.Add(blockPanel);
             Line separationLine = MakeTimelineSeparatingLine();
             Line blockSeperation = MakeBlockPanelSeparation();
@@ -297,7 +298,6 @@ namespace SeeShells.UI.Pages
             AddTicks(beginDate, endDate);
             AddTimeStamp(beginDate, endDate);
         }
-
 
         /// <summary>
         /// Creates a TimelinePanel
@@ -311,6 +311,26 @@ namespace SeeShells.UI.Pages
             {
                 UnitTimeSpan = new TimeSpan(0, 0, 0, 1),
                 UnitSize = App.nodeCollection.nodeList[0].Width,
+                BeginDate = beginDate,
+                EndDate = endDate,
+                KeepOriginalOrderForOverlap = true
+            };
+
+            return timelinePanel;
+        }
+
+        /// <summary>
+        /// Creates a TimelinePanel for Blocks
+        /// </summary>
+        /// <param name="beginDate">begin date of timeline</param>
+        /// <param name="endDate">end date of timeline</param>
+        /// <returns>TimelinePanel that can space Blocks according to time</returns>
+        private TimelinePanel MakeBlockPanel(DateTime beginDate, DateTime endDate)
+        {
+            TimelinePanel timelinePanel = new TimelinePanel
+            {
+                UnitTimeSpan = new TimeSpan(0, 0, 0, 10),
+                UnitSize = 200,
                 BeginDate = beginDate,
                 EndDate = endDate,
                 KeepOriginalOrderForOverlap = true
@@ -478,7 +498,7 @@ namespace SeeShells.UI.Pages
         {
             Line separatingSpace = new Line();
             separatingSpace.X1 = 0;
-            separatingSpace.X2 = 0;
+            separatingSpace.X2 = 1;
             separatingSpace.Y1 = 43;
             separatingSpace.Y2 = 150;
             separatingSpace.StrokeThickness = 2;

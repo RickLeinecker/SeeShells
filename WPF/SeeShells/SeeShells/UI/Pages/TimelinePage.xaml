@@ -153,7 +153,7 @@
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
-                                    <StackPanel x:Name="Blocks" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Bottom"/>
+                                    <StackPanel x:Name="Blocks" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="0,0,450,0"/>
                                     <StackPanel x:Name="Timelines" Grid.Row="1" Orientation="Horizontal"/>
                                     <StackPanel x:Name="TimeStamps" Grid.Row="1" Orientation="Horizontal" Margin="0,97,0,0"/>
                                     <StackPanel x:Name="TicksBar" Grid.Row="1" Orientation="Horizontal" Margin="0,43,0,0"/>
