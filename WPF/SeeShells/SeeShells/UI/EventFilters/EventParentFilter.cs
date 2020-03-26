@@ -28,6 +28,11 @@ namespace SeeShells.UI.EventFilters
 
         public void Apply(ref List<Node.Node> nodes)
         {
+            if(shellItems.Length == 0)
+            {
+                return;
+            }
+
             for (int i = nodes.Count-1; i >= 0; i--)//iterate backwards because iterating forwards would be an issue with a list of changing size.
             {
                 Node.Node node = nodes[i];
