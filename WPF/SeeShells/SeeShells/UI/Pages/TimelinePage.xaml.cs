@@ -260,6 +260,7 @@ namespace SeeShells.UI.Pages
             // Add all blocks onto a timeline
             foreach (Node.Node node in nodesCluster)
             {
+                node.IsChecked = false;
                 node.block.Style = (Style)Resources["TimelineBlock"];
                 TimelinePanel.SetDate(node.block, node.aEvent.EventTime);
                 blockPanel.Children.Add(node.block);
@@ -281,6 +282,8 @@ namespace SeeShells.UI.Pages
             // Add all other nodes onto a timeline
             foreach (Node.Node node in nodesCluster)
             {
+                node.MouseEnter -= HoverNode;
+                node.MouseLeave -= HoverNode;
                 node.MouseEnter += HoverNode;
                 node.MouseLeave += HoverNode;
                 TimelinePanel.SetDate(node, node.aEvent.EventTime);
@@ -612,7 +615,7 @@ namespace SeeShells.UI.Pages
                     // change color
                     ((Node.Node)sender).block.Style = (Style)Resources["LitUpBlock"];
                 }
-                else
+                else 
                 {
                     ((Node.Node)sender).block.Style = (Style)Resources["TimelineBlock"];
                 }
