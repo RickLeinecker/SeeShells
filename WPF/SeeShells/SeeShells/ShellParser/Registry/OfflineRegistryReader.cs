@@ -26,10 +26,10 @@ namespace SeeShells.ShellParser.Registry
         public List<RegistryKeyWrapper> GetRegistryKeys()
         {
             List<RegistryKeyWrapper> retList = new List<RegistryKeyWrapper>();
+            var hive = new RegistryHiveOnDemand(RegistryFilePath);
 
             foreach (string location in Parser.GetRegistryLocations())
             {
-                var hive = new RegistryHiveOnDemand(RegistryFilePath);
                 string userOfHive = FindOfflineUsername(hive);
 
                 foreach (byte[] keyValue in IterateRegistry(hive.GetKey(location), hive, location, 0, ""))
@@ -50,6 +50,9 @@ namespace SeeShells.ShellParser.Registry
         private string FindOfflineUsername(RegistryHiveOnDemand hive)
         {
             string retval = string.Empty;
+
+            if (hive.HiveType != HiveTypeEnum.NtUser)
+                return retval;
 
             //todo refactor this List into key-value pairs for lookup, we have to hardcode key-values otherwise.
             List<string> usernameLocations = Parser.GetUsernameLocations();
