@@ -26,6 +26,7 @@ namespace SeeShells.UI.Pages
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
+        private int maxStackedNodes = 0;
         private TimeSpan maxRealTimeSpan = new TimeSpan(0, 0, 1, 0); // Max time in one timeline (1 min).
 
         private static TimelinePage timelinePage;
@@ -189,8 +190,25 @@ namespace SeeShells.UI.Pages
 
                 List<Node.Node> nodeList = new List<Node.Node>();
                 List<TextBlock> blockList = new List<TextBlock>();
+                DateTime eventTime = App.nodeCollection.nodeList[0].aEvent.EventTime;
+                maxStackedNodes = 0;
+                int currentMaxStackedNodes = 0;
                 foreach (Node.Node node in App.nodeCollection.nodeList)
                 {
+                    if(eventTime == node.aEvent.EventTime)
+                    {
+                        currentMaxStackedNodes++;
+                    }
+                    else
+                    {
+                        if(currentMaxStackedNodes > maxStackedNodes)
+                        {
+                            maxStackedNodes = currentMaxStackedNodes;
+                        }
+                        currentMaxStackedNodes = 0;
+                        eventTime = node.aEvent.EventTime;
+                    }
+
                     node.Style = (Style)Resources["Node"];
                     if (node.Visibility == System.Windows.Visibility.Visible)
                     {
@@ -258,13 +276,13 @@ namespace SeeShells.UI.Pages
             TimelinePanel blockPanel = MakeBlockPanel(beginDate, endDate);
 
             // Add all blocks onto a timeline
-            foreach (Node.Node node in nodesCluster)
-            {
-                node.IsChecked = false;
-                node.block.Style = (Style)Resources["TimelineBlock"];
-                TimelinePanel.SetDate(node.block, node.aEvent.EventTime);
-                blockPanel.Children.Add(node.block);
-            }
+            //foreach (Node.Node node in nodesCluster)
+            //{
+            //    node.IsChecked = false;
+            //    node.block.Style = (Style)Resources["TimelineBlock"];
+            //    TimelinePanel.SetDate(node.block, node.aEvent.EventTime);
+            //    blockPanel.Children.Add(node.block);
+            //}
 
             List<StackedNodes> stackedNodesList = GetStackedNodes(nodesCluster);
             // Add all nodes that stack onto a timeline
@@ -278,6 +296,27 @@ namespace SeeShells.UI.Pages
                 stackedNode.Content = stackedNode.events.Count.ToString();
                 timelinePanel.Children.Add(stackedNode);
                 ConnectNodeToTimeline(timelinePanel, stackedNode.events[0].EventTime);
+
+                int invisibleBlocks = maxStackedNodes - stackedNode.blocks.Count;
+                while (invisibleBlocks != 0) // Adds invisible blocks as padding for a nice vertical allignment.
+                {
+                    TextBlock invisibleBlock = new TextBlock();
+                    invisibleBlock.Style = (Style)Resources["TimelineBlock"];
+                    invisibleBlock.Visibility = Visibility.Visible;
+
+                    TimelinePanel.SetDate(invisibleBlock, stackedNode.events[0].EventTime);
+                    blockPanel.Children.Add(invisibleBlock);
+                    invisibleBlocks--;
+                }
+
+                // Adds the actual node blocks
+                foreach(Node.Node node in stackedNode.nodes)
+                {
+                    node.IsChecked = false;
+                    node.block.Style = (Style)Resources["TimelineBlock"];
+                    TimelinePanel.SetDate(node.block, node.aEvent.EventTime);
+                    blockPanel.Children.Add(node.block);
+                }
             }
             // Add all other nodes onto a timeline
             foreach (Node.Node node in nodesCluster)
@@ -289,6 +328,24 @@ namespace SeeShells.UI.Pages
                 TimelinePanel.SetDate(node, node.aEvent.EventTime);
                 timelinePanel.Children.Add(node);
                 ConnectNodeToTimeline(timelinePanel, node.aEvent.EventTime);
+
+                int invisibleBlocks = maxStackedNodes -1;
+                while (invisibleBlocks != 0) // Adds invisible blocks as padding for a nice vertical allignment.
+                {
+                    TextBlock invisibleBlock = new TextBlock();
+                    invisibleBlock.Style = (Style)Resources["TimelineBlock"];
+                    invisibleBlock.Visibility = Visibility.Visible;
+
+                    TimelinePanel.SetDate(invisibleBlock, node.aEvent.EventTime);
+                    blockPanel.Children.Add(invisibleBlock);
+                    invisibleBlocks--;
+                }
+
+                // Adds the actual node blocks
+                node.IsChecked = false;
+                node.block.Style = (Style)Resources["TimelineBlock"];
+                TimelinePanel.SetDate(node.block, node.aEvent.EventTime);
+                blockPanel.Children.Add(node.block);
             }
 
             Timelines.Children.Add(timelinePanel);
@@ -365,6 +422,7 @@ namespace SeeShells.UI.Pages
                         stackedNodes.events.Add(nodesCluster[i].aEvent);
                         stackedNodes.blocks.Add(nodesCluster[i].block);
                         previousNode = nodesCluster[i];
+                        stackedNodes.nodes.Add(nodesCluster.ElementAt(i - 1));
                         nodesCluster.RemoveAt(i - 1);
 
                     }
@@ -373,10 +431,12 @@ namespace SeeShells.UI.Pages
                     if (i < nodesCluster.Count) // If haven't reached the end of the list.
                     {
                         previousNode = nodesCluster[i];
+                        stackedNodes.nodes.Add(nodesCluster.ElementAt(i - 1));
                         nodesCluster.RemoveAt(i - 1);
                     }
                     else
                     {
+                        stackedNodes.nodes.Add(nodesCluster.ElementAt(i - 1));
                         nodesCluster.RemoveAt(i - 1); 
                     }
                 }

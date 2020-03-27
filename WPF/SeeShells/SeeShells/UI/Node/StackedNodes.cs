@@ -9,6 +9,7 @@ namespace SeeShells.UI.Node
     {
         public List<IEvent> events = new List<IEvent>();
         public List<InfoBlock> blocks = new List<InfoBlock>();
+        public List<Node> nodes = new List<Node>();
 
         public StackedNodes()
         {
@@ -16,11 +17,6 @@ namespace SeeShells.UI.Node
             this.Height = 20;
             this.FontSize = 10;
             this.FontWeight = FontWeights.Bold;
-        }
-
-        public void Add(IEvent aEvent)
-        {
-            events.Add(aEvent);
         }
 
         public void ToggleBlock()
