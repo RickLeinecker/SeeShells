@@ -19,6 +19,7 @@ using System.Linq;
 using System.Reflection;
 using NLog.Time;
 using SeeShells.ShellParser.Registry;
+using SeeShells.UI.Templates;
 
 namespace SeeShells.UI.Pages
 {
@@ -33,7 +34,7 @@ namespace SeeShells.UI.Pages
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private TimelinePage timelinePage;
+        public static TimelinePage timelinePage;
 
         public Home()
         {
@@ -49,7 +50,9 @@ namespace SeeShells.UI.Pages
             this.DataContext = locations;
             UpdateOSVersionList();
             HideOfflineRows();
+
         }
+        
 
         private void OfflineBrowseButton_Click(object sender, RoutedEventArgs e)
         {
@@ -296,13 +299,21 @@ namespace SeeShells.UI.Pages
             {
                 timelinePage = new TimelinePage();
                 NavigationService.Navigate(timelinePage);
+
             }
             else
             {
                 timelinePage.RebuildTimeline();
                 NavigationService.Navigate(timelinePage);
             }
-            
+
+            App.NavigationService = NavigationService;
+            if (!(App.pages.ContainsKey("timelinepage")))
+            {
+                App.pages.Add("timelinepage", timelinePage);
+
+            }
+
 
         }
 
@@ -431,7 +442,7 @@ namespace SeeShells.UI.Pages
         {
             return MessageBox.Show(message, messageBoxTitle, MessageBoxButton.YesNo, MessageBoxImage.Question);
         }
-
+        
         private void EnableUIElements(bool value)
         {
             ParseButton.IsEnabled = value;
