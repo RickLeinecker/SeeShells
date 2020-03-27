@@ -71,6 +71,7 @@ namespace SeeShells.UI.Templates
         private void About_OnClick(object sender, RoutedEventArgs e)
         {
             new AboutWindow().ShowDialog();
+        }
         private void Import_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
@@ -108,6 +109,10 @@ namespace SeeShells.UI.Templates
                 if (App.pages.ContainsKey(timelinePageKey))
                 {
                     App.NavigationService.Navigate(App.pages[timelinePageKey]);
+                }
+                else
+                {
+                    App.NavigationService.Navigate(Home.timelinePage);
                 }
             }
 

@@ -16,7 +16,7 @@
                 <MenuItem Header="Help page" Click="Help_Click" Foreground="Black"/>
                 <MenuItem Header="About" Click="About_OnClick" Foreground="Black"/>
             </MenuItem>
-            <MenuItem x:Name="csvimport" Header="Import CSV" Click="Import_Click" Foreground="DarkGray">Import Csv</MenuItem>
+            <MenuItem x:Name="csvimport" Header="Import CSV" Click="Import_Click" Foreground="DarkGray"/>
         </Menu>
     </Grid>
 </UserControl>
