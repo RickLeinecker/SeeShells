@@ -7,10 +7,13 @@
             <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
             <b-collapse id="nav-collapse" is-nav>
+                <router-link to='/SeeShells/about' tag="menuitem"><b-navbar-item>About</b-navbar-item></router-link>
                 <b-navbar-nav>
-                    <b-nav-item href="#">About</b-nav-item>
                     <b-nav-item href="#">Download the Program</b-nav-item>
-                    <b-nav-item href="#">Developer Team</b-nav-item>
+                </b-navbar-nav>
+                <!--styling found in menuitem tag-->
+                <router-link to='/SeeShells/team' tag="menuitem"><b-navbar-item>Developer Team</b-navbar-item></router-link>
+                <b-navbar-nav>
                     <b-nav-item href="https://github.com/RickLeinecker/SeeShells">GitHub Page</b-nav-item>
                 </b-navbar-nav>
 
@@ -56,5 +59,20 @@
     #nav{
           margin-left: 0px;
           margin-right: 0px;
+    }
+    nav menuitem:hover,
+    nav menuitem:active{
+        font-family: Avenir, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-align: center;
+        color: #CCCCCC;
+    }
+    nav menuitem{
+        font-family: Avenir, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-align: center;
+        color: #a1a1a1;
     }
 </style>
