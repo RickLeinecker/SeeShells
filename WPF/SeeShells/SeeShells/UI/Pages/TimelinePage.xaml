@@ -87,14 +87,14 @@
                                 </Border>
 
 
-                                    <Border>
-                                        <StackPanel>
-                                            <Label Content="Event Parent Filter"/>
-                                            <!--TODO: This filter should be used if someone right clicks or something on an event. to "filter by parent"-->
-                                            <StackPanel Orientation="Horizontal">
-                                                <DockPanel>
-                                                    <TextBox x:Name="EventParentTextBox" HorizontalAlignment="Stretch" DockPanel.Dock="Left" Margin="5,0" IsEnabled="False" Width="289"/>
-                                                </DockPanel>
+                                <Border>
+                                    <StackPanel>
+                                        <Label Content="Event Parent Filter"/>
+                                        <!--TODO: This filter should be used if someone right clicks or something on an event. to "filter by parent"-->
+                                        <StackPanel Orientation="Horizontal">
+                                            <DockPanel>
+                                                <TextBox x:Name="EventParentTextBox" HorizontalAlignment="Stretch" DockPanel.Dock="Left" Margin="5,0" IsEnabled="False" Width="289"/>
+                                            </DockPanel>
 
                                             <Button x:Name="EventParentClearButton" Click="EventParentClearButton_Click">Clear</Button>
                                         </StackPanel>
@@ -148,7 +148,7 @@
                                 <Button x:Name="download" Content="Download" Click="DownloadClick"/>
                             </Viewbox>
                         </Grid>
-                        <ScrollViewer x:Name="TimelineScroll" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  Margin="0,0,0.333,163.667">
+                        <ScrollViewer x:Name="TimelineScroll" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  Margin="0,0,10.333,0" HorizontalAlignment="Right" Width="729" Height="402" VerticalAlignment="Top">
                             <Grid x:Name="Timeline" Background="#292525" Width="Auto" Height="Auto">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
