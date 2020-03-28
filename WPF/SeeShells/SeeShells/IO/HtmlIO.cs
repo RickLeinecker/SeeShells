@@ -45,6 +45,7 @@ namespace SeeShells.IO
                 outputFile.WriteLine("<div class=\"grid-item\">");
                 outputFile.WriteLine("<h4><b>" + node.aEvent.Name + "</b></h4>");
                 outputFile.WriteLine("<p>" + node.aEvent.EventTime + "</p>");
+                outputFile.WriteLine("<p>" + node.aEvent.timeZone.StandardName + "</p>");
                 outputFile.WriteLine("<p>" + node.aEvent.EventType + "</p>");
                 outputFile.WriteLine("</div>");
                 
