@@ -1,7 +1,11 @@
-﻿using SeeShells.UI.Pages;
+﻿using Microsoft.Win32;
+using SeeShells.IO;
+using SeeShells.UI.Node;
+using SeeShells.UI.Pages;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +30,7 @@ namespace SeeShells.UI.Templates
         {
             InitializeComponent();
         }
-        
+
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (Home.timelinePage == null)
@@ -43,6 +47,7 @@ namespace SeeShells.UI.Templates
                 }
             }
         }
+
 
         private void Home_Click(object sender, RoutedEventArgs e)
         {
@@ -66,6 +71,51 @@ namespace SeeShells.UI.Templates
         private void About_OnClick(object sender, RoutedEventArgs e)
         {
             new AboutWindow().ShowDialog();
+        }
+        private void Import_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                InitialDirectory = Directory.GetCurrentDirectory(),
+                Filter = "CSV File (*.csv)|*.csv"
+            };
+
+            if (openFileDialog.ShowDialog() != true)
+                return;
+            var file = openFileDialog.FileName;
+            if (App.ShellItems != null)
+            {
+                App.ShellItems.Clear();
+            }
+            if (App.nodeCollection.nodeList != null)
+            {
+                App.nodeCollection.nodeList.Clear();
+            }
+
+            App.ShellItems = CsvIO.ImportCSVFile(file);
+            List<IEvent> events = EventParser.GetEvents(App.ShellItems);
+            App.nodeCollection.ClearAllFilters();
+            App.nodeCollection.nodeList.AddRange(NodeParser.GetNodes(events));
+
+            if (Home.timelinePage == null)
+            {
+                Home.timelinePage = new TimelinePage();
+                App.NavigationService.Navigate(Home.timelinePage);
+            }
+            else
+            {
+                Home.timelinePage.RebuildTimeline();
+                string timelinePageKey = "timelinepage";
+                if (App.pages.ContainsKey(timelinePageKey))
+                {
+                    App.NavigationService.Navigate(App.pages[timelinePageKey]);
+                }
+                else
+                {
+                    App.NavigationService.Navigate(Home.timelinePage);
+                }
+            }
+
         }
     }
 }
