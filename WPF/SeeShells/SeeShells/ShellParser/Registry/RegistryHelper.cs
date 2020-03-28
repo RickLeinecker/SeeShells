@@ -9,6 +9,7 @@ namespace SeeShells.ShellParser.Registry
 {
     public static class RegistryHelper
     {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         public static DateTime? GetDateModified(RegistryHive registryHive, string path)
         {
             var lastModified = new FILETIME();
@@ -63,6 +64,7 @@ namespace SeeShells.ShellParser.Registry
             }
             catch (Exception ex)
             {
+                logger.Warn(ex, $"Couldn't retrieve registry modified date for {path}");
                 return null;
             }
         }
