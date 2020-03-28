@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:SeeShells"
              xmlns:template="clr-namespace:SeeShells.UI.Templates"
-             StartupUri="UI/MainWindow.xaml">
+             StartupUri="UI/MainWindow.xaml"
+             ShutdownMode="OnMainWindowClose">
     <Application.Resources>
         <Style TargetType="{x:Type Button}">
             <Setter Property="Background" Value="#292525" />

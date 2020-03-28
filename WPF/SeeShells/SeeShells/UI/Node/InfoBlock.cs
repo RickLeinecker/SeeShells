@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using SeeShells.UI.Windows;
 
 namespace SeeShells.UI.Node
 {
@@ -32,6 +33,24 @@ namespace SeeShells.UI.Node
             this.aEvent = aEvent;
         }
 
+        private string GetInfo()
+        {
+            string text = "";
+            
+            foreach (KeyValuePair<string, string> property in this.aEvent.Parent.GetAllProperties())
+            {
+                text += AddSpacesToCamelCase(property.Key) + ": " + property.Value;
+                text += "\n";
+            };
+
+            return text;
+        }
+
+        private string AddSpacesToCamelCase(string value)
+        {
+            return System.Text.RegularExpressions.Regex.Replace(value, "[A-Z]", " $0");
+        }
+
         /// <summary>
         /// This enlarges the textblock so more information can be seen about the shellItem.
         /// </summary>
@@ -50,13 +69,22 @@ namespace SeeShells.UI.Node
             {
                 this.Width = 450;
                 this.Height = 250;
-                this.Text = "";
-                foreach (KeyValuePair<string, string> property in this.aEvent.Parent.GetAllProperties())
-                {
-                    this.Text += property.Key + " : " + property.Value;
-                    this.Text += "\n";
-                }
+                this.Text = GetInfo();
             }
+        }
+
+        /// <summary>
+        /// This creates a window of the event information so that it can be moved around on the screen.
+        /// </summary>
+        public void PopOutInfo()
+        {
+            EventInformationWindow info = new EventInformationWindow()
+            {
+                EventTitle = this.aEvent.Name,
+                EventBody = GetInfo()
+            };
+
+            info.Show();
         }
     }
 }

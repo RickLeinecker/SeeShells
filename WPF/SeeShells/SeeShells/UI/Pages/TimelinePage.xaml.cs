@@ -188,14 +188,12 @@ namespace SeeShells.UI.Pages
                 }
 
                 List<Node.Node> nodeList = new List<Node.Node>();
-                List<TextBlock> blockList = new List<TextBlock>();
                 foreach (Node.Node node in App.nodeCollection.nodeList)
                 {
                     node.Style = (Style)Resources["Node"];
-                    if (node.Visibility == System.Windows.Visibility.Visible)
+                    if (node.Visibility == Visibility.Visible)
                     {
                         nodeList.Add(node);
-                        blockList.Add(node.block);
                     }
                     node.block.Visibility = Visibility.Collapsed;
                 }
@@ -238,7 +236,7 @@ namespace SeeShells.UI.Pages
                     AddTimeline(nodesCluster);
                 }
             }
-            catch (System.NullReferenceException ex)
+            catch (NullReferenceException ex)
             {
                 logger.Error(ex, "Null nodeList" + "\n" + ex.ToString());
                 return;
@@ -601,6 +599,14 @@ namespace SeeShells.UI.Pages
         public static void HoverBlock(object sender, EventArgs e)
         {
             ((InfoBlock)sender).ToggleInfo();
+        }
+
+        /// <summary>
+        /// This pops up an information window when a block is clicked.
+        /// </summary>
+        public static void ClickBlock(object sender, EventArgs e)
+        {
+            ((InfoBlock)sender).PopOutInfo();
         }
 
         /// <summary>
