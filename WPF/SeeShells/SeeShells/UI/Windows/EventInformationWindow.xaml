@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SeeShells.UI.Windows"
         mc:Ignorable="d"
         Deactivated="Window_Deactivated"
-        Title="Event Information" Height="250" Width="275">
+        Title="Event Information" Height="250" Width="320">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -14,10 +14,11 @@
         </Grid.RowDefinitions>
 
         <Viewbox Grid.Row="0" Stretch="Uniform">
-            <Label Grid.Row="0" FontWeight="Bold" Content="{Binding EventTitle}"/>
+            <Label FontWeight="Bold" Content="{Binding EventTitle}"/>
         </Viewbox>
-        <Viewbox Grid.Row="1" Stretch="Uniform" >
-            <Label Grid.Row="1" Content="{Binding EventBody}" />
-        </Viewbox>
+
+        <ScrollViewer Grid.Row="1">
+            <TextBlock FontSize="16px" Text="{Binding EventBody}" TextWrapping="Wrap" Margin="10" />
+        </ScrollViewer>
     </Grid>
 </Window>
