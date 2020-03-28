@@ -42,6 +42,12 @@ namespace SeeShells.ShellParser.Registry
                 baseDict.Add("RegistryOwner", RegKey.RegistryUser);
             if (RegKey.RegistryPath != string.Empty)
                 baseDict.Add("RegistryPath", RegKey.RegistryPath);
+            if (RegKey.ShellbagPath != string.Empty)
+                baseDict.Add("ShellbagPath", RegKey.ShellbagPath);
+            if (RegKey.LastRegistryWriteDate != DateTime.MinValue)
+                baseDict.Add("LastRegistryWriteDate", RegKey.LastRegistryWriteDate.ToString());
+            if (RegKey.SlotModifiedDate != DateTime.MinValue)
+                baseDict.Add("SlotModifiedDate", RegKey.SlotModifiedDate.ToString());
 
 
             return baseDict;
