@@ -9,6 +9,7 @@ namespace SeeShells.UI
 {
     public class Event : IEvent
     {
+        private TimeZone curTimeZone = TimeZone.CurrentTimeZone;
         /// <summary>
         /// Constructor for the Event class that takes in the parameters 
         /// listed below in order to create the elements of an event object. 
@@ -41,5 +42,11 @@ namespace SeeShells.UI
         /// Categorizes the action which was preformed.
         /// </summary>
         public string EventType { get; set; }
+
+        public TimeZone timeZone { get
+            {
+                return curTimeZone;
+            }
+        }
     }
 }
