@@ -11,6 +11,7 @@ namespace SeeShells.ShellParser.Registry
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public string RegistryUser { get; internal set; }
+        public string RegistrySID { get; internal set; }
         public string RegistryPath { get; internal set; }
         public byte[] Value { get; }
         public DateTime SlotModifiedDate { get; internal set; }
@@ -57,6 +58,18 @@ namespace SeeShells.ShellParser.Registry
 
         private void AdaptWin32Key(Microsoft.Win32.RegistryKey registryKey)
         {
+            //obtain SID and Username(?)
+
+            //HKEY USERS registry is {hivename}\UserSID\....
+            string UserSID = registryKey.Name.Split('\\')[1];
+
+            // "_classes" is actually just a user's usrclass.dat, not a seperate user.
+            UserSID = UserSID.ToUpper().Replace("_CLASSES", "");
+            RegistrySID = UserSID;
+
+            //todo somehow retrieve usernames, this may need to be passed into this adapter.
+            //if we dont know the username, default to the SID. 
+            RegistryUser = RegistrySID;
 
             //obtain NodeSlot (Shellbag Path in registry)
             SlotModifiedDate = DateTime.MinValue;
@@ -73,7 +86,7 @@ namespace SeeShells.ShellParser.Registry
             }
             catch (Exception ex)
             {
-                logger.Info(ex, $"NodeSlot was not found for registry key at {RegistryPath}");
+                logger.Trace(ex, $"NodeSlot was not found for registry key at {RegistryPath}");
             }
 
             //obtain the date the registry last wrote this key
