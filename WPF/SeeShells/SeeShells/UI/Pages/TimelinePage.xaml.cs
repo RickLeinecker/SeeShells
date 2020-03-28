@@ -205,7 +205,7 @@ namespace SeeShells.UI.Pages
                         {
                             maxStackedNodes = currentMaxStackedNodes;
                         }
-                        currentMaxStackedNodes = 0;
+                        currentMaxStackedNodes = 1;
                         eventTime = node.aEvent.EventTime;
                     }
 
@@ -275,15 +275,6 @@ namespace SeeShells.UI.Pages
             TimelinePanel timelinePanel = MakeTimelinePanel(beginDate, endDate);
             TimelinePanel blockPanel = MakeBlockPanel(beginDate, endDate);
 
-            // Add all blocks onto a timeline
-            //foreach (Node.Node node in nodesCluster)
-            //{
-            //    node.IsChecked = false;
-            //    node.block.Style = (Style)Resources["TimelineBlock"];
-            //    TimelinePanel.SetDate(node.block, node.aEvent.EventTime);
-            //    blockPanel.Children.Add(node.block);
-            //}
-
             List<StackedNodes> stackedNodesList = GetStackedNodes(nodesCluster);
             // Add all nodes that stack onto a timeline
             foreach (StackedNodes stackedNode in stackedNodesList)
@@ -297,16 +288,16 @@ namespace SeeShells.UI.Pages
                 timelinePanel.Children.Add(stackedNode);
                 ConnectNodeToTimeline(timelinePanel, stackedNode.events[0].EventTime);
 
-                int invisibleBlocks = maxStackedNodes - stackedNode.blocks.Count;
-                while (invisibleBlocks != 0) // Adds invisible blocks as padding for a nice vertical allignment.
+                int invisibleBlocksNeeded = maxStackedNodes - stackedNode.blocks.Count;
+                if (invisibleBlocksNeeded != 0) // Adds invisible blocks as padding for a nice vertical allignment.
                 {
                     TextBlock invisibleBlock = new TextBlock();
                     invisibleBlock.Style = (Style)Resources["TimelineBlock"];
                     invisibleBlock.Visibility = Visibility.Visible;
-
+                    invisibleBlock.Height = invisibleBlocksNeeded * 70;
                     TimelinePanel.SetDate(invisibleBlock, stackedNode.events[0].EventTime);
                     blockPanel.Children.Add(invisibleBlock);
-                    invisibleBlocks--;
+                    invisibleBlocksNeeded--;
                 }
 
                 // Adds the actual node blocks
@@ -329,17 +320,13 @@ namespace SeeShells.UI.Pages
                 timelinePanel.Children.Add(node);
                 ConnectNodeToTimeline(timelinePanel, node.aEvent.EventTime);
 
-                int invisibleBlocks = maxStackedNodes -1;
-                while (invisibleBlocks != 0) // Adds invisible blocks as padding for a nice vertical allignment.
-                {
-                    TextBlock invisibleBlock = new TextBlock();
-                    invisibleBlock.Style = (Style)Resources["TimelineBlock"];
-                    invisibleBlock.Visibility = Visibility.Visible;
-
-                    TimelinePanel.SetDate(invisibleBlock, node.aEvent.EventTime);
-                    blockPanel.Children.Add(invisibleBlock);
-                    invisibleBlocks--;
-                }
+                // Adds invisible block as padding for a nice vertical allignment.
+                TextBlock invisibleBlock = new TextBlock();
+                invisibleBlock.Style = (Style)Resources["TimelineBlock"];
+                invisibleBlock.Visibility = Visibility.Visible;
+                invisibleBlock.Height = (maxStackedNodes - 1) * 70;
+                TimelinePanel.SetDate(invisibleBlock, node.aEvent.EventTime);
+                blockPanel.Children.Add(invisibleBlock);
 
                 // Adds the actual node blocks
                 node.IsChecked = false;
