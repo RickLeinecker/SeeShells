@@ -56,7 +56,7 @@ namespace SeeShells.UI.Node
         /// </summary>
         public void ToggleInfo()
         {
-            if(this.Width > 300)
+            if(this.Height >= 250)
             {
                 this.Text = "";
                 this.Width = 200;
@@ -67,7 +67,7 @@ namespace SeeShells.UI.Node
             }
             else
             {
-                this.Width = 450;
+                this.Width = Double.NaN;
                 this.Height = 250;
                 this.Text = GetInfo();
             }
