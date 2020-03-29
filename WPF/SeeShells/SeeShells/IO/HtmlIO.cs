@@ -59,7 +59,7 @@ namespace SeeShells.IO
                         DateTime timeChange = Convert.ToDateTime(property.Value);
                         timeChange = TimeZoneInfo.ConvertTimeFromUtc(timeChange, time);
                         string timeFix = timeChange.ToString();
-                        outputFile.WriteLine("<p>" + property.Key + timeFix + "</p>");
+                        outputFile.WriteLine("<p>" + "["+property.Key +", "+ timeFix + "]"+ "</p>");
                     }
                     else
                     {
