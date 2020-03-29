@@ -291,18 +291,16 @@ namespace SeeShells.UI.Pages
                 ConnectNodeToTimeline(timelinePanel, stackedNode.events[0].EventTime);
 
                 int numBlocksNeeded = maxStackedNodes - stackedNode.blocks.Count;
-                if (numBlocksNeeded != 0) // Adds invisible blocks as padding for a nice vertical allignment.
+                 // Adds invisible blocks as padding for a nice vertical allignment.
+                TextBlock alignmentBlock = new TextBlock
                 {
-                    TextBlock alignmentBlock = new TextBlock
-                    {
-                        Style = (Style)Resources["TimelineBlock"],
-                        Visibility = Visibility.Collapsed,
-                        Height = numBlocksNeeded * 70
-                    };
-                    stackedNode.alignmentBlock = alignmentBlock;
-                    TimelinePanel.SetDate(stackedNode.alignmentBlock, stackedNode.nodes[0].GetBlockTime());
-                    blockPanel.Children.Add(stackedNode.alignmentBlock);
-                }
+                    Style = (Style)Resources["TimelineBlock"],
+                    Visibility = Visibility.Collapsed,
+                    Height = numBlocksNeeded * 70
+                };
+                stackedNode.alignmentBlock = alignmentBlock;
+                TimelinePanel.SetDate(stackedNode.alignmentBlock, stackedNode.nodes[0].GetBlockTime());
+                blockPanel.Children.Add(stackedNode.alignmentBlock);
 
                 // Adds the actual node blocks
                 foreach (Node.Node node in stackedNode.nodes)
@@ -644,27 +642,34 @@ namespace SeeShells.UI.Pages
         /// </summary>
         public static void DotPress(object sender, EventArgs e)
         {
+            try
+            {
+                if (sender.GetType() == typeof(Node.Node))
+                {
+                    unToggleEventsThatAreTooClose(((Node.Node)sender).GetBlockTime());
+                    ((Node.Node)sender).ToggleBlock();
+
+                    if (toggledNodes.Contains((Node.Node)sender))
+                        toggledNodes.Remove((Node.Node)sender);
+                    else
+                        toggledNodes.Add((Node.Node)sender);
+                }
+                else if (sender.GetType() == typeof(StackedNodes))
+                {
+                    unToggleEventsThatAreTooClose(((StackedNodes)sender).GetBlockTime());
+                    ((StackedNodes)sender).ToggleBlock();
+
+                    if (toggledNodes.Contains((StackedNodes)sender))
+                        toggledNodes.Remove((StackedNodes)sender);
+                    else
+                        toggledNodes.Add((StackedNodes)sender);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Error with the toggled nodes.");
+            }
             
-            if(sender.GetType() == typeof(Node.Node))
-            {
-                unToggleEventsThatAreTooClose(((Node.Node)sender).GetBlockTime());
-                ((Node.Node)sender).ToggleBlock();
-
-                if (toggledNodes.Contains(sender))
-                    toggledNodes.Remove((Node.Node)sender);
-                else
-                    toggledNodes.Add((Node.Node)sender);
-            }
-            else if(sender.GetType() == typeof(StackedNodes))
-            {
-                unToggleEventsThatAreTooClose(((StackedNodes)sender).GetBlockTime());
-                ((StackedNodes)sender).ToggleBlock();
-
-                if (toggledNodes.Contains(sender))
-                    toggledNodes.Remove((StackedNodes)sender);
-                else
-                    toggledNodes.Add((StackedNodes)sender);
-            }
 
         }
 
