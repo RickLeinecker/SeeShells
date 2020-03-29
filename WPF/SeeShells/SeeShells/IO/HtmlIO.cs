@@ -53,7 +53,19 @@ namespace SeeShells.IO
                 outputFile.WriteLine("<div class=\"grid-item\" style=\"column-count: 3;\" > ");
                 foreach (KeyValuePair<string, string> property in node.aEvent.Parent.GetAllProperties())
                 {
-                    outputFile.WriteLine("<p>" + property + "</p>");
+                    TimeZoneInfo time = TimeZoneInfo.Local;
+                    if (property.Key.Contains("Date"))
+                    {
+                        DateTime timeChange = Convert.ToDateTime(property.Value);
+                        timeChange = TimeZoneInfo.ConvertTimeFromUtc(timeChange, time);
+                        string timeFix = timeChange.ToString();
+                        outputFile.WriteLine("<p>" + property.Key + timeFix + "</p>");
+                    }
+                    else
+                    {
+                        outputFile.WriteLine("<p>" + property + "</p>");
+
+                    }
                 }
 
                 outputFile.WriteLine("</div>");
