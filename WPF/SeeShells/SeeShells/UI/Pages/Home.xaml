@@ -23,7 +23,6 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width=".25*"/>
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Row="0">
@@ -64,10 +63,6 @@
                     </StackPanel>
                 </Viewbox>
             </Grid>
-            <Viewbox Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top">
-                <Button x:Name="HelpButton" Content="HELP" Click="HelpButton_Click" />
-            </Viewbox>
-
             <Viewbox Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
                 <Button x:Name="ParseButton" Content="Parse" Click="ParseButton_Click"/>
             </Viewbox>
