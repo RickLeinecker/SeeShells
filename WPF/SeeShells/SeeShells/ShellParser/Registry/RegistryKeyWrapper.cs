@@ -8,13 +8,26 @@ namespace SeeShells.ShellParser.Registry
     public class RegistryKeyWrapper
     {
 
-        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        private static Logger logger = LogManager.GetCurrentClassLogger();
 
         public string RegistryUser { get; internal set; }
         public string RegistryPath { get; internal set; }
         public byte[] Value { get; }
-        public DateTime SlotModifiedDate { get; internal set; }
-        public DateTime LastRegistryWriteDate { get; internal set; }
+
+        private DateTime slotModifiedDate = DateTime.MinValue;
+        public DateTime SlotModifiedDate
+        {
+            get => slotModifiedDate == DateTime.MinValue ? DateTime.MinValue : TimeZoneInfo.ConvertTimeToUtc(slotModifiedDate);
+            internal set => slotModifiedDate = value;
+        }
+
+        private DateTime lastRegistryWriteDate;
+        public DateTime LastRegistryWriteDate
+        {
+            get => lastRegistryWriteDate == DateTime.MinValue ? DateTime.MinValue : TimeZoneInfo.ConvertTimeToUtc(lastRegistryWriteDate);
+            internal set => lastRegistryWriteDate = value;
+        }
+
         public string ShellbagPath { get; internal set; }
         public RegistryKeyWrapper Parent { get; }
 
