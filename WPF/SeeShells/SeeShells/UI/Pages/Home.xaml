@@ -14,7 +14,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="1.5*"/>
             <RowDefinition Height=".5*"/>
-            <RowDefinition Height="2*"/>
+            <RowDefinition Height="0*"/>
             <RowDefinition Height=".35*"/>
         </Grid.RowDefinitions>
 
@@ -81,7 +81,7 @@
             </StackPanel>
         </Grid>
 
-        <Grid x:Name="AdvancedOptions" Grid.Row="2">
+        <Grid x:Name="AdvancedOptions" Visibility="Collapsed" Grid.Row="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>

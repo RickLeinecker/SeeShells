@@ -457,7 +457,6 @@ namespace SeeShells.UI.Pages
             OfflineCheck.IsEnabled = value;
             OfflineBrowseButton.IsEnabled = value;
             OSVersion.IsEnabled = value;
-            HelpButton.IsEnabled = value;
         }
 
         /// <summary>

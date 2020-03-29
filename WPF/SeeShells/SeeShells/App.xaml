@@ -8,8 +8,8 @@
     <Application.Resources>
         <Style TargetType="{x:Type Button}">
             <Setter Property="Background" Value="#292525" />
-            <Setter Property="BorderBrush" Value="#FF1F52A1"/>
-            <Setter Property="Foreground" Value="#FF5381C8" />
+            <Setter Property="BorderBrush" Value="#088fa1"/>
+            <Setter Property="Foreground" Value="#088fa1" />
 
             <Setter Property="Template">
                 <Setter.Value>

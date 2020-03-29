@@ -8,6 +8,7 @@
         mc:Ignorable="d"
         Title="SeeShells" Height="450" Width="800"
         Loaded="Window_Loaded"
+        MinHeight="450" MinWidth="800"
         >
     <Window.RenderTransform>
         <ScaleTransform ScaleX="{Binding ZoomX}" ScaleY="{Binding ZoomY}"/>
