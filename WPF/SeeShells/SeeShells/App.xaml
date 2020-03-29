@@ -2,7 +2,9 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:SeeShells"
-             StartupUri="UI/MainWindow.xaml">
+             xmlns:template="clr-namespace:SeeShells.UI.Templates"
+             StartupUri="UI/MainWindow.xaml"
+             ShutdownMode="OnMainWindowClose">
     <Application.Resources>
         <Style TargetType="{x:Type Button}">
             <Setter Property="Background" Value="#292525" />
@@ -43,15 +45,7 @@
                             <ToolBarTray IsLocked="True" Background="Transparent">
                                 <ToolBar OverflowMode="Never" Loaded="Toolbar_Loaded" MinWidth="{Binding ActualWidth,
                                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type WrapPanel}}}" Background="Transparent">
-                                    <Menu Background="Transparent">
-                                        <MenuItem Header="View" Foreground="DarkGray" >
-                                            <MenuItem Header="Home"/>
-                                            <MenuItem Header="Timeline"/>
-                                        </MenuItem>
-                                        <MenuItem Header="Help" Foreground="DarkGray">
-                                            <MenuItem Header="About SeeShells" Click="About_OnClick"/>
-                                        </MenuItem>
-                                    </Menu>
+                                    <template:Switch/>
                                 </ToolBar>
                             </ToolBarTray>
                             <ContentPresenter/>

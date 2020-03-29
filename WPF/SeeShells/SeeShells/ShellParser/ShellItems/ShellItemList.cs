@@ -21,32 +21,31 @@ namespace SeeShells.ShellParser.ShellItems
         /// <returns>a ShellItem</returns>
         protected IShellItem GetItem(int off)
         {
-            //the shell item type which can be identified by 2 bytes (0xXX)
-            String postfix = unpack_byte(off + 2).ToString("X2");
+            int identifier = unpack_byte(off + 2); //the shell item type which can be identified by 2 bytes (0xXX)
 
-            Type type = Type.GetType("SeeShells.ShellParser.ShellItems.ShellItem0x" + postfix);
-            if (type == null)
-            { 
-                // if we have a script for the ShellItem, use it to get the information needed
-                int identifier = unpack_byte(off + 2);
-
-                if (ScriptHandler.HasScriptForShellItem(identifier))
+            // if we have a script for the ShellItem, use it to get the information needed
+            if (ScriptHandler.HasScriptForShellItem(identifier))
+            {
+                try
                 {
-                    try
-                    {
-                        return ScriptHandler.ParseShellItem(buf, identifier);
-                    }
-                    catch (ArgumentNullException)
-                    {
-                        logger.Error("The identifier being passed to the Lua scripts is null.");
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.Error("Failed to parse shell item through script: " + ex.Message);
-                    }
-
+                    return ScriptHandler.ParseShellItem(buf, identifier);
                 }
+                catch (ArgumentNullException)
+                {
+                    logger.Error("The identifier being passed to the Lua scripts is null.");
+                }
+                catch (Exception ex)
+                {
+                    logger.Error("Failed to parse shell item through script: " + ex.Message);
+                }
+            }
 
+            // if we don't have a script for the shell item (or the script fails), we check the classes we have in the program
+            string postfix = unpack_byte(off + 2).ToString("X2");
+            Type type = Type.GetType("SeeShells.ShellParser.ShellItems.ShellItem0x" + postfix);
+
+            if (type == null)
+            {
                 // Getting here means that the ShellItem is unidentified
                 logger.Info("Could not identify ShellItem 0x" + postfix);
                 return new ShellItem(buf);
@@ -56,10 +55,11 @@ namespace SeeShells.ShellParser.ShellItems
             {
                 return (IShellItem)Activator.CreateInstance(type, buf);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.Error(ex, "ShellItem0x" + postfix + " Failed to create\n" + "ShellItem Byte array:\n" + BitConverter.ToString(buf) + "\n" + ex.ToString());
             }
+
             return new ShellItem(buf);
         }
 

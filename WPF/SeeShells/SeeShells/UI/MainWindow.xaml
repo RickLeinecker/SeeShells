@@ -4,16 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SeeShells"
+        xmlns:template="clr-namespace:SeeShells.UI.Templates"
         mc:Ignorable="d"
-        Title="SeeShells" Height="450" Width="800">
+        Title="SeeShells" Height="450" Width="800"
+        Loaded="Window_Loaded"
+        >
     <Window.RenderTransform>
         <ScaleTransform ScaleX="{Binding ZoomX}" ScaleY="{Binding ZoomY}"/>
     </Window.RenderTransform>
+
     <Grid>
-        <Frame Source="Pages/Home.xaml">
-
+        <Frame x:Name="mainframe" NavigationUIVisibility="Hidden">
         </Frame>
-        
-
     </Grid>
 </Window>

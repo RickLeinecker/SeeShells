@@ -31,7 +31,7 @@ namespace SeeShells.ShellParser.Scripting
         {
             scripts.TryGetValue(identifier, out string script);
 
-            return new LuaShellItem(buf, script);
+            return new LuaShellItem(buf, identifier, script);
 
         }
     }

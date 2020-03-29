@@ -15,6 +15,7 @@ namespace SeeShells.UI.Node
     {
         public IEvent aEvent;
         public InfoBlock block;
+        public TextBlock alignmentBlock { get; set; }
 
         /// <summary>
         /// The Node is an object that stores event data and has graphical objects to be displayed on a timeline.
@@ -27,6 +28,11 @@ namespace SeeShells.UI.Node
             this.block = block;
         }
 
+        public DateTime GetBlockTime()
+        {
+            return aEvent.EventTime;
+        }
+
         /// <summary>
         /// This is used to hide and show the block of information connected to each dot of information on the timeline.
         /// </summary>
@@ -34,10 +40,12 @@ namespace SeeShells.UI.Node
         {
             if (this.block.Visibility == Visibility.Collapsed)
             {
+                this.alignmentBlock.Visibility = Visibility.Hidden;
                 this.block.Visibility = Visibility.Visible;
             }
             else if (this.block.Visibility == Visibility.Visible)
             {
+                this.alignmentBlock.Visibility = Visibility.Collapsed;
                 this.block.Visibility = Visibility.Collapsed;
             }
         }

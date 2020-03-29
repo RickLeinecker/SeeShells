@@ -13,7 +13,8 @@ namespace SeeShellsTests.ShellParser.ShellParserMocks
         public List<string> GetRegistryLocations()
         {
             List<String> list = new List<String>();
-            list.Add(@"Software\Microsoft\Windows\Shell");
+            list.Add(@"Software\Microsoft\Windows\Shell"); //NTUser path
+            list.Add(@"Local Settings\Software\Microsoft\Windows\Shell\BagMRU"); //Usrclass path
             return list;
         }
 

@@ -41,9 +41,8 @@ namespace SeeShells.ShellParser.Registry
 
                 foreach (string location in Parser.GetRegistryLocations())
                 {
-                    foreach (byte[] keyValue in IterateRegistry(userStore.OpenSubKey(location), location, 0, ""))
+                    foreach (RegistryKeyWrapper keyWrapper in IterateRegistry(userStore.OpenSubKey(location), location, null, ""))
                     {
-                        var keyWrapper = new RegistryKeyWrapper(keyValue);
                         keyWrapper.RegistryUser = userStore.Name.Split('\\').Last(); //only pull the SID, dont include HKEY_USERS\
 
                         retList.Add(keyWrapper);
@@ -60,12 +59,12 @@ namespace SeeShells.ShellParser.Registry
         /// </summary>
         /// <param name="rk">The root registry key to start iterating over</param>
         /// <param name="subKey">the path of the first subkey under the root key</param>
-        /// <param name="indent"></param>
+        /// <param name="parent">The Parent Key of the Registry Key currently being iterated. Can be null</param>
         /// <param name="path_prefix">the header to the current root key, needed for identification of the registry store</param>
         /// <returns></returns>
-        static List<byte[]> IterateRegistry(RegistryKey rk, string subKey, int indent, string path_prefix)
+        static List<RegistryKeyWrapper> IterateRegistry(RegistryKey rk, string subKey, RegistryKeyWrapper parent, string path_prefix)
         {
-            List<byte[]> retList = new List<byte[]>();
+            List<RegistryKeyWrapper> retList = new List<RegistryKeyWrapper>();
             if (rk == null)
             {
                 return retList;
@@ -95,36 +94,19 @@ namespace SeeShells.ShellParser.Registry
                     logger.Warn("ACCESS DENIED: " + ex.Message);
                     continue;
                 }
-                int slot = 0;
-                DateTime slotModified = DateTime.MinValue;
-                string slotKeyName = "";
-                try
-                {
-                    slot = (int)rk.GetValue("NodeSlot");
-                    slotKeyName = string.Format("{0}{1}\\{2}", rk.Name.Substring(0, rk.Name.IndexOf("BagMRU")), "Bags", slot);
-                    if (rk.Name.StartsWith("HKEY_USERS"))
-                    {
-                        slotModified = RegistryHelper.GetDateModified(RegistryHive.Users, slotKeyName.Replace("HKEY_USERS\\", "")) ?? DateTime.MinValue;
-                    }
-                    else if (rkNext.Name.StartsWith("HKEY_CURRENT_USER"))
-                    {
-                        slotModified = RegistryHelper.GetDateModified(RegistryHive.CurrentUser, slotKeyName.Replace("HKEY_CURRENT_USER\\", "")) ?? DateTime.MinValue;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    //Console.WriteLine("NodeSlot was not found");
-                }
 
-                int intVal = 0;
                 string path = path_prefix;
-                bool isNumeric = int.TryParse(valueName, out intVal);
+                RegistryKeyWrapper rkNextWrapper = null;
+
+                //shellbags only have their numerical identifer for the value name, not a shellbag otherwise
+                bool isNumeric = int.TryParse(valueName, out _);
                 if (isNumeric)
                 {
                     try
                     {
                         byte[] byteVal = (byte[])rk.GetValue(valueName);
-                        retList.Add(byteVal);
+                        rkNextWrapper = new RegistryKeyWrapper(rkNext, byteVal, parent);
+                        retList.Add(rkNextWrapper);
                     }
                     catch (OverrunBufferException ex)
                     {
@@ -136,7 +118,7 @@ namespace SeeShells.ShellParser.Registry
                     }
                 }
 
-                retList.AddRange(IterateRegistry(rkNext, sk, indent + 2, path));
+                retList.AddRange(IterateRegistry(rkNext, sk, rkNextWrapper, path));
             }
 
             return retList;
