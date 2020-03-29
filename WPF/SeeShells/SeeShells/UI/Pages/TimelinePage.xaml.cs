@@ -623,7 +623,12 @@ namespace SeeShells.UI.Pages
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.ShowDialog();
                 string name = saveFileDialog1.FileName;
-                HtmlIO.OutputHtmlFile(App.nodeCollection.nodeList, name);
+                if (name != string.Empty)
+                {
+                    List<Node.Node> visibleNodes = App.nodeCollection.nodeList
+                        .Where(node => node.Visibility == Visibility.Visible).ToList();
+                    HtmlIO.OutputHtmlFile(visibleNodes, name);
+                }
             }
             if (csvCheckBox.IsChecked ?? false)
             {
@@ -633,7 +638,8 @@ namespace SeeShells.UI.Pages
                 saveFileDialog2.AddExtension = true;
                 saveFileDialog2.ShowDialog();
                 string name2 = saveFileDialog2.FileName;
-                CsvIO.OutputCSVFile(App.ShellItems, name2);
+                if (name2 != string.Empty)
+                    CsvIO.OutputCSVFile(App.ShellItems, name2);
             }
         }
 
