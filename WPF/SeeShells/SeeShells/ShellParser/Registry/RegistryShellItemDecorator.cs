@@ -30,8 +30,8 @@ namespace SeeShells.ShellParser.Registry
 
         public ushort Size => BaseShellItem.Size;
         public byte Type => BaseShellItem.Type;
-        public string TypeName => BaseShellItem.TypeName;
-        public string Name => BaseShellItem.Name;
+        public string TypeName => BaseShellItem.TypeName ?? string.Empty;
+        public string Name => BaseShellItem.Name ?? string.Empty;
         public DateTime ModifiedDate => BaseShellItem.ModifiedDate;
         public DateTime AccessedDate => BaseShellItem.AccessedDate;
         public DateTime CreationDate => BaseShellItem.CreationDate;
@@ -44,21 +44,21 @@ namespace SeeShells.ShellParser.Registry
         {
             IDictionary<string, string> baseDict = BaseShellItem.GetAllProperties();
             
-            baseDict.Add(AbsolutePathIdentifier, AbsolutePath);
+            baseDict[AbsolutePathIdentifier] = AbsolutePath;
 
             //add all registry key values
             if (RegKey.RegistryUser != string.Empty)
-                baseDict.Add("RegistryOwner", RegKey.RegistryUser);
+                baseDict["RegistryOwner"] =  RegKey.RegistryUser;
             if (RegKey.RegistryUser != string.Empty)
-                baseDict.Add("RegistrySID", RegKey.RegistrySID);
+                baseDict["RegistrySID"] = RegKey.RegistrySID;
             if (RegKey.RegistryPath != string.Empty)
-                baseDict.Add("RegistryPath", RegKey.RegistryPath);
+                baseDict["RegistryPath"] = RegKey.RegistryPath;
             if (RegKey.ShellbagPath != string.Empty)
-                baseDict.Add("ShellbagPath", RegKey.ShellbagPath);
+                baseDict["ShellbagPath"] = RegKey.ShellbagPath;
             if (RegKey.LastRegistryWriteDate != DateTime.MinValue)
-                baseDict.Add("LastRegistryWriteDate", RegKey.LastRegistryWriteDate.ToString());
+                baseDict["LastRegistryWriteDate"] = RegKey.LastRegistryWriteDate.ToString();
             if (RegKey.SlotModifiedDate != DateTime.MinValue)
-                baseDict.Add("SlotModifiedDate", RegKey.SlotModifiedDate.ToString());
+                baseDict["SlotModifiedDate"] = RegKey.SlotModifiedDate.ToString();
 
 
             return baseDict;

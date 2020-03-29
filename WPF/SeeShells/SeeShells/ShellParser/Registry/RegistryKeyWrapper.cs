@@ -24,6 +24,8 @@ namespace SeeShells.ShellParser.Registry
             this.Value = value;
             RegistryUser = string.Empty;
             RegistryPath = string.Empty;
+            RegistrySID = string.Empty;
+            ShellbagPath = string.Empty;
         }
 
         public RegistryKeyWrapper(byte[] value, string registryUser, string registryPath) : this(value)
