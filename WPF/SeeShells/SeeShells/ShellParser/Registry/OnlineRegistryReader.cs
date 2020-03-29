@@ -41,10 +41,8 @@ namespace SeeShells.ShellParser.Registry
 
                 foreach (string location in Parser.GetRegistryLocations())
                 {
-                    foreach (RegistryKeyWrapper keyWrapper in IterateRegistry(userStore.OpenSubKey(location), location, null, ""))
+                    foreach (RegistryKeyWrapper keyWrapper in IterateRegistry(userStore.OpenSubKey(location), location, null))
                     {
-                        keyWrapper.RegistryUser = userStore.Name.Split('\\').Last(); //only pull the SID, dont include HKEY_USERS\
-
                         retList.Add(keyWrapper);
                     }
                 }
@@ -60,9 +58,8 @@ namespace SeeShells.ShellParser.Registry
         /// <param name="rk">The root registry key to start iterating over</param>
         /// <param name="subKey">the path of the first subkey under the root key</param>
         /// <param name="parent">The Parent Key of the Registry Key currently being iterated. Can be null</param>
-        /// <param name="path_prefix">the header to the current root key, needed for identification of the registry store</param>
         /// <returns></returns>
-        static List<RegistryKeyWrapper> IterateRegistry(RegistryKey rk, string subKey, RegistryKeyWrapper parent, string path_prefix)
+        static List<RegistryKeyWrapper> IterateRegistry(RegistryKey rk, string subKey, RegistryKeyWrapper parent)
         {
             List<RegistryKeyWrapper> retList = new List<RegistryKeyWrapper>();
             if (rk == null)
@@ -95,7 +92,6 @@ namespace SeeShells.ShellParser.Registry
                     continue;
                 }
 
-                string path = path_prefix;
                 RegistryKeyWrapper rkNextWrapper = null;
 
                 //shellbags only have their numerical identifer for the value name, not a shellbag otherwise
@@ -118,7 +114,7 @@ namespace SeeShells.ShellParser.Registry
                     }
                 }
 
-                retList.AddRange(IterateRegistry(rkNext, sk, rkNextWrapper, path));
+                retList.AddRange(IterateRegistry(rkNext, sk, rkNextWrapper));
             }
 
             return retList;
