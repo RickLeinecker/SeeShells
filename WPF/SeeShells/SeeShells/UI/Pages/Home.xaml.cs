@@ -395,7 +395,7 @@ namespace SeeShells.UI.Pages
             return true;
         }
 
-        private void HelpButton_Click(object sender, RoutedEventArgs e)
+        public void HelpButton_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new HelpPage());
         }
@@ -445,6 +445,25 @@ namespace SeeShells.UI.Pages
             OfflineBrowseButton.IsEnabled = value;
             OSVersion.IsEnabled = value;
             HelpButton.IsEnabled = value;
+        }
+
+        /// <summary>
+        /// This hides and reveals the advanced options on the Home screen.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ToggleAdvancedContent(object sender, RoutedEventArgs e)
+        {
+            if (AdvancedOptions.Visibility == Visibility.Visible)
+            {
+                HomePage.RowDefinitions[2].Height = new GridLength(0);
+                AdvancedOptions.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                HomePage.RowDefinitions[2].Height = new GridLength(3, GridUnitType.Star);
+                AdvancedOptions.Visibility = Visibility.Visible;
+            }
         }
     }
 }

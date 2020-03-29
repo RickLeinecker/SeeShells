@@ -8,6 +8,7 @@ using System.Data;
 using System.Windows;
 using System.Windows.Controls;
 using SeeShells.UI.Pages;
+using System.Windows.Navigation;
 
 namespace SeeShells
 {
