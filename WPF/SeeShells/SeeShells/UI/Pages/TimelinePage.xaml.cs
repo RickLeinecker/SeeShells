@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using Xceed.Wpf.Toolkit;
 using Xceed.Wpf.Toolkit.Primitives;
+using System.Windows.Controls.Primitives;
 
 namespace SeeShells.UI.Pages
 {
@@ -26,9 +27,13 @@ namespace SeeShells.UI.Pages
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
+        private int maxStackedNodes = 0;
         private TimeSpan maxRealTimeSpan = new TimeSpan(0, 0, 1, 0); // Max time in one timeline (1 min).
 
         private static TimelinePage timelinePage;
+
+        private static List<ToggleButton> toggledNodes = new List<ToggleButton>();
+        private Boolean AutoScroll = true;
 
         public TimelinePage()
         {
@@ -188,14 +193,30 @@ namespace SeeShells.UI.Pages
                 }
 
                 List<Node.Node> nodeList = new List<Node.Node>();
+                DateTime eventTime = App.nodeCollection.nodeList[0].aEvent.EventTime;
+                maxStackedNodes = 0;
+                int currentMaxStackedNodes = 0;
                 foreach (Node.Node node in App.nodeCollection.nodeList)
                 {
+                    if(node.aEvent.EventTime == eventTime)
+                    {
+                        currentMaxStackedNodes++;
+                    }
+                    else
+                    {
+                        if(currentMaxStackedNodes > maxStackedNodes)
+                            maxStackedNodes = currentMaxStackedNodes;
+
+                        currentMaxStackedNodes = 1;
+
+                        eventTime = node.aEvent.EventTime;
+                    }
+
                     node.Style = (Style)Resources["Node"];
                     if (node.Visibility == Visibility.Visible)
-                    {
                         nodeList.Add(node);
-                    }
                     node.block.Visibility = Visibility.Collapsed;
+
                 }
 
                 if (nodeList.Count == 0)
@@ -255,16 +276,8 @@ namespace SeeShells.UI.Pages
             TimelinePanel timelinePanel = MakeTimelinePanel(beginDate, endDate);
             TimelinePanel blockPanel = MakeBlockPanel(beginDate, endDate);
 
-            // Add all blocks onto a timeline
-            foreach (Node.Node node in nodesCluster)
-            {
-                node.IsChecked = false;
-                node.block.Style = (Style)Resources["TimelineBlock"];
-                TimelinePanel.SetDate(node.block, node.aEvent.EventTime);
-                blockPanel.Children.Add(node.block);
-            }
-
             List<StackedNodes> stackedNodesList = GetStackedNodes(nodesCluster);
+
             // Add all nodes that stack onto a timeline
             foreach (StackedNodes stackedNode in stackedNodesList)
             {
@@ -276,6 +289,28 @@ namespace SeeShells.UI.Pages
                 stackedNode.Content = stackedNode.events.Count.ToString();
                 timelinePanel.Children.Add(stackedNode);
                 ConnectNodeToTimeline(timelinePanel, stackedNode.events[0].EventTime);
+
+                int numBlocksNeeded = maxStackedNodes - stackedNode.blocks.Count;
+                 // Adds invisible blocks as padding for a nice vertical allignment.
+                TextBlock alignmentBlock = new TextBlock
+                {
+                    Style = (Style)Resources["TimelineBlock"],
+                    Visibility = Visibility.Collapsed,
+                    Height = numBlocksNeeded * 70
+                };
+                stackedNode.alignmentBlock = alignmentBlock;
+                TimelinePanel.SetDate(stackedNode.alignmentBlock, stackedNode.nodes[0].GetBlockTime());
+                blockPanel.Children.Add(stackedNode.alignmentBlock);
+
+                // Adds the actual node blocks
+                foreach (Node.Node node in stackedNode.nodes)
+                {
+                    node.IsChecked = false;
+                    node.block.Style = (Style)Resources["TimelineBlock"];
+                    TimelinePanel.SetDate(node.block, node.GetBlockTime());
+                    blockPanel.Children.Add(node.block);
+                }
+
             }
             // Add all other nodes onto a timeline
             foreach (Node.Node node in nodesCluster)
@@ -287,6 +322,25 @@ namespace SeeShells.UI.Pages
                 TimelinePanel.SetDate(node, node.aEvent.EventTime);
                 timelinePanel.Children.Add(node);
                 ConnectNodeToTimeline(timelinePanel, node.aEvent.EventTime);
+
+                // Adds invisible block as padding for a nice vertical allignment.
+                TextBlock alignmentBlock = new TextBlock
+                {
+                    Style = (Style)Resources["TimelineBlock"],
+                    Visibility = Visibility.Collapsed,
+                    Height = (maxStackedNodes - 1) * 70
+                };
+                node.alignmentBlock = alignmentBlock;
+                TimelinePanel.SetDate(node.alignmentBlock, node.GetBlockTime());
+                blockPanel.Children.Add(node.alignmentBlock);
+                
+
+                // Adds the actual node blocks
+                node.IsChecked = false;
+                node.block.Style = (Style)Resources["TimelineBlock"];
+                TimelinePanel.SetDate(node.block, node.GetBlockTime());
+                blockPanel.Children.Add(node.block);
+
             }
 
             Timelines.Children.Add(timelinePanel);
@@ -363,6 +417,7 @@ namespace SeeShells.UI.Pages
                         stackedNodes.events.Add(nodesCluster[i].aEvent);
                         stackedNodes.blocks.Add(nodesCluster[i].block);
                         previousNode = nodesCluster[i];
+                        stackedNodes.nodes.Add(nodesCluster.ElementAt(i - 1));
                         nodesCluster.RemoveAt(i - 1);
 
                     }
@@ -371,10 +426,12 @@ namespace SeeShells.UI.Pages
                     if (i < nodesCluster.Count) // If haven't reached the end of the list.
                     {
                         previousNode = nodesCluster[i];
+                        stackedNodes.nodes.Add(nodesCluster.ElementAt(i - 1));
                         nodesCluster.RemoveAt(i - 1);
                     }
                     else
                     {
+                        stackedNodes.nodes.Add(nodesCluster.ElementAt(i - 1));
                         nodesCluster.RemoveAt(i - 1); 
                     }
                 }
@@ -527,6 +584,8 @@ namespace SeeShells.UI.Pages
         /// </summary>
         public void RebuildTimeline()
         {
+            toggledNodes.Clear();
+
             foreach (Object child in Timelines.Children)
             {
                 if(child is TimelinePanel) // Only TimelinePanel objects since Timelines also contains separating lines
@@ -583,14 +642,77 @@ namespace SeeShells.UI.Pages
         /// </summary>
         public static void DotPress(object sender, EventArgs e)
         {
-            if(sender.GetType() == typeof(Node.Node))
+            try
             {
-                ((Node.Node)sender).ToggleBlock();
+                if (sender.GetType() == typeof(Node.Node))
+                {
+                    unToggleEventsThatAreTooClose(((Node.Node)sender).GetBlockTime());
+                    ((Node.Node)sender).ToggleBlock();
+
+                    if (toggledNodes.Contains((Node.Node)sender))
+                        toggledNodes.Remove((Node.Node)sender);
+                    else
+                        toggledNodes.Add((Node.Node)sender);
+                }
+                else if (sender.GetType() == typeof(StackedNodes))
+                {
+                    unToggleEventsThatAreTooClose(((StackedNodes)sender).GetBlockTime());
+                    ((StackedNodes)sender).ToggleBlock();
+
+                    if (toggledNodes.Contains((StackedNodes)sender))
+                        toggledNodes.Remove((StackedNodes)sender);
+                    else
+                        toggledNodes.Add((StackedNodes)sender);
+                }
             }
-            else if(sender.GetType() == typeof(StackedNodes))
+            catch (Exception ex)
             {
-                ((StackedNodes)sender).ToggleBlock();
+                logger.Error(ex, "Error with the toggled nodes.");
             }
+            
+
+        }
+
+        private static void unToggleEventsThatAreTooClose(DateTime time)
+        {
+            for (int i=0; i<toggledNodes.Count; i++)
+            {
+                ToggleButton button = toggledNodes[i];
+
+                if (button.GetType() == typeof(Node.Node))
+                {
+                    Node.Node node = (Node.Node)button;
+                    DateTime nodesTime = node.GetBlockTime();
+                    if (EventIsTooClose(nodesTime, time))
+                    {
+                        node.ToggleBlock();
+                        toggledNodes.Remove(node);
+                        i--;
+                    }
+                }
+                else if (button.GetType() == typeof(StackedNodes))
+                {
+                    StackedNodes node = (StackedNodes)button;
+                    DateTime nodesTime = node.GetBlockTime();
+                    if (EventIsTooClose(nodesTime, time))
+                    {
+                        node.ToggleBlock();
+                        toggledNodes.Remove(node);
+                        i--;
+                    }
+                }
+            }
+        }
+
+        private static bool EventIsTooClose(DateTime eventTime, DateTime comparison)
+        {
+            if ((eventTime.Ticks < comparison.Ticks) && (eventTime.Ticks >= (comparison.Ticks - TimeSpan.TicksPerSecond * 11)))
+                return true;
+
+            if ((eventTime.Ticks > comparison.Ticks) && (eventTime.Ticks <= (comparison.Ticks + TimeSpan.TicksPerSecond * 11)))
+                return true;
+
+           return false;
         }
 
         /// <summary>
@@ -647,6 +769,33 @@ namespace SeeShells.UI.Pages
                         block.Style = (Style)Resources["TimelineBlock"];
                     }
                 }
+            }
+        }
+
+
+        // from: https://stackoverflow.com/questions/2984803/how-to-automatically-scroll-scrollviewer-only-if-the-user-did-not-change-scrol
+        private void TimelineScroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            // User scroll event : set or unset auto-scroll mode
+            if (e.ExtentHeightChange == 0)
+            {   // Content unchanged : user scroll event
+                if (TimelineScroll.VerticalOffset == TimelineScroll.ScrollableHeight)
+                {   // Scroll bar is in bottom
+                    // Set auto-scroll mode
+                    AutoScroll = true;
+                }
+                else
+                {   // Scroll bar isn't in bottom
+                    // Unset auto-scroll mode
+                    AutoScroll = false;
+                }
+            }
+
+            // Content scroll event : auto-scroll eventually
+            if (AutoScroll && e.ExtentHeightChange != 0)
+            {   // Content changed and auto-scroll mode set
+                // Autoscroll
+                TimelineScroll.ScrollToVerticalOffset(TimelineScroll.ExtentHeight);
             }
         }
     }
