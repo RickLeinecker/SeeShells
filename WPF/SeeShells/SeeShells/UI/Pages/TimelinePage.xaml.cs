@@ -724,6 +724,14 @@ namespace SeeShells.UI.Pages
         }
 
         /// <summary>
+        /// This pops up an information window when a block is clicked.
+        /// </summary>
+        public static void ClickBlock(object sender, EventArgs e)
+        {
+            ((InfoBlock)sender).PopOutInfo();
+        }
+
+        /// <summary>
         /// This is the Node version of this function to change the color of the blocks whose node is hovered over. 
         /// </summary>
         public void HoverNode(Object sender, EventArgs e)
