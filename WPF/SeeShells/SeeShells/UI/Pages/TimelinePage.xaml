@@ -147,7 +147,7 @@
                                 <Button x:Name="download" Content="Download" Click="DownloadClick"/>
                             </Viewbox>
                         </Grid>
-                        <ScrollViewer x:Name="TimelineScroll" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  Margin="0,0,10.333,0" HorizontalAlignment="Right" Width="729" Height="402" VerticalAlignment="Top">
+                        <ScrollViewer x:Name="TimelineScroll" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  Margin="0,0,10.333,0" HorizontalAlignment="Right" Width="729" Height="402" VerticalAlignment="Top" ScrollChanged="TimelineScroll_ScrollChanged">
                             <Grid x:Name="Timeline" Background="#292525" Width="Auto" Height="Auto">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
