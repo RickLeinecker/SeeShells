@@ -41,15 +41,15 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Page}">
-                        <WrapPanel Background="#FF343030">
-                            <ToolBarTray IsLocked="True" Background="Transparent">
+                        <DockPanel Background="#FF343030">
+                            <ToolBarTray IsLocked="True" Background="Transparent" DockPanel.Dock="Top">
                                 <ToolBar OverflowMode="Never" Loaded="Toolbar_Loaded" MinWidth="{Binding ActualWidth,
                                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type WrapPanel}}}" Background="Transparent">
                                     <template:Switch/>
                                 </ToolBar>
                             </ToolBarTray>
                             <ContentPresenter/>
-                        </WrapPanel>
+                        </DockPanel>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

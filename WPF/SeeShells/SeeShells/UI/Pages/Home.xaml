@@ -97,6 +97,12 @@
                     <TextBox x:Name="OSFileLocationTextBox" MinWidth="200" Text="{Binding OSFileLocation, Mode=OneWay}" VerticalContentAlignment="Center" IsEnabled="False"/>
                 </StackPanel>
             </Viewbox>
+            <Viewbox x:Name="OsConfig" Grid.Row="0" Grid.Column="1" VerticalAlignment="Bottom" Margin="0,0,0,5">
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="OSBrowseButton" Content="Browse" Click="OSBrowseButton_Click" Margin="10,0"/>
+                    <Button x:Name="OSUpdateButton" Content="Update File" Click="OSUpdateButton_Click"  Margin="10,0"/>
+                </StackPanel>
+            </Viewbox>
             <Viewbox Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,5,0,5">
                 <StackPanel Orientation="Vertical">
                     <Label Content="GUID Configuration File" Foreground="LightGray" />
@@ -112,13 +118,6 @@
                         <TextBox x:Name="ScriptFileLocationTextBox" MinWidth="200" Text="{Binding ScriptFileLocation, Mode=OneWay}" VerticalContentAlignment="Center" IsEnabled="False"/>
                     </StackPanel>
                 </StackPanel>
-            </Viewbox>
-            <Viewbox x:Name="OsConfig" Grid.Row="0" Grid.Column="1" VerticalAlignment="Bottom" Margin="0,0,0,5">
-                <StackPanel Orientation="Horizontal">
-                    <Button x:Name="OSBrowseButton" Content="Browse" Click="OSBrowseButton_Click" Margin="10,0"/>
-                    <Button x:Name="OSUpdateButton" Content="Update File" Click="OSUpdateButton_Click"  Margin="10,0"/>
-                </StackPanel>
-
             </Viewbox>
             <Viewbox Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,5">
                 <StackPanel Orientation="Horizontal">
