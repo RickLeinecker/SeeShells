@@ -193,7 +193,6 @@ namespace SeeShells.UI.Pages
                 }
 
                 List<Node.Node> nodeList = new List<Node.Node>();
-                List<TextBlock> blockList = new List<TextBlock>();
                 DateTime eventTime = App.nodeCollection.nodeList[0].aEvent.EventTime;
                 maxStackedNodes = 0;
                 int currentMaxStackedNodes = 0;
@@ -206,20 +205,16 @@ namespace SeeShells.UI.Pages
                     else
                     {
                         if(currentMaxStackedNodes > maxStackedNodes)
-                        {
                             maxStackedNodes = currentMaxStackedNodes;
-                        }
+
                         currentMaxStackedNodes = 1;
 
                         eventTime = node.aEvent.EventTime;
                     }
 
                     node.Style = (Style)Resources["Node"];
-                    if (node.Visibility == System.Windows.Visibility.Visible)
-                    {
+                    if (node.Visibility == Visibility.Visible)
                         nodeList.Add(node);
-                        blockList.Add(node.block);
-                    }
                     node.block.Visibility = Visibility.Collapsed;
 
                 }
@@ -262,7 +257,7 @@ namespace SeeShells.UI.Pages
                     AddTimeline(nodesCluster);
                 }
             }
-            catch (System.NullReferenceException ex)
+            catch (NullReferenceException ex)
             {
                 logger.Error(ex, "Null nodeList" + "\n" + ex.ToString());
                 return;
