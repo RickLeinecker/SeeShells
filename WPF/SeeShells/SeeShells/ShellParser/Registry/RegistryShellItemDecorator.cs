@@ -44,7 +44,6 @@ namespace SeeShells.ShellParser.Registry
         {
             IDictionary<string, string> baseDict = BaseShellItem.GetAllProperties();
             
-
             baseDict[AbsolutePathIdentifier] = AbsolutePath;
 
             //add all registry key values
@@ -65,14 +64,12 @@ namespace SeeShells.ShellParser.Registry
             return baseDict;
         }
 
-
         /// <summary>
         /// Reconstructs the Absolute File Path to find the Item represented by this ShellItem, by obtaining the names of all parents <br/>
         /// (i.e. "C:\Users\User\Desktop" when the ShellItem is the "Desktop" ShellItem Type)
         /// </summary>
         /// <param name="parentShellItem">The ShellItem which represents the hiearchical parent to the information in this ShellItem</param>
         /// <returns>A filepath that should contain enough information to find the original item and related parent Shellbag items</returns>
-
         protected string SetAbsolutePath(IShellItem parentShellItem)
         {
             if (parentShellItem == null) 
