@@ -278,7 +278,6 @@ namespace SeeShells.UI.Pages
 
             //cover UI
             Mouse.OverrideCursor = Cursors.Wait;
-            //TODO spinner over screen to show operation in progress?
             ParseButton.Content = "Parsing...";
             EnableUIElements(false);
 
@@ -295,7 +294,7 @@ namespace SeeShells.UI.Pages
             }
             catch (System.Security.SecurityException)
             {
-                MessageBox.Show("Please exit the program and run SeeShells as an administrator to parse a live registry.", "Access Denied", MessageBoxButton.OK, MessageBoxImage.Error);
+                showErrorMessage("Please exit the program and run SeeShells as an administrator to parse a live registry.", "Access Denied");
                 ParseButton.Content = "Parse";
                 EnableUIElements(true);
                 Mouse.OverrideCursor = Cursors.Arrow;
