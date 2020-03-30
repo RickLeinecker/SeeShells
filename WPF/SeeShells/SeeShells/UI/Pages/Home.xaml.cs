@@ -470,11 +470,15 @@ namespace SeeShells.UI.Pages
             {
                 HomePage.RowDefinitions[2].Height = new GridLength(0);
                 AdvancedOptions.Visibility = Visibility.Collapsed;
+                ToggleAdv.Content = 5;
+                ParseView.Margin = new Thickness(25);
             }
             else
             {
-                HomePage.RowDefinitions[2].Height = new GridLength(3, GridUnitType.Star);
+                HomePage.RowDefinitions[2].Height = new GridLength(2, GridUnitType.Star);
                 AdvancedOptions.Visibility = Visibility.Visible;
+                ToggleAdv.Content = 6;
+                ParseView.Margin = new Thickness(10);
             }
         }
 
@@ -482,6 +486,7 @@ namespace SeeShells.UI.Pages
         {
             App.NavigationService = NavigationService;
         }
+
 
     }
 }
