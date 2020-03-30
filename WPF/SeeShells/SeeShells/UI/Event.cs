@@ -41,5 +41,12 @@ namespace SeeShells.UI
         /// Categorizes the action which was preformed.
         /// </summary>
         public string EventType { get; set; }
+
+        public TimeZone timeZone { get
+            {
+                TimeZone curTimeZone = TimeZone.CurrentTimeZone;
+                return curTimeZone;
+            }
+        }
     }
 }

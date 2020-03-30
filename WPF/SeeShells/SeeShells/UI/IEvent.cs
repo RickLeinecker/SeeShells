@@ -33,5 +33,7 @@ namespace SeeShells.UI
         /// Categorizes the action which was preformed.
         /// </summary>
         string EventType { get; }
+
+        TimeZone timeZone { get; }
     }
 }

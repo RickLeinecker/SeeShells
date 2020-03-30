@@ -17,6 +17,7 @@ namespace SeeShells.UI
         public static List<IEvent> GetEvents(List<IShellItem> shells)
         {
             List<IEvent> eventList = new List<IEvent>();
+            TimeZoneInfo time = TimeZoneInfo.Local;
             foreach (IShellItem item in shells)
             {
                 IDictionary<String, String> parser = item.GetAllProperties();
@@ -26,6 +27,7 @@ namespace SeeShells.UI
                     {
                         String name = item.Name;
                         DateTime eventDate = Convert.ToDateTime(el.Value);
+                        eventDate = TimeZoneInfo.ConvertTimeFromUtc(eventDate, time);
                         String[] type = el.Key.Split('D');
                         Event e = new Event(name, eventDate, item, type[0]);
                         eventList.Add(e);

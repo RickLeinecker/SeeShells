@@ -39,8 +39,21 @@ namespace SeeShells.UI.Node
             
             foreach (KeyValuePair<string, string> property in this.aEvent.Parent.GetAllProperties())
             {
-                text += AddSpacesToCamelCase(property.Key) + ": " + property.Value;
-                text += "\n";
+                TimeZoneInfo time = TimeZoneInfo.Local;
+                if (property.Key.Contains("Date"))
+                {
+                    DateTime timeChange = Convert.ToDateTime(property.Value);
+                    timeChange = TimeZoneInfo.ConvertTimeFromUtc(timeChange, time);
+                    string timeFix = timeChange.ToString();
+                    text += AddSpacesToCamelCase(property.Key) + ": " + timeFix;
+                    text += "\n";
+                }
+                else
+                {
+                    text += AddSpacesToCamelCase(property.Key) + ": " + property.Value;
+                    text += "\n";
+
+                }
             };
 
             return text;

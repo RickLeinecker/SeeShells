@@ -26,5 +26,7 @@ namespace SeeShellsTests.UI.Mocks
         public IShellItem Parent { get; set; }
 
         public string EventType { get; set; }
+
+        public TimeZone timeZone { get; }
     }
 }
