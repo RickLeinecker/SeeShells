@@ -5,6 +5,7 @@ using SeeShells.UI.EventFilters;
 using SeeShells.UI.Node;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -639,7 +640,27 @@ namespace SeeShells.UI.Pages
                 saveFileDialog2.ShowDialog();
                 string name2 = saveFileDialog2.FileName;
                 if (name2 != string.Empty)
+                {
+                    var file = new FileInfo(name2);
+                    if (file.Exists)
+                    {
+                        try // Check if the file is locked
+                        {
+                            using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
+                            {
+                                stream.Close();
+                            }
+                        }
+                        catch (IOException ex)
+                        {
+                            System.Windows.MessageBox.Show("The file: \"" + name2 + "\" is being used by another process.\n" +
+                                "Select a different file name or close the process to save the CSV.", "Cannot save file", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                            logger.Info(ex, "The file: \"" + name2 + "\" is being used by another process.\n" + ex.ToString());
+                            return;
+                        }
+                    }
                     CsvIO.OutputCSVFile(App.ShellItems, name2);
+                }
             }
         }
 
