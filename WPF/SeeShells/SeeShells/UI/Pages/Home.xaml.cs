@@ -285,10 +285,23 @@ namespace SeeShells.UI.Pages
             //begin the parsing process
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-            App.ShellItems = await ParseShellBags();
-            List<IEvent> events = EventParser.GetEvents(App.ShellItems);
-            App.nodeCollection.ClearAllFilters();
-            App.nodeCollection.nodeList.AddRange(NodeParser.GetNodes(events));
+
+            try
+            {
+                App.ShellItems = await ParseShellBags();
+                List<IEvent> events = EventParser.GetEvents(App.ShellItems);
+                App.nodeCollection.ClearAllFilters();
+                App.nodeCollection.nodeList.AddRange(NodeParser.GetNodes(events));
+            }
+            catch (System.Security.SecurityException)
+            {
+                MessageBox.Show("Please exit the program and run SeeShells as an administrator to parse a live registry.", "Access Denied", MessageBoxButton.OK, MessageBoxImage.Error);
+                ParseButton.Content = "Parse";
+                EnableUIElements(true);
+                Mouse.OverrideCursor = Cursors.Arrow;
+                return;
+            }
+
             stopwatch.Stop();
             logger.Info("Parsing Complete. ShellItems Parsed: " + App.ShellItems.Count + ". Time Elapsed: " + stopwatch.ElapsedMilliseconds / 1000 + " seconds");
 
