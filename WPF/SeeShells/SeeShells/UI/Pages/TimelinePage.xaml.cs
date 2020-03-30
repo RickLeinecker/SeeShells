@@ -653,7 +653,8 @@ namespace SeeShells.UI.Pages
                         }
                         catch (IOException ex)
                         {
-                            System.Windows.MessageBox.Show("The file: \"" + name2 + "\" is being used by another process.");
+                            System.Windows.MessageBox.Show("The file: \"" + name2 + "\" is being used by another process.\n" +
+                                "Select a different file name or close the process to save the CSV.", "Cannot save file", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                             logger.Info(ex, "The file: \"" + name2 + "\" is being used by another process.\n" + ex.ToString());
                             return;
                         }
