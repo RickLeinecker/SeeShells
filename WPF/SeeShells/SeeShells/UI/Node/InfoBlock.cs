@@ -56,7 +56,7 @@ namespace SeeShells.UI.Node
         /// </summary>
         public void ToggleInfo()
         {
-            if(this.Height >= 250)
+            if(this.Width >= 250)
             {
                 this.Text = "";
                 this.Width = 200;
@@ -64,11 +64,13 @@ namespace SeeShells.UI.Node
                 this.Text += this.aEvent.Name + "\n";
                 this.Text += this.aEvent.EventTime + "\n";
                 this.Text += this.aEvent.EventType + "\n";
+                this.TextAlignment = TextAlignment.Center;
             }
             else
             {
-                this.Width = Double.NaN;
-                this.Height = 250;
+                this.Width = 350;
+                this.Height = Double.NaN;
+                this.TextAlignment = TextAlignment.Left;
                 this.Text = GetInfo();
             }
         }

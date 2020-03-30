@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:SeeShells"
         xmlns:template="clr-namespace:SeeShells.UI.Templates"
         mc:Ignorable="d"
-        Title="SeeShells" Height="500" Width="850"
-        MinHeight="500" MinWidth="850"
+        Title="SeeShells" Height="575" Width="850"
+        MinHeight="575" MinWidth="850"
         Loaded="Window_Loaded"
         >
     <Window.RenderTransform>
