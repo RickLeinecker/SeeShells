@@ -339,7 +339,7 @@ namespace SeeShells.UI.Pages
 
                 // Adds invisible block as padding for a nice vertical allignment.
                 TextBlock alignmentBlock;
-                if (maxStackedNodes > 1)
+                if (maxStackedNodes >= 1)
                 {
                     alignmentBlock = new TextBlock
                     {
