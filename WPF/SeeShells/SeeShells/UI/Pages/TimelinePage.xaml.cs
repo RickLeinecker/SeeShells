@@ -293,13 +293,25 @@ namespace SeeShells.UI.Pages
 
                 // Adds invisible blocks as padding for a nice vertical allignment.
                 int numBlocksNeeded = maxStackedNodes - stackedNode.nodes.Count;
-                TextBlock alignmentBlock = new TextBlock
+                TextBlock alignmentBlock;
+                if (numBlocksNeeded >= 0)
+                {
+                    alignmentBlock = new TextBlock
                     {
                         Style = (Style)Resources["TimelineBlock"],
                         Visibility = Visibility.Collapsed,
                         Height = numBlocksNeeded * 70
                     };
-
+                }
+                else
+                {
+                    alignmentBlock = new TextBlock
+                    {
+                        Style = (Style)Resources["TimelineBlock"],
+                        Visibility = Visibility.Collapsed,
+                        Height = 0
+                    };
+                }
                 stackedNode.alignmentBlock = alignmentBlock;
                 TimelinePanel.SetDate(stackedNode.alignmentBlock, stackedNode.nodes[0].GetBlockTime());
                 blockPanel.Children.Add(stackedNode.alignmentBlock);
