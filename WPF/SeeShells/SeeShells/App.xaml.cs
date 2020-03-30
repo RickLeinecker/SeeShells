@@ -68,9 +68,8 @@ namespace SeeShells
 
         void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            string errorMessage = string.Format("An unhandled exception occurred: {0}", e.ToString());
+            string errorMessage = string.Format("An unhandled exception occurred: {0} - {1}", e.Exception.Message, e.Exception.StackTrace);
             logger.Fatal(errorMessage);
-            e.Handled = true;
         }
     }
 }
