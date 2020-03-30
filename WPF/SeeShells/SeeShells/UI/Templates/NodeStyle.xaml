@@ -148,6 +148,7 @@
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="Padding" Value="10,10,10,10"/>
         <Setter Property="TextAlignment" Value="Center"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
 
 

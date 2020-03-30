@@ -16,153 +16,165 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Page.Resources>
-    <Grid>
-        <Viewbox>
-            <StackPanel Margin="10" HorizontalAlignment="Left" Background="#FF343030" Height="592" Width="1100">
-                <Grid>
-                    <Grid x:Name="Filters" Margin="0,0,750.667,0.333">
-                        <Viewbox>
-                            <StackPanel x:Name="StackRoot">
-                                <StackPanel.Resources>
-                                    <Style TargetType="Border">
-                                        <Setter Property="BorderThickness" Value="1" />
-                                        <Setter Property="BorderBrush" Value="LightGray"/>
-                                        <Setter Property="Margin" Value="0,5" />
-                                        <Setter Property="Padding" Value="0,0,0,5" />
-                                        <Setter Property="Background" Value="#19D3D3D3"/>
-                                    </Style>
-                                    <Style TargetType="Label">
-                                        <Setter Property="Foreground" Value="White"/>
-                                        <Setter Property="HorizontalAlignment" Value="Center" />
-                                    </Style>
-                                </StackPanel.Resources>
+    <Grid Margin="5,5,5,5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid x:Name="Filters" Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Viewbox>
 
-                                <Border Height="85" Width="346">
-                                    <StackPanel x:Name="DateFilterPanel">
-                                        <Label Content="Event Date Filter"/>
-                                        <StackPanel Orientation="Horizontal">
-                                            <StackPanel Margin="0,0,0,0" Width="145">
-                                                <Label Content="Start Date"/>
-                                                <!--TODO: set the start date to the first date in the node by default-->
-                                                <!--TODO: limit the user's date selection to the first event and last event-->
-                                                <DatePicker x:Name="startDatePicker" SelectedDateChanged="UpdateDateFilter" IsTodayHighlighted="False" />
-                                            </StackPanel>
-                                            <StackPanel Margin="5,0,0,0" Width="145">
-                                                <Label Content="End Date"/>
-                                                <!--TODO: Dont let the user select a date eariler than startDate-->
-                                                <!--TODO: limit the user's date selection to the first event and last event-->
-                                                <DatePicker x:Name="endDatePicker" SelectedDateChanged="UpdateDateFilter" IsTodayHighlighted="False" />
-                                            </StackPanel>
-                                            <StackPanel Margin="4,23,0,0">
-                                                <Button Click="ClearDateFilter_Click" Content="Clear"/>
-                                            </StackPanel>
+                <StackPanel x:Name="StackRoot" Orientation="Vertical">
+                    <Viewbox Grid.Row="0">
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="BorderThickness" Value="1" />
+                                    <Setter Property="BorderBrush" Value="LightGray"/>
+                                    <Setter Property="Background" Value="#19D3D3D3"/>
+                                </Style>
+                                <Style TargetType="Label">
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                </Style>
+                            </StackPanel.Resources>
+                            <Border>
+                                <StackPanel x:Name="DateFilterPanel">
+                                    <Label Content="Event Date Filter"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <StackPanel Margin="0,0,0,0" Width="145">
+                                            <Label Content="Start Date"/>
+                                            <!--TODO: set the start date to the first date in the node by default-->
+                                            <!--TODO: limit the user's date selection to the first event and last event-->
+                                            <DatePicker x:Name="startDatePicker" SelectedDateChanged="UpdateDateFilter" IsTodayHighlighted="False" />
+                                        </StackPanel>
+                                        <StackPanel Margin="5,0,0,0" Width="145">
+                                            <Label Content="End Date"/>
+                                            <!--TODO: Dont let the user select a date eariler than startDate-->
+                                            <!--TODO: limit the user's date selection to the first event and last event-->
+                                            <DatePicker x:Name="endDatePicker" SelectedDateChanged="UpdateDateFilter" IsTodayHighlighted="False" />
+                                        </StackPanel>
+                                        <StackPanel Margin="4,23,0,0">
+                                            <Button Click="ClearDateFilter_Click" Content="Clear"/>
                                         </StackPanel>
                                     </StackPanel>
-                                </Border>
+                                </StackPanel>
+                            </Border>
 
-                                <Border>
-                                    <StackPanel>
-                                        <Label Content="Event Name Filter"/>
+                            <Border>
+                                <StackPanel>
+                                    <Label Content="Event Name Filter"/>
 
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBox x:Name="EventNameFilter" TextWrapping="Wrap"  TextChanged="EventNameFilter_TextChanged" Margin="5,0" Width="289"/>
-                                            <Button Click="ClearEventNameFilter_Click">Clear</Button>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBox x:Name="EventNameFilter" TextWrapping="Wrap"  TextChanged="EventNameFilter_TextChanged" Margin="5,0" Width="289"/>
+                                        <Button Click="ClearEventNameFilter_Click">Clear</Button>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <Border>
+                                <StackPanel>
+                                    <Label Content="Event Content Filter"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <StackPanel>
+                                            <TextBox x:Name="AllStringFilterTextBlock" TextWrapping="Wrap" TextChanged="AllStringFilter_TextChanged" Margin="5,0" Width="289"/>
+                                            <CheckBox x:Name="RegexCheckBox" Content="Use Regex" Click="RegexCheckBox_Click" Foreground="White" HorizontalAlignment="Right" Margin="0,1,5,0"/>
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <Button Click="ClearEventContentFilter_Click">Clear</Button>
                                         </StackPanel>
                                     </StackPanel>
-                                </Border>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Viewbox>
 
-                                <Border>
-                                    <StackPanel>
-                                        <Label Content="Event Content Filter"/>
-                                        <StackPanel Orientation="Horizontal">
-                                            <StackPanel>
-                                                <TextBox x:Name="AllStringFilterTextBlock" TextWrapping="Wrap" TextChanged="AllStringFilter_TextChanged" Margin="5,0" Width="289"/>
-                                                <CheckBox x:Name="RegexCheckBox" Content="Use Regex" Click="RegexCheckBox_Click" Foreground="White" HorizontalAlignment="Right" Margin="0,1,5,0"/>
-                                            </StackPanel>
-                                            <StackPanel>
-                                                <Button Click="ClearEventContentFilter_Click">Clear</Button>
-                                            </StackPanel>
-                                        </StackPanel>
+                    <Viewbox Grid.Row="1">
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="BorderThickness" Value="1" />
+                                    <Setter Property="BorderBrush" Value="LightGray"/>
+                                    <Setter Property="Background" Value="#19D3D3D3"/>
+                                </Style>
+                                <Style TargetType="Label">
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                </Style>
+                            </StackPanel.Resources>
+                            <Border>
+                                <StackPanel>
+                                    <Label Content="Event Parent Filter"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <DockPanel>
+                                            <TextBox x:Name="EventParentTextBox" HorizontalAlignment="Stretch" DockPanel.Dock="Left" Margin="5,0" IsEnabled="False" Width="289"/>
+                                        </DockPanel>
+
+                                        <Button x:Name="EventParentClearButton" Click="EventParentClearButton_Click">Clear</Button>
                                     </StackPanel>
-                                </Border>
+                                </StackPanel>
+                            </Border>
 
-
-                                <Border>
-                                    <StackPanel>
-                                        <Label Content="Event Parent Filter"/>
-                                        <StackPanel Orientation="Horizontal">
-                                            <DockPanel>
-                                                <TextBox x:Name="EventParentTextBox" HorizontalAlignment="Stretch" DockPanel.Dock="Left" Margin="5,0" IsEnabled="False" Width="289"/>
-                                            </DockPanel>
-
-                                            <Button x:Name="EventParentClearButton" Click="EventParentClearButton_Click">Clear</Button>
-                                        </StackPanel>
+                            <Border>
+                                <StackPanel>
+                                    <Label Content="Event Type Filter"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <xctk:CheckComboBox x:Name="EventTypeFilter" ItemSelectionChanged="EventTypeFilter_OnItemSelectionChanged"  Opened="EventTypeFilter_DropDownOpened" Margin="5,0" Width="289"/>
+                                        <Button Click="ClearEventTypeFilter_Click">Clear</Button>
                                     </StackPanel>
-                                </Border>
-
-                                <Border>
-                                    <StackPanel>
-                                        <Label Content="Event Type Filter"/>
-                                        <StackPanel Orientation="Horizontal">
-                                            <xctk:CheckComboBox x:Name="EventTypeFilter" ItemSelectionChanged="EventTypeFilter_OnItemSelectionChanged"  Opened="EventTypeFilter_DropDownOpened" Margin="5,0" Width="289"/>
-                                            <Button Click="ClearEventTypeFilter_Click">Clear</Button>
-                                        </StackPanel>
+                                </StackPanel>
+                            </Border>
+                            <Border Height="63">
+                                <StackPanel>
+                                    <Label Content="User Filter"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <xctk:CheckComboBox x:Name="EventUserFilter" ItemSelectionChanged="EventUserFilter_OnItemSelectionChanged"  Opened="EventUserFilter_DropDownOpened" Margin="5,0" Width="289"/>
+                                        <Button Click="ClearUserFilter_Click">Clear</Button>
                                     </StackPanel>
-                                </Border>
-                                <Border Height="63">
-                                    <StackPanel>
-                                        <Label Content="User Filter"/>
-                                        <StackPanel Orientation="Horizontal">
-                                            <xctk:CheckComboBox x:Name="EventUserFilter" ItemSelectionChanged="EventUserFilter_OnItemSelectionChanged"  Opened="EventUserFilter_DropDownOpened" Margin="5,0" Width="289"/>
-                                            <Button Click="ClearUserFilter_Click">Clear</Button>
-                                        </StackPanel>
-                                    </StackPanel>
-                                </Border>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Viewbox>
+                </StackPanel>
+            </Viewbox>
+        </Grid>
 
-                            </StackPanel>
-                        </Viewbox>
-                    </Grid>
-                    <Grid Margin="361,10,-0.333,0.333">
-                        <Grid Margin="0,391,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="273*"/>
-                                <ColumnDefinition Width="254*"/>
-                                <ColumnDefinition Width="176*"/>
-                                <ColumnDefinition Width="43*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="7*"/>
-                                <RowDefinition Height="45*"/>
-                                <RowDefinition Height="45*"/>
-                                <RowDefinition Height="62*"/>
-                            </Grid.RowDefinitions>
-
-                            <Viewbox Margin="0,13,0.333,0" Grid.RowSpan="2">
-                                <CheckBox x:Name="htmlCheckBox" Content="HTML Timeline" Foreground="White" Width="111"/>
-                            </Viewbox>
-                            <Viewbox Margin="0,5,0.333,61.667" Grid.RowSpan="2" Grid.Row="2">
-                                <CheckBox x:Name="csvCheckBox" Content="CSV Raw Data" Foreground="White" Width="108"/>
-                            </Viewbox>
-                            <Viewbox Grid.ColumnSpan="2" Grid.Column="1" Margin="253.667,24,0.333,22.667" Grid.Row="2" Grid.RowSpan="2">
-                                <Button x:Name="download" Content="Download" Click="DownloadClick"/>
-                            </Viewbox>
-                        </Grid>
-                        <ScrollViewer x:Name="TimelineScroll" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  Margin="0,0,10.333,0" HorizontalAlignment="Right" Width="729" Height="402" VerticalAlignment="Top" ScrollChanged="TimelineScroll_ScrollChanged">
-                            <Grid x:Name="Timeline" Background="#292525" Width="Auto" Height="Auto">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <StackPanel x:Name="Blocks" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Bottom"/>
-                                <StackPanel x:Name="Timelines" Grid.Row="1" Orientation="Horizontal"/>
-                                <StackPanel x:Name="TimeStamps" Grid.Row="1" Orientation="Horizontal" Margin="0,97,0,0"/>
-                                <StackPanel x:Name="TicksBar" Grid.Row="1" Orientation="Horizontal" Margin="0,43,0,0"/>
-                                <StackPanel x:Name="Ticks" Grid.Row="1" Orientation="Horizontal" Margin="0,43,0,0"/>
-                            </Grid>
-                        </ScrollViewer>
-                    </Grid>
+        <Grid Grid.Row="1">
+            <ScrollViewer x:Name="TimelineScroll" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Right"  VerticalAlignment="Top" ScrollChanged="TimelineScroll_ScrollChanged" Margin="10, 10, 10, 10">
+                <Grid x:Name="Timeline" Background="#292525">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel x:Name="Blocks" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="0,0,450,0"/>
+                    <StackPanel x:Name="Timelines" Grid.Row="1" Orientation="Horizontal"/>
+                    <StackPanel x:Name="TimeStamps" Grid.Row="1" Orientation="Horizontal" Margin="0,97,0,0"/>
+                    <StackPanel x:Name="TicksBar" Grid.Row="1" Orientation="Horizontal" Margin="0,43,0,0"/>
+                    <StackPanel x:Name="Ticks" Grid.Row="1" Orientation="Horizontal" Margin="0,43,0,0"/>
                 </Grid>
-            </StackPanel>
-        </Viewbox>
+            </ScrollViewer>
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+
+            <Viewbox Grid.Column="0" Margin="5,5,5,0">
+                <CheckBox x:Name="htmlCheckBox" Content="HTML Timeline" Foreground="White" Width="100" Height="20"/>
+            </Viewbox>
+            <Viewbox Grid.Column="1" Margin="5,5,5,0">
+                <CheckBox x:Name="csvCheckBox" Content="CSV Raw Data" Foreground="White" Width="100" Height="20"/>
+            </Viewbox>
+            <Viewbox Grid.Column="2" Margin="5,5,5,5">
+                <Button x:Name="download" Content="Download" Click="DownloadClick"/>
+            </Viewbox>
+        </Grid>
     </Grid>
 </Page>
