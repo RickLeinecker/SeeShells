@@ -366,6 +366,9 @@ namespace SeeShells.UI.Pages
 
         private bool ConfigurationFilesAreValid()
         {
+            if (AdvancedOptions.Visibility != Visibility.Visible)
+                return true;
+
             string messageBoxTitle = "Invalid configuration selected";
             string question = "The currently selected {0} file is invalid or missing.\n" +
                               "Would you like to proceed anyway?";
