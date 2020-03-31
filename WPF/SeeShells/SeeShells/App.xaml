@@ -44,7 +44,7 @@
                         <DockPanel Background="#FF343030">
                             <ToolBarTray IsLocked="True" Background="Transparent" DockPanel.Dock="Top">
                                 <ToolBar OverflowMode="Never" Loaded="Toolbar_Loaded" MinWidth="{Binding ActualWidth,
-                                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type WrapPanel}}}" Background="Transparent">
+                                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DockPanel}}}" Background="Transparent">
                                     <template:Switch/>
                                 </ToolBar>
                             </ToolBarTray>

@@ -222,8 +222,13 @@ namespace SeeShells.UI.Pages
 
                 if (nodeList.Count == 0)
                 {
+                    EmptyTimeline.Visibility = Visibility.Visible;
                     logger.Info("All nodes are filtered out, no nodes to draw on the timeline.");
                     return;
+                }
+                else
+                {
+                    EmptyTimeline.Visibility = Visibility.Collapsed;
                 }
 
                 List<Node.Node> nodesCluster = new List<Node.Node>(); // Holds events for one timeline at a time.
