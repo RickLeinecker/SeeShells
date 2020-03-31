@@ -25,6 +25,8 @@ namespace SeeShells
     /// </summary>
     public partial class App : Application
     {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         /// <summary>
         /// Creates an instance of the EventCollection class so that the whole program can access the list of events.
         /// </summary>
@@ -57,6 +59,17 @@ namespace SeeShells
             {
                 overflowGrid.Visibility = Visibility.Collapsed;
             }
+        }
+
+        public App()
+        {
+            this.Dispatcher.UnhandledException += OnDispatcherUnhandledException;
+        }
+
+        void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            string errorMessage = string.Format("An unhandled exception occurred: {0} - {1}", e.Exception.Message, e.Exception.StackTrace);
+            logger.Fatal(errorMessage);
         }
     }
 }
