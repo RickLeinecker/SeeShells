@@ -199,7 +199,7 @@ namespace SeeShells.UI.Pages
                 int currentMaxStackedNodes = 0;
                 foreach (Node.Node node in App.nodeCollection.nodeList)
                 {
-                    if(node.aEvent.EventTime == eventTime)
+                    if(node.aEvent.EventTime.Equals(eventTime))
                     {
                         currentMaxStackedNodes++;
                     }
@@ -291,14 +291,27 @@ namespace SeeShells.UI.Pages
                 timelinePanel.Children.Add(stackedNode);
                 ConnectNodeToTimeline(timelinePanel, stackedNode.events[0].EventTime);
 
-                int numBlocksNeeded = maxStackedNodes - stackedNode.blocks.Count;
-                 // Adds invisible blocks as padding for a nice vertical allignment.
-                TextBlock alignmentBlock = new TextBlock
+                // Adds invisible blocks as padding for a nice vertical allignment.
+                int numBlocksNeeded = maxStackedNodes - stackedNode.nodes.Count;
+                TextBlock alignmentBlock;
+                if (numBlocksNeeded >= 0)
                 {
-                    Style = (Style)Resources["TimelineBlock"],
-                    Visibility = Visibility.Collapsed,
-                    Height = numBlocksNeeded * 70
-                };
+                    alignmentBlock = new TextBlock
+                    {
+                        Style = (Style)Resources["TimelineBlock"],
+                        Visibility = Visibility.Collapsed,
+                        Height = numBlocksNeeded * 70
+                    };
+                }
+                else
+                {
+                    alignmentBlock = new TextBlock
+                    {
+                        Style = (Style)Resources["TimelineBlock"],
+                        Visibility = Visibility.Collapsed,
+                        Height = 0
+                    };
+                }
                 stackedNode.alignmentBlock = alignmentBlock;
                 TimelinePanel.SetDate(stackedNode.alignmentBlock, stackedNode.nodes[0].GetBlockTime());
                 blockPanel.Children.Add(stackedNode.alignmentBlock);
@@ -325,12 +338,26 @@ namespace SeeShells.UI.Pages
                 ConnectNodeToTimeline(timelinePanel, node.aEvent.EventTime);
 
                 // Adds invisible block as padding for a nice vertical allignment.
-                TextBlock alignmentBlock = new TextBlock
+                TextBlock alignmentBlock;
+                if (maxStackedNodes >= 1)
                 {
-                    Style = (Style)Resources["TimelineBlock"],
-                    Visibility = Visibility.Collapsed,
-                    Height = (maxStackedNodes - 1) * 70
-                };
+                    alignmentBlock = new TextBlock
+                    {
+                        Style = (Style)Resources["TimelineBlock"],
+                        Visibility = Visibility.Collapsed,
+                        Height = (maxStackedNodes - 1) * 70
+                    };
+                }
+                else
+                {
+                    alignmentBlock = new TextBlock
+                    {
+                        Style = (Style)Resources["TimelineBlock"],
+                        Visibility = Visibility.Collapsed,
+                        Height = 0
+                    };
+                }
+
                 node.alignmentBlock = alignmentBlock;
                 TimelinePanel.SetDate(node.alignmentBlock, node.GetBlockTime());
                 blockPanel.Children.Add(node.alignmentBlock);
