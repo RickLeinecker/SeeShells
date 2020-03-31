@@ -189,7 +189,6 @@ namespace SeeShells.UI.Pages
             {
                 if(App.nodeCollection.nodeList.Count == 0)
                 {
-                    System.Windows.MessageBox.Show("Hit");
                     logger.Info("No nodes to draw on the timeline.");
                     return;
                 }
