@@ -144,13 +144,18 @@
         </Grid>
 
         <Grid Grid.Row="1">
-            <ScrollViewer x:Name="TimelineScroll" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Right"  VerticalAlignment="Top" ScrollChanged="TimelineScroll_ScrollChanged" Margin="10, 10, 10, 10">
-                <Grid x:Name="Timeline" Background="#292525">
+            <ScrollViewer x:Name="TimelineScroll" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Center"  VerticalAlignment="Top" ScrollChanged="TimelineScroll_ScrollChanged" MinHeight="250" Margin="5,5,5,5" MinWidth="700">
+                <Grid x:Name="Timeline">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <StackPanel x:Name="Blocks" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="0,0,450,0"/>
+
+                    <Viewbox x:Name="EmptyTimeline" Margin="50,50,50,50" Grid.RowSpan="2" Visibility="Collapsed">
+                        <TextBlock TextWrapping="Wrap" Text="No Events to Show" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" Margin="10,5,10,5" Width="65"></TextBlock>
+                    </Viewbox>
+                    
+                    <StackPanel x:Name="Blocks" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Bottom"/>
                     <StackPanel x:Name="Timelines" Grid.Row="1" Orientation="Horizontal"/>
                     <StackPanel x:Name="TimeStamps" Grid.Row="1" Orientation="Horizontal" Margin="0,97,0,0"/>
                     <StackPanel x:Name="TicksBar" Grid.Row="1" Orientation="Horizontal" Margin="0,43,0,0"/>
@@ -158,7 +163,7 @@
                 </Grid>
             </ScrollViewer>
         </Grid>
-
+        
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3*"/>
