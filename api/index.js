@@ -311,6 +311,63 @@ app.post('/addOS', function (req, res) {
     )      
 });
 
+app.post('/deleteOS', function (req, res) {
+    let promise = database.getSession(req.header('x-auth-token'));
+    promise.then(
+        function (result) {
+            if (result == true) {
+                var name = String(req.body.osname);
+                var mainkeysid = String(req.body.mainkeysid);
+
+                let onlyOneWithKey = database.isOnlyVersionWithThisKey(name, mainkeysid);
+                onlyOneWithKey.then(
+                    function (value) {
+                        if (value == true) {
+                            let deletePromise = database.deleteKeys(mainkeysid);
+                            deletePromise.then(
+                                function (value) {
+                                    let finalDelete = database.deleteOS(name);
+                                    finalDelete.then(
+                                        function (value) {
+                                            res.send({ "success": 1 });
+                                        },
+                                        function (err) {
+                                            res.send({ "success": 0, "error": "Failed to delete the OS." });
+                                        }
+                                    );
+                                },
+                                function (err) {
+                                    res.send({ "success": 0, "error": "Failed to delete the keys with the OS." });
+                                }
+                            );
+                        }
+                        else {
+                            let finalDelete = database.deleteOS(name);
+                            finalDelete.then(
+                                function (value) {
+                                    res.send({ "success": 1 });
+                                },
+                                function (err) {
+                                    res.send({ "success": 0, "error": "Failed to delete the OS." });
+                                }
+                            );
+                        }
+                    },
+                    function (err) {
+                        res.send({ "success": 0, "error": "Error with database connection." });
+                    }
+                );
+            }
+            else {
+                res.redirect('/notauthenticated');
+            }
+        },
+        function (err) {
+            res.redirect('/notauthenticated');
+        }
+    )      
+});
+
 app.post('/addOSWithFileLocations', function (req, res) {
     let promise = database.getSession(req.header('x-auth-token'));
     promise.then(

@@ -150,8 +150,25 @@ function addKeys(keysArray) {
                 reject(err);
             }
         )
+    });   
+}
+
+function deleteKeys(id) {
+    return new Promise(function (resolve, reject) {
+        pool.query('DELETE FROM keys WHERE mainkeysid=$1;', [id], (err, res) => {
+            if (err) {
+                reject(err);
+            }
+        });
+
+        pool.query('DELETE FROM mainshellkeys where mainkeysid=$1', [id], (err, res) => {
+            if (err) {
+                reject(err);
+            }
+
+            resolve({ "message": "success" });
+        });
     });
-    
 }
 
 function registerUser(username, password, salt) {
@@ -198,9 +215,22 @@ function addOS(num, name, keysid) {
     });
 }
 
+function deleteOS(name) {
+    return new Promise(function (resolve, reject) {
+
+        pool.query('DELETE FROM osversion where osname=$1', [name], (err, res) => {
+            if (err) {
+                reject(err);
+            }
+
+            resolve({ "message": "success" });
+        });
+    });
+}
+
 function getOSandRegistryLocations() {
     return new Promise(function (resolve, reject) {
-        pool.query('SELECT osversion.osname, keys.location FROM osversion INNER JOIN mainshellkeys ON osversion.mainkeysid = mainshellkeys.mainkeysid INNER JOIN keys ON keys.mainkeysid = mainshellkeys.mainkeysid ORDER BY osversion.osid ASC;', (err, res) => {
+        pool.query('SELECT osversion.osname, keys.location, osversion.mainkeysid FROM osversion INNER JOIN mainshellkeys ON osversion.mainkeysid = mainshellkeys.mainkeysid INNER JOIN keys ON keys.mainkeysid = mainshellkeys.mainkeysid ORDER BY osversion.osid ASC;', (err, res) => {
             if (err) {
                 reject({});
                 return;
@@ -215,6 +245,25 @@ function getOSandRegistryLocations() {
                     reject({});
                 }
             )
+        });
+    });
+}
+
+function isOnlyVersionWithThisKey(name, keyid) {
+    return new Promise(function (resolve, reject) {
+        pool.query('SELECT * FROM osversion where mainkeysid=$1', [keyid], (err, res) => {
+            if (err) {
+                reject(err);
+            }
+
+            for (var i in res.rows) {
+                var os = res.rows[i];
+                if (os.osname != name) {
+                    resolve(false)
+                }
+            }
+
+            resolve(true);
         });
     });
 }
@@ -458,11 +507,14 @@ module.exports = {
     getUnapprovedUsers,
     keysIDExists,
     addKeys,
+    deleteKeys,
     registerUser,
     approveUser,
     rejectUser,
     addOS,
+    deleteOS,
     getOSandRegistryLocations,
+    isOnlyVersionWithThisKey,
     getRegistryLocations,
     getGUIDs,
     addGUID,
