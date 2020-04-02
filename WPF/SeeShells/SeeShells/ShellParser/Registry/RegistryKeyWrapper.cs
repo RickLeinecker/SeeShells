@@ -66,11 +66,11 @@ namespace SeeShells.ShellParser.Registry
         /// <param name="registryKey">A Registry Key associated with a Shellbag, retrieved from a offline registry reader API</param>
         /// <param name="keyValue">The Value of a Registry key containing Shellbag information. Found in the Parent of the registryKey being inspected</param>
         /// <param name="parent">The parent of the currently inspected registryKey. Can be null.</param>
-        public RegistryKeyWrapper(global::Registry.Abstractions.RegistryKey registryKey, byte[] keyValue, RegistryKeyWrapper parent = null) : this(keyValue)
+        public RegistryKeyWrapper(global::Registry.Abstractions.RegistryKey registryKey, byte[] keyValue, global::Registry.RegistryHiveOnDemand hive, RegistryKeyWrapper parent = null) : this(keyValue)
         {
             Parent = parent;
             RegistryPath = registryKey.KeyName;
-            AdaptOfflineKey(registryKey);
+            AdaptOfflineKey(registryKey, hive);
         }
 
         private void AdaptWin32Key(Microsoft.Win32.RegistryKey registryKey)
@@ -111,7 +111,7 @@ namespace SeeShells.ShellParser.Registry
 
         }
 
-        private void AdaptOfflineKey(global::Registry.Abstractions.RegistryKey registryKey)
+        private void AdaptOfflineKey(global::Registry.Abstractions.RegistryKey registryKey, global::Registry.RegistryHiveOnDemand hive)
         {
             //obtain SID and Username(?)
 
@@ -141,7 +141,8 @@ namespace SeeShells.ShellParser.Registry
                         ShellbagPath = string.Format("{0}{1}\\{2}", registryKey.KeyPath.Substring(0, registryKey.KeyPath.IndexOf("BagMRU", StringComparison.Ordinal)), "Bags", slot);
                     }
                 }
-                SlotModifiedDate = registryKey.LastWriteTime.Value.DateTime;
+                var shellbagKey = hive.GetKey(ShellbagPath);
+                SlotModifiedDate = shellbagKey.LastWriteTime.Value.DateTime;
             }
             catch (Exception ex)
             {

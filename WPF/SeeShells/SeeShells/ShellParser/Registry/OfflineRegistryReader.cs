@@ -125,28 +125,6 @@ namespace SeeShells.ShellParser.Registry
                         logger.Warn("ACCESS DENIED: " + ex.Message);
                         continue;
                     }
-                /// The offline parser cannot GetValue() for any given gavlue, instead it has to get the data directly from a key value as it iterates over it
-                /// This code needs to be reworked
-/*                    int slot = 0;
-                    DateTime slotModified = DateTime.MinValue;
-                    string slotKeyName = "";
-                    try
-                    {
-                        slot = (int)rk.GetValue("NodeSlot");
-                        slotKeyName = string.Format("{0}{1}\\{2}", rk.Name.Substring(0, rk.Name.IndexOf("BagMRU")), "Bags", slot);
-                        if (rk.Name.StartsWith("HKEY_USERS"))
-                        {
-                            slotModified = RegistryHelper.GetDateModified(RegistryHive.Users, slotKeyName.Replace("HKEY_USERS\\", "")) ?? DateTime.MinValue;
-                        }
-                        else if (rkNext.Name.StartsWith("HKEY_CURRENT_USER"))
-                        {
-                            slotModified = RegistryHelper.GetDateModified(RegistryHive.CurrentUser, slotKeyName.Replace("HKEY_CURRENT_USER\\", "")) ?? DateTime.MinValue;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        //Console.WriteLine("NodeSlot was not found");
-                    }*/
 
                     string path = path_prefix;
                     RegistryKeyWrapper rkNextWrapper = null;
@@ -160,7 +138,7 @@ namespace SeeShells.ShellParser.Registry
                         foreach (KeyValue keyValue in k.Values)
                         {
                             byte[] byteVal = keyValue.ValueDataRaw;
-                            rkNextWrapper = new RegistryKeyWrapper(rkNext, byteVal, parent);
+                            rkNextWrapper = new RegistryKeyWrapper(rkNext, byteVal, hive, parent);
                             retList.Add(rkNextWrapper);
                         }
                         }
