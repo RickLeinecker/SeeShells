@@ -97,20 +97,13 @@
 
                 if (this.keygroupID == -1) { // add a new OS with new registry key locations
                     var keys = this.locationtext.split('\n');
-                    var keysString = '[';
-
-                    for (var i = 0; i < keys.length - 1; i++) {
-                        keysString = keysString + '"' + keys[i] + '", ';
-                    }
-
-                    keysString = keysString + '"' + keys[keys.length - 1] + '"]';
 
                     url = this.$baseurl + 'addOSWithFileLocations';
-                    jsonPayload = '{"osnum":' + this.versionnumber + ', "osname":"' + this.name + '", "keys":' + keysString + '}';
+                    jsonPayload = {osnum: this.versionnumber, osname: this.name, keys: keys};
                 }
                 else { // add a new OS that uses the same registry keys as previous OS versions
                     url = this.$baseurl + 'addOS';
-                    jsonPayload = '{"osnum":' + this.versionnumber + ', "osname":"' + this.name + '", "mainkeysid":' + this.keygroupID + '}'; 
+                    jsonPayload = {osnum: this.versionnumber, osname: this.name, mainkeysid: this.keygroupID }; 
                 }
 
                 var xhr = new XMLHttpRequest();
@@ -119,7 +112,7 @@
                 xhr.setRequestHeader("X-Auth-Token", this.$session.get('session'));
 
                 try {
-                    xhr.send(jsonPayload);
+                    xhr.send(JSON.stringify(jsonPayload));
                     var result = JSON.parse(xhr.responseText);
 
                     console.log(result);
