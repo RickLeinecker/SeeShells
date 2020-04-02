@@ -30,7 +30,7 @@
 
                 var url = this.$baseurl + 'addGUID';
 
-                var jsonPayload = '{"guid":"' + this.guid + '", "name":"' + this.name + '"}';
+                var jsonPayload = { guid: this.guid, name: this.name };
 
                 var xhr = new XMLHttpRequest();
                 xhr.open("POST", url, false);
@@ -38,7 +38,7 @@
                 xhr.setRequestHeader("X-Auth-Token", this.$session.get('session'));
 
                 try {
-                    xhr.send(jsonPayload);
+                    xhr.send(JSON.stringify(jsonPayload));
                     var result = JSON.parse(xhr.responseText);
 
                     if (result.success == 1) {
@@ -93,6 +93,4 @@
     p {
         text-align: center;
     }
-
-
 </style>

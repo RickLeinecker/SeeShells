@@ -37,7 +37,7 @@
                 event.preventDefault();            
 
                 if (this.form.password == this.form.passwordconfirm) {
-                    var jsonPayload = '{"username":"' + this.form.name + '", "password":"' + this.form.password + '"}';
+                    var jsonPayload = { username: this.form.name, password: this.form.password };
                     var url = this.$baseurl + 'register';
 
                     var xhr = new XMLHttpRequest();
@@ -45,7 +45,7 @@
                     xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
 
                     try {
-                        xhr.send(jsonPayload);
+                        xhr.send(JSON.stringify(jsonPayload));
                         var result = JSON.parse(xhr.responseText);
 
                         if (result.success == 1) {

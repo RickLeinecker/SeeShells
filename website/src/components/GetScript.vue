@@ -68,7 +68,7 @@
 
                 var url = this.$baseurl + 'updateScript';
 
-                var jsonPayload = '{"identifier":' + this.identifier + ', "script":"' + btoa(this.text) + '"}';
+                var jsonPayload = {identifier: this.identifier, script: btoa(this.text)};
 
                 var xhr = new XMLHttpRequest();
                 xhr.open("POST", url, false);
@@ -76,7 +76,7 @@
                 xhr.setRequestHeader("X-Auth-Token", this.$session.get('session'));
 
                 try {
-                    xhr.send(jsonPayload);
+                    xhr.send(JSON.stringify(jsonPayload));
                     var result = JSON.parse(xhr.responseText);
 
                     if (result.success == 1) {

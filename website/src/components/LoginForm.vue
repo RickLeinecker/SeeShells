@@ -32,14 +32,14 @@
                 event.preventDefault();
                 var url = this.$baseurl + 'login';
 
-                var jsonPayload = '{"username":"' + this.form.name + '", "password":"' + this.form.password + '"}';
+                var jsonPayload = { username: this.form.name, password: this.form.password };
 
                 var xhr = new XMLHttpRequest();
                 xhr.open("POST", url, false);
                 xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
 
                 try {
-                    xhr.send(jsonPayload);
+                    xhr.send(JSON.stringify(jsonPayload));
                     var result = JSON.parse(xhr.responseText);
 
                     if (result.success == 1) {
