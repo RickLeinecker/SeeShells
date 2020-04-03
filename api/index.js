@@ -9,7 +9,7 @@ var port = process.env.PORT || 3000;
 var app = express();
 
 app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', 'https://rickleinecker.github.io');
+    res.setHeader('Access-Control-Allow-Origin', 'https://rickleinecker.github.io'); 
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, X-Auth-Token, Content-Type, Accept');
     res.setHeader('Access-Control-Allow-Methods', 'POST, GET');
     res.setHeader('Access-Control-Allow-Credentials', true);
@@ -323,10 +323,10 @@ app.post('/deleteOS', function (req, res) {
                 onlyOneWithKey.then(
                     function (value) {
                         if (value == true) {
-                            let deletePromise = database.deleteKeys(mainkeysid);
+                            let deletePromise = database.deleteOS(name);
                             deletePromise.then(
                                 function (value) {
-                                    let finalDelete = database.deleteOS(name);
+                                    let finalDelete = database.deleteKeys(mainkeysid);
                                     finalDelete.then(
                                         function (value) {
                                             res.send({ "success": 1 });
@@ -366,6 +366,77 @@ app.post('/deleteOS', function (req, res) {
             res.redirect('/notauthenticated');
         }
     )      
+});
+
+app.post('/deleteKey', function (req, res) {
+    let promise = database.getSession(req.header('x-auth-token'));
+    promise.then(
+        function (result) {
+            if (result == true) {
+                var name = String(req.body.osname);
+                var mainkeysid = String(req.body.mainkeysid);
+                var location = String(req.body.keyToDelete);
+
+                let onlyOneWithKey = database.isOnlyVersionWithThisKey(name, mainkeysid);
+                onlyOneWithKey.then(
+                    function (value) {
+                        if (value == true) {
+                            let deletePromise = database.deleteKey(mainkeysid, location);
+                            deletePromise.then(
+                                function (value) {
+                                    res.send({ "success": 1 });
+                                },
+                                function (err) {
+                                    console.log(err);
+                                    res.send({ "success": 0, "error": "Failed to delete the key." });
+                                }
+                            );
+                        }
+                        else {
+                            // duplicate old keys into new group
+                            let duplicate = database.duplicateKeys(mainkeysid);
+                            duplicate.then(
+                                function (newkey) {
+                                    let update = database.updateOSKeyID(name, newkey);
+                                    update.then(
+                                        function () {
+                                            // delete the key from the group
+                                            let deletePromise = database.deleteKey(newkey, location);
+                                            deletePromise.then(
+                                                function (value) {
+                                                    res.send({ "success": 1 });
+                                                },
+                                                function (err) {
+                                                    res.send({ "success": 0, "error": "Failed to delete the key." });
+                                                }
+                                            );
+                                        },
+                                        function (err) {
+                                            res.send({ "success": 0, "error": "Failed to update the OS version." });
+                                        }
+                                    )
+                                },
+                                function (err) {
+                                    res.send({ "success": 0, "error": "Failed to make new key group." });
+                                }
+
+                            );
+
+                        }
+                    },
+                    function (err) {
+                        res.send({ "success": 0, "error": "Error with database connection." });
+                    }
+                );
+            }
+            else {
+                res.redirect('/notauthenticated');
+            }
+        },
+        function (err) {
+            res.redirect('/notauthenticated');
+        }
+    )
 });
 
 app.post('/addOSWithFileLocations', function (req, res) {

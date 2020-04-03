@@ -115,8 +115,6 @@
                     xhr.send(JSON.stringify(jsonPayload));
                     var result = JSON.parse(xhr.responseText);
 
-                    console.log(result);
-
                     if (result.success == 1) {
                         location.reload();
                         (document.getElementById('messages')).insertAdjacentHTML('afterend', '<div class="alert alert-success alert-dismissible">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong>OS and files saved! </strong>To use it in the desktop application, just update your OS configuration file in the application. </div>');
