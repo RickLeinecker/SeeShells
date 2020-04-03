@@ -14,7 +14,7 @@
 
             </b-form-group>
             <div>
-                <div id="leftContent"><b-form-input v-model="name" type="text" placeholder="Location (NTUSER.DAT\Software\Microsoft\Windows\Shell\BagMRU)" /></div>
+                <div id="leftContent"><b-form-input v-model="newlocation" type="text" placeholder="Location (NTUSER.DAT\Software\Microsoft\Windows\Shell\BagMRU)" /></div>
                 <div id="rightContent"><b-button @click="onSubmit" variant="primary">Submit New Location</b-button></div>
             </div>
             <br />
@@ -56,7 +56,7 @@
         components: { ViewOSandFiles },
         data() {
             return {
-                name: '',
+                newlocation: '',
                 osIndex: null,
                 osList: [],
                 keysList: []
@@ -67,6 +67,7 @@
                 this.osList = [];
                 this.keysList = [];
                 this.osIndex = null;
+                this.newlocation = '';
 
                 var url = this.$baseurl + 'getOSandRegistryLocations';
 
@@ -101,7 +102,34 @@
                  }
             },
             onSubmit() {
-                
+                if (this.osIndex == null)
+                    return;
+
+                var url = this.$baseurl + 'addKey';
+
+                var jsonPayload = { osname: this.osList[this.osIndex].text, mainkeysid: this.osList[this.osIndex].mainkeysid, keyToAdd: this.newlocation};
+
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", url, false);
+                xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+                xhr.setRequestHeader("X-Auth-Token", this.$session.get('session'));
+
+                try {
+                    xhr.send(JSON.stringify(jsonPayload));
+                    var result = JSON.parse(xhr.responseText);
+
+                    if (result.success == 1) {
+                        this.populateForm();
+                    }
+                    else if (result.message == "You must log in to perform this action.") {
+                        this.$session.destroy();
+                        this.$router.push('/SeeShells/login');
+                        location.reload();
+                    }
+                }
+                catch (err) {
+                    console.log(err);
+                }
             },
             deleteKey(location, keysid) {
                 if(confirm("Do you really want to delete this OS version?")){

@@ -153,6 +153,18 @@ function addKeys(keysArray) {
     });   
 }
 
+function addKey(id, location) {
+    return new Promise(function (resolve, reject) {
+        pool.query('INSERT INTO keys(location, mainkeysid) values($1, $2);', [location, id], (err, res) => {
+            if (err) {
+                reject(err);
+            }
+
+            resolve({ "message": "success" });
+        });
+    });
+}
+
 function duplicateKeys(keyid) {
     return new Promise(function (resolve, reject) {
 
@@ -588,6 +600,7 @@ module.exports = {
     getUnapprovedUsers,
     keysIDExists,
     addKeys,
+    addKey,
     duplicateKeys,
     deleteKeys,
     deleteKey,
