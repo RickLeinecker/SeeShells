@@ -85,7 +85,8 @@ namespace SeeShells.UI.EventFilters
                             catch (Exception ex) when (ex is ArgumentException || ex is RegexMatchTimeoutException) //catch parsing error and timeout
                             {
                                 logger.Warn(ex);
-                                nodes.Clear(); //no results if regex is broken.
+                                nodes.ForEach(n => n.Visibility = System.Windows.Visibility.Collapsed); //no results if regex is broken.
+                                return;
                             }
 
                             if (regex.IsMatch(key.Key) || (regex.IsMatch(key.Value)))
