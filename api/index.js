@@ -388,7 +388,7 @@ app.post('/addKey', function (req, res) {
                                 },
                                 function (err) {
                                     console.log(err);
-                                    res.send({ "success": 0, "error": "Failed to delete the key." });
+                                    res.send({ "success": 0, "error": "Failed to add the key." });
                                 }
                             );
                         }
@@ -407,7 +407,7 @@ app.post('/addKey', function (req, res) {
                                                     res.send({ "success": 1 });
                                                 },
                                                 function (err) {
-                                                    res.send({ "success": 0, "error": "Failed to delete the key." });
+                                                    res.send({ "success": 0, "error": "Failed to add the key." });
                                                 }
                                             );
                                         },
