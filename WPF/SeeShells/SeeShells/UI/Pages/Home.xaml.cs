@@ -469,6 +469,8 @@ namespace SeeShells.UI.Pages
             OfflineCheck.IsEnabled = value;
             OfflineBrowseButton.IsEnabled = value;
             OSVersion.IsEnabled = value;
+            LiveCheck.IsEnabled = value;
+            ToggleAdv.IsEnabled = value;
         }
 
         /// <summary>
