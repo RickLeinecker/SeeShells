@@ -142,7 +142,7 @@ namespace SeeShells.ShellParser.Registry
                     }
                 }
                 var shellbagKey = hive.GetKey(ShellbagPath);
-                SlotModifiedDate = shellbagKey.LastWriteTime.Value.DateTime;
+                SlotModifiedDate = shellbagKey.LastWriteTime.Value.LocalDateTime;
             }
             catch (Exception ex)
             {
@@ -150,8 +150,7 @@ namespace SeeShells.ShellParser.Registry
             }
 
             //obtain the date the registry last wrote this key
-            LastRegistryWriteDate = registryKey.LastWriteTime.Value.DateTime;
-
+            LastRegistryWriteDate = registryKey.LastWriteTime.Value.LocalDateTime;
         }
     }
 }
