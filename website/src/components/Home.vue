@@ -26,9 +26,8 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
     div{
-
         font-size: x-large;
     }
 

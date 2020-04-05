@@ -71,10 +71,10 @@
                 }
             },
 
-            approveUser(userID) {
+            approveUser(usrID) {
                 var url = this.$baseurl + 'approveUser';
 
-                var jsonPayload = '{"userID":' + userID + '}';
+                var jsonPayload = { userID: usrID };
 
                 var xhr = new XMLHttpRequest();
                 xhr.open("POST", url, false);
@@ -82,7 +82,7 @@
                 xhr.setRequestHeader("X-Auth-Token", this.$session.get('session'));
 
                 try {
-                    xhr.send(jsonPayload);
+                    xhr.send(JSON.stringify(jsonPayload));
                     var result = JSON.parse(xhr.responseText);
 
                     if (result.success == 1) {
@@ -99,10 +99,10 @@
                 }
             },
 
-            rejectUser(userID) {
+            rejectUser(usrID) {
                 var url = this.$baseurl + 'rejectUser';
 
-                var jsonPayload = '{"userID":' + userID + '}';
+                var jsonPayload = { userID: usrID };
 
                 var xhr = new XMLHttpRequest();
                 xhr.open("POST", url, false);
@@ -110,7 +110,7 @@
                 xhr.setRequestHeader("X-Auth-Token", this.$session.get('session'));
 
                 try {
-                    xhr.send(jsonPayload);
+                    xhr.send(JSON.stringify(jsonPayload));
                     var result = JSON.parse(xhr.responseText);
 
                     if (result.success == 1) {

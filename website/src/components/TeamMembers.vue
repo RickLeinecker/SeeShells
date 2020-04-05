@@ -52,7 +52,7 @@
     </div>
 </template>
 
-<style>
+<style scoped>
     body {
         font-family: Arial, Helvetica, sans-serif;
         margin: 0;
