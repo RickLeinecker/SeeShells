@@ -4,6 +4,7 @@
         <b-dropdown-item><router-link to='/SeeShells/guids'>Modify GUIDs</router-link></b-dropdown-item>
         <b-dropdown-item><router-link to='/SeeShells/scripts'>Modify Scripts</router-link></b-dropdown-item>
         <b-dropdown-item><router-link to='/SeeShells/os'>Add New OS</router-link></b-dropdown-item>
+        <b-dropdown-item><router-link to='/SeeShells/modifyos'>Modify OS</router-link></b-dropdown-item>
         <b-dropdown-item v-on:click="Logout">Logout</b-dropdown-item>
     </div>
 </template>

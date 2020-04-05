@@ -23,7 +23,7 @@ function buildOSFileJSON(databaseResults) {
                 result[value].files.push(osfile.location);
             }
             else {
-                result.push({ "os": osfile.osname, "files": [osfile.location] });
+                result.push({ "os": osfile.osname, "keysID": osfile.mainkeysid, "files": [osfile.location] });
                 os = osfile.osname;
             }
         }

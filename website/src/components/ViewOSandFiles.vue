@@ -10,6 +10,7 @@
                     <tr>
                         <th>OS name</th>
                         <th>Shellbag file locations</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
 
@@ -18,6 +19,9 @@
                     <tr v-for="item in osList" :key="item.os">
                         <td width="25%">{{item.name}}</td>
                         <td>{{item.fileString}}</td>
+                        <td>
+                            <a class='btn btn-sm btn-primary' style='color:white;width:50px;' v-on:click="deleteOS(item.name, item.mainkeysid)">X</a>
+                        </td>
                     </tr>
                 </tbody>
 
@@ -55,7 +59,7 @@
                         var arr = Array.from(result.json);
 
                         for (var i = 0; i < arr.length; i++) {
-                            this.osList.push({ name: arr[i].os, files: arr[i].files, fileString: arr[i].files.join(', ') });
+                            this.osList.push({ name: arr[i].os, mainkeysid: arr[i].keysID, files: arr[i].files, fileString: arr[i].files.join(', ') });
                         }
                     }
 
@@ -64,6 +68,37 @@
                     console.info(err);
                 }
 
+            },
+            deleteOS(name, keysid) {
+
+                if(confirm("Do you really want to delete this OS version?")){
+
+                    var url = this.$baseurl + 'deleteOS';
+
+                    var jsonPayload = { osname: name, mainkeysid: keysid};
+
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", url, false);
+                    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+                    xhr.setRequestHeader("X-Auth-Token", this.$session.get('session'));
+
+                    try {
+                        xhr.send(JSON.stringify(jsonPayload));
+                        var result = JSON.parse(xhr.responseText);
+
+                        if (result.success == 1) {
+                            this.populateTable();
+                        }
+                        else if (result.message == "You must log in to perform this action.") {
+                            this.$session.destroy();
+                            this.$router.push('/SeeShells/login');
+                            location.reload();
+                        }
+                    }
+                    catch (err) {
+                        console.log(err);
+                    }
+                }
             }
         },
         mounted() {

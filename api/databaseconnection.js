@@ -150,8 +150,94 @@ function addKeys(keysArray) {
                 reject(err);
             }
         )
+    });   
+}
+
+function addKey(id, location) {
+    return new Promise(function (resolve, reject) {
+        pool.query('INSERT INTO keys(location, mainkeysid) values($1, $2);', [location, id], (err, res) => {
+            if (err) {
+                reject(err);
+            }
+
+            resolve({ "message": "success" });
+        });
     });
-    
+}
+
+function duplicateKeys(keyid) {
+    return new Promise(function (resolve, reject) {
+
+        let keylocations = getRegistryLocationsForKeyGroup(keyid);
+        keylocations.then(
+            function (result) {
+                let newKeyGroup = makeNewKeyGroup();
+                newKeyGroup.then(
+                    async function (keygroupID) {
+                        for (var i in result) {
+                            var key = result[i];
+                            await pool.query('INSERT INTO keys(location, mainkeysid) values($1, $2);', [String(key.location), keygroupID], (err, res) => {
+                                if (err) {
+                                    reject(err);
+                                    return;
+                                }
+                            });
+                        }
+
+                        resolve(keygroupID);
+                    },
+                    function (err) {
+                        reject(err);
+                });
+            },
+            function (err) {
+                reject(err);
+        });
+    });   
+}
+
+function deleteAllIndividualKeys(id) {
+    return new Promise(function (resolve, reject) {
+        pool.query('DELETE FROM keys WHERE mainkeysid=$1;', [id], (err, res) => {
+            if (err) {
+                reject(err);
+            }
+
+            resolve({ "message": "success" });
+        });
+    });
+}
+
+function deleteKeys(id) {
+    return new Promise(function (resolve, reject) {
+        let deleteIndividualKeys = deleteAllIndividualKeys(id);
+        deleteIndividualKeys.then(
+            function () {
+                pool.query('DELETE FROM mainshellkeys where mainkeysid=$1', [id], (err, res) => {
+                    if (err) {
+                        reject(err);
+                    }
+
+                    resolve({ "message": "success" });
+                });
+            },
+            function (err) {
+                reject(err);
+            }
+       );
+    });   
+}
+
+function deleteKey(id, location) {
+    return new Promise(function (resolve, reject) {
+        pool.query('DELETE FROM keys WHERE mainkeysid=$1 AND location=$2;', [id, location], (err, res) => {
+            if (err) {
+                reject(err);
+            }
+
+            resolve({ "message": "success" });
+        });
+    });
 }
 
 function registerUser(username, password, salt) {
@@ -198,9 +284,33 @@ function addOS(num, name, keysid) {
     });
 }
 
+function deleteOS(name) {
+    return new Promise(function (resolve, reject) {
+        pool.query('DELETE FROM osversion WHERE osname=$1', [name], (err, res) => {
+            if (err) {
+                reject(err);
+            }
+
+            resolve({ "message": "success" });
+        });
+    });
+}
+
+function updateOSKeyID(osname, newid) {
+    return new Promise(function (resolve, reject) {
+        pool.query('UPDATE osversion SET mainkeysid=$1 WHERE osname=$2;', [newid, osname], (err, res) => {
+            if (err) {
+                reject(err);
+            }
+
+            resolve({ "message": "success" });
+        });
+    });
+}
+
 function getOSandRegistryLocations() {
     return new Promise(function (resolve, reject) {
-        pool.query('SELECT osversion.osname, keys.location FROM osversion INNER JOIN mainshellkeys ON osversion.mainkeysid = mainshellkeys.mainkeysid INNER JOIN keys ON keys.mainkeysid = mainshellkeys.mainkeysid ORDER BY osversion.osid ASC;', (err, res) => {
+        pool.query('SELECT osversion.osname, keys.location, osversion.mainkeysid FROM osversion INNER JOIN mainshellkeys ON osversion.mainkeysid = mainshellkeys.mainkeysid INNER JOIN keys ON keys.mainkeysid = mainshellkeys.mainkeysid ORDER BY osversion.osid ASC;', (err, res) => {
             if (err) {
                 reject({});
                 return;
@@ -215,6 +325,38 @@ function getOSandRegistryLocations() {
                     reject({});
                 }
             )
+        });
+    });
+}
+
+function getRegistryLocationsForKeyGroup(keyid) {
+    return new Promise(function (resolve, reject) {
+        pool.query('SELECT location FROM keys WHERE mainkeysid=$1;', [keyid], (err, res) => {
+            if (err) {
+                reject({});
+                return;
+            }
+
+            resolve(res.rows);
+        });
+    });
+}
+
+function isOnlyVersionWithThisKey(name, keyid) {
+    return new Promise(function (resolve, reject) {
+        pool.query('SELECT * FROM osversion where mainkeysid=$1', [keyid], (err, res) => {
+            if (err) {
+                reject(err);
+            }
+
+            for (var i in res.rows) {
+                var os = res.rows[i];
+                if (os.osname != name) {
+                    resolve(false)
+                }
+            }
+
+            resolve(true);
         });
     });
 }
@@ -458,11 +600,18 @@ module.exports = {
     getUnapprovedUsers,
     keysIDExists,
     addKeys,
+    addKey,
+    duplicateKeys,
+    deleteKeys,
+    deleteKey,
     registerUser,
     approveUser,
     rejectUser,
     addOS,
+    deleteOS,
+    updateOSKeyID,
     getOSandRegistryLocations,
+    isOnlyVersionWithThisKey,
     getRegistryLocations,
     getGUIDs,
     addGUID,
