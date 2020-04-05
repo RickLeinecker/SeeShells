@@ -34,7 +34,7 @@
                 <Viewbox Grid.Row="0" Grid.ColumnSpan="2">
                     <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal">
                             <RadioButton x:Name="OfflineCheck" Content="Offline Registry" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5" Checked="OfflineChecked" Unchecked="OfflineUnchecked"/>
-                            <RadioButton Content="Live Registry" IsChecked="True" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5"/>
+                            <RadioButton x:Name="LiveCheck" Content="Live Registry" IsChecked="True" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5"/>
                     </StackPanel>
                 </Viewbox>
                 
