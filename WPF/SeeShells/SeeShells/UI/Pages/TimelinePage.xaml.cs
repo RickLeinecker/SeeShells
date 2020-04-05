@@ -61,7 +61,10 @@ namespace SeeShells.UI.Pages
 
         private void UpdateDateFilter(object sender, SelectionChangedEventArgs e)
         {
-            UpdateFilter("DateFilter", new DateRangeFilter(startDatePicker.SelectedDate, endDatePicker.SelectedDate));
+            //set the end date's time to the end of the day
+            DateTime? endTime = endDatePicker.SelectedDate?.AddHours(23).AddMinutes(59).AddSeconds(59) ??
+                                endDatePicker.SelectedDate;
+            UpdateFilter("DateFilter", new DateRangeFilter(startDatePicker.SelectedDate, endTime));
 
         }
 
