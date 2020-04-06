@@ -5,10 +5,11 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import VueRouter from 'vue-router'
 import VueSession from 'vue-session'
 import Vuex from 'vuex'
+import store from 'vuex'
 import App from './App.vue'
 import routes from './routes';
 
-Vue.use(Vuex)
+Vue.use(Vuex) 
 
 Vue.config.productionTip = true
 Vue.prototype.$baseurl = (Vue.config.productionTip) ? 'https://seeshells.herokuapp.com/' : 'http://localhost:3000/'
