@@ -66,9 +66,11 @@ namespace SeeShells.ShellParser.Registry
         /// <param name="registryKey">A Registry Key associated with a Shellbag, retrieved from a offline registry reader API</param>
         /// <param name="keyValue">The Value of a Registry key containing Shellbag information. Found in the Parent of the registryKey being inspected</param>
         /// <param name="parent">The parent of the currently inspected registryKey. Can be null.</param>
-        public RegistryKeyWrapper(global::Registry.Abstractions.RegistryKey registryKey, byte[] keyValue, RegistryKeyWrapper parent = null) : this(keyValue)
+        public RegistryKeyWrapper(global::Registry.Abstractions.RegistryKey registryKey, byte[] keyValue, global::Registry.RegistryHiveOnDemand hive, RegistryKeyWrapper parent = null) : this(keyValue)
         {
-            //TODO adapt offline hive properties 
+            Parent = parent;
+            RegistryPath = registryKey.KeyName;
+            AdaptOfflineKey(registryKey, hive);
         }
 
         private void AdaptWin32Key(Microsoft.Win32.RegistryKey registryKey)
@@ -107,6 +109,48 @@ namespace SeeShells.ShellParser.Registry
             //obtain the date the registry last wrote this key
             LastRegistryWriteDate = RegistryHelper.GetDateModified(RegistryHive.Users, registryKey.Name.Replace("HKEY_USERS\\", "")) ?? DateTime.MinValue;
 
+        }
+
+        private void AdaptOfflineKey(global::Registry.Abstractions.RegistryKey registryKey, global::Registry.RegistryHiveOnDemand hive)
+        {
+            //obtain SID and Username(?)
+
+            //HKEY USERS registry is UserSID\....
+            string UserSID = registryKey.KeyPath.Split('\\')[0];
+
+            // "_classes" is actually just a user's usrclass.dat, not a seperate user.
+            UserSID = UserSID.ToUpper().Replace("_CLASSES", "");
+            RegistrySID = UserSID;
+
+            //todo somehow retrieve usernames, this may need to be passed into this adapter.
+            //if we dont know the username, default to the SID. 
+            RegistryUser = RegistrySID;
+
+            //obtain NodeSlot (Shellbag Path in registry)
+            SlotModifiedDate = DateTime.MinValue;
+            LastRegistryWriteDate = DateTime.MinValue;
+            ShellbagPath = string.Empty;
+            try
+            {
+                var values = registryKey.Values;
+                foreach(global::Registry.Abstractions.KeyValue kv in registryKey.Values)
+                {
+                    if(kv.ValueName.Equals("NodeSlot"))
+                    {
+                        string slot = kv.ValueData;
+                        ShellbagPath = string.Format("{0}{1}\\{2}", registryKey.KeyPath.Substring(0, registryKey.KeyPath.IndexOf("BagMRU", StringComparison.Ordinal)), "Bags", slot);
+                    }
+                }
+                var shellbagKey = hive.GetKey(ShellbagPath);
+                SlotModifiedDate = shellbagKey.LastWriteTime.Value.LocalDateTime;
+            }
+            catch (Exception ex)
+            {
+                logger.Trace(ex, $"NodeSlot was not found for registry key at {RegistryPath}");
+            }
+
+            //obtain the date the registry last wrote this key
+            LastRegistryWriteDate = registryKey.LastWriteTime.Value.LocalDateTime;
         }
     }
 }

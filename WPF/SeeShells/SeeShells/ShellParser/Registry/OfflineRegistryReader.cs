@@ -32,9 +32,8 @@ namespace SeeShells.ShellParser.Registry
             {
                 string userOfHive = FindOfflineUsername(hive);
 
-                foreach (byte[] keyValue in IterateRegistry(hive.GetKey(location), hive, location, 0, ""))
+                foreach (RegistryKeyWrapper keyWrapper in IterateRegistry(hive.GetKey(location), hive, location, null, ""))
                 {
-                    var keyWrapper = new RegistryKeyWrapper(keyValue);
                     if (userOfHive != string.Empty)
                     {
                         keyWrapper.RegistryUser = userOfHive;
@@ -99,9 +98,9 @@ namespace SeeShells.ShellParser.Registry
         /// <param name="indent"></param>
         /// <param name="path_prefix">the header to the current root key, needed for identification of the registry store</param>
         /// <returns></returns>
-        static List<byte[]> IterateRegistry(RegistryKey rk, RegistryHiveOnDemand hive, string subKey, int indent, string path_prefix)
+        static List<RegistryKeyWrapper> IterateRegistry(RegistryKey rk, RegistryHiveOnDemand hive, string subKey, RegistryKeyWrapper parent, string path_prefix)
             {
-                List<byte[]> retList = new List<byte[]>();
+                List<RegistryKeyWrapper> retList = new List<RegistryKeyWrapper>();
                 if (rk == null)
                 {
                     return retList;
@@ -126,32 +125,11 @@ namespace SeeShells.ShellParser.Registry
                         logger.Warn("ACCESS DENIED: " + ex.Message);
                         continue;
                     }
-                /// The offline parser cannot GetValue() for any given gavlue, instead it has to get the data directly from a key value as it iterates over it
-                /// This code needs to be reworked
-/*                    int slot = 0;
-                    DateTime slotModified = DateTime.MinValue;
-                    string slotKeyName = "";
-                    try
-                    {
-                        slot = (int)rk.GetValue("NodeSlot");
-                        slotKeyName = string.Format("{0}{1}\\{2}", rk.Name.Substring(0, rk.Name.IndexOf("BagMRU")), "Bags", slot);
-                        if (rk.Name.StartsWith("HKEY_USERS"))
-                        {
-                            slotModified = RegistryHelper.GetDateModified(RegistryHive.Users, slotKeyName.Replace("HKEY_USERS\\", "")) ?? DateTime.MinValue;
-                        }
-                        else if (rkNext.Name.StartsWith("HKEY_CURRENT_USER"))
-                        {
-                            slotModified = RegistryHelper.GetDateModified(RegistryHive.CurrentUser, slotKeyName.Replace("HKEY_CURRENT_USER\\", "")) ?? DateTime.MinValue;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        //Console.WriteLine("NodeSlot was not found");
-                    }*/
 
-                    int intVal = 0;
                     string path = path_prefix;
-                    bool isNumeric = int.TryParse(valueName.KeyName, out intVal);
+                    RegistryKeyWrapper rkNextWrapper = null;
+
+                    bool isNumeric = int.TryParse(valueName.KeyName, out _);
                     if (isNumeric)
                     {
                         try
@@ -160,7 +138,8 @@ namespace SeeShells.ShellParser.Registry
                         foreach (KeyValue keyValue in k.Values)
                         {
                             byte[] byteVal = keyValue.ValueDataRaw;
-                            retList.Add(byteVal);
+                            rkNextWrapper = new RegistryKeyWrapper(rkNext, byteVal, hive, parent);
+                            retList.Add(rkNextWrapper);
                         }
                         }
 
@@ -174,7 +153,7 @@ namespace SeeShells.ShellParser.Registry
                         }
                     }
 
-                    retList.AddRange(IterateRegistry(rkNext, hive, sk, indent + 2, path));
+                    retList.AddRange(IterateRegistry(rkNext, hive, sk, rkNextWrapper, path));
                 }
 
                 return retList;
