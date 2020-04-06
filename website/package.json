@@ -11,10 +11,12 @@
     "bootstrap": "^4.4.1",
     "bootstrap-vue": "^2.5.0",
     "core-js": "^3.6.4",
+    "showdown": "^1.9.1",
     "vue": "^2.6.11",
     "vue-password-strength-meter": "^1.7.1",
     "vue-router": "^3.1.6",
     "vue-session": "^1.0.0",
+    "vue-showdown": "^2.4.1",
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {

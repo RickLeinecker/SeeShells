@@ -7,7 +7,8 @@ import Scripts from './components/ScriptPage.vue';
 import ApproveUsers from './components/ApproveUserPage.vue';
 import GUIDPage from './components/GUIDPage.vue';
 import OSPage from './components/OSPage.vue';
-import ModifyOSPage from './components/ModifyOSPage.vue'
+import ModifyOSPage from './components/ModifyOSPage.vue';
+import HelpPage from './components/HelpPage.vue';
 
 const root = '/SeeShells/'
 
@@ -21,7 +22,8 @@ const routes = [
     { path: root + 'approveusers', component: ApproveUsers },
     { path: root + 'guids', component: GUIDPage },
     { path: root + 'os', component: OSPage },
-    { path: root + 'modifyos', component: ModifyOSPage }
+    { path: root + 'modifyos', component: ModifyOSPage },
+    { path: root + 'help', component: HelpPage }
 ];
 
 export default routes;

@@ -8,10 +8,7 @@
 
             <b-collapse id="nav-collapse" is-nav>
                 <router-link to='/SeeShells/about' tag="menuitem"><b-navbar-item>About</b-navbar-item></router-link>
-                <b-navbar-nav>
-                    <b-nav-item href="#">Download the Program</b-nav-item>
-                </b-navbar-nav>
-                <!--styling found in menuitem tag-->
+                <router-link to='/SeeShells/help' tag="menuitem"><b-navbar-item>Documentation</b-navbar-item></router-link>
                 <router-link to='/SeeShells/team' tag="menuitem"><b-navbar-item>Developer Team</b-navbar-item></router-link>
                 <b-navbar-nav>
                     <b-nav-item href="https://github.com/RickLeinecker/SeeShells">GitHub Page</b-nav-item>
@@ -19,9 +16,7 @@
 
                 <!-- Right aligned nav items -->
                 <b-navbar-nav class="ml-auto">
-
                     <b-nav-item-dropdown right>
-                        <!-- Using 'button-content' slot -->
                         <template v-slot:button-content>
                             <em>Administrative</em>
                         </template>
@@ -74,5 +69,6 @@
         -moz-osx-font-smoothing: grayscale;
         text-align: center;
         color: #a1a1a1;
+        margin: 5px;
     }
 </style>
