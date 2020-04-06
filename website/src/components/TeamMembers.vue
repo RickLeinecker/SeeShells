@@ -26,7 +26,7 @@
             <div class="card">
                 <img src="./../assets/logo.png" alt="Aleks" style="width:100%">
                 <div class="container">
-                    <h2>Aleksander Stoyanov</h2>
+                    <h2>Aleksandar Stoyanov</h2>
                     <p class="title">WPF</p>
                 </div>
             </div>
