@@ -4,8 +4,11 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import VueRouter from 'vue-router'
 import VueSession from 'vue-session'
+import Vuex from 'vuex'
 import App from './App.vue'
 import routes from './routes';
+
+Vue.use(Vuex)
 
 Vue.config.productionTip = true
 Vue.prototype.$baseurl = (Vue.config.productionTip) ? 'https://seeshells.herokuapp.com/' : 'http://localhost:3000/'
@@ -19,5 +22,13 @@ const router = new VueRouter({ mode: 'history', routes });
 
 new Vue({
     router,
-    render: h => h(App)
+    store,
+    render: h => h(App),
+    created() {
+        if (sessionStorage.redirect) {
+            const redirect = sessionStorage.redirect
+            delete sessionStorage.redirect
+            this.$router.push(redirect)
+        }
+    }
 }).$mount('#app');
