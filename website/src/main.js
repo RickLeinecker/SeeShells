@@ -6,6 +6,7 @@ import VueRouter from 'vue-router'
 import VueSession from 'vue-session'
 import Vuex from 'vuex'
 import store from 'vuex'
+import VueShowdown from 'vue-showdown'
 import App from './App.vue'
 import routes from './routes';
 
@@ -18,6 +19,7 @@ Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 Vue.use(VueRouter)
 Vue.use(VueSession)
+Vue.use(VueShowdown);
 
 const router = new VueRouter({ mode: 'history', routes });
 

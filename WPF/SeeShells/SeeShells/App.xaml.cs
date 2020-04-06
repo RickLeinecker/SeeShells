@@ -17,6 +17,7 @@ using System.Reflection;
 using System.Windows.Resources;
 using SeeShells.UI.Pages;
 using System.Windows.Input;
+using NLog;
 
 namespace SeeShells
 {
@@ -64,6 +65,19 @@ namespace SeeShells
         public App()
         {
             this.Dispatcher.UnhandledException += OnDispatcherUnhandledException;
+
+            var config = new NLog.Config.LoggingConfiguration();
+
+            // Targets where to log to: File and Console
+            var logfile = new NLog.Targets.FileTarget("logfile") { FileName = "${basedir}/log.txt" };
+            var logconsole = new NLog.Targets.ConsoleTarget("logconsole");
+
+            // Rules for mapping loggers to targets            
+            config.AddRule(LogLevel.Trace, LogLevel.Fatal, logconsole);
+            config.AddRule(LogLevel.Trace, LogLevel.Fatal, logfile);
+
+            // Apply config           
+            NLog.LogManager.Configuration = config;
         }
 
         void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
