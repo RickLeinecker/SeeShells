@@ -58,13 +58,22 @@ namespace SeeShells.UI.Node
             block.MouseEnter += Pages.TimelinePage.HoverBlock;
             block.MouseLeave += Pages.TimelinePage.HoverBlock;
             block.MouseDown += Pages.TimelinePage.ClickBlock;
+            block.MouseUp += Pages.TimelinePage.ClickBlock;
 
             ContextMenu contextMenu = new ContextMenu();
+
             MenuItem parentFilter = new MenuItem();
             parentFilter.Header = "Filter for events with same parent";
             parentFilter.Click += Pages.TimelinePage.EventParentContextMenu_Click;
             parentFilter.Tag = aEvent.Parent;
             contextMenu.Items.Add(parentFilter);
+
+            MenuItem popOut = new MenuItem();
+            popOut.Header = "Create new window for event";
+            popOut.Click += Pages.TimelinePage.popOut;
+            popOut.Tag = block;
+            contextMenu.Items.Add(popOut);
+
             block.ContextMenu = contextMenu;
         }
     }
