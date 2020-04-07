@@ -69,7 +69,7 @@ namespace SeeShells.ShellParser.Registry
         public RegistryKeyWrapper(global::Registry.Abstractions.RegistryKey registryKey, byte[] keyValue, global::Registry.RegistryHiveOnDemand hive, RegistryKeyWrapper parent = null) : this(keyValue)
         {
             Parent = parent;
-            RegistryPath = registryKey.KeyName;
+            RegistryPath = registryKey.KeyPath;
             AdaptOfflineKey(registryKey, hive);
         }
 
