@@ -16,7 +16,7 @@
     export default {
         name: 'OSPage',
         components: { NewOS, ViewOSandFiles },
-                beforeMount() {
+        beforeMount() {
             var url = this.$baseurl + 'SessionIsActive';
 
             var xhr = new XMLHttpRequest();
@@ -37,7 +37,7 @@
             catch (err) {
                 console.info(err);
             }
-        },
+        }
     }
 </script>
 
