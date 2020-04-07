@@ -57,7 +57,7 @@
     #helpContent {
         margin: auto;
         height: 100%;
-        width: 75%;
+        width: 90%;
         text-align: left;
     }
 </style>

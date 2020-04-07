@@ -9,6 +9,7 @@ import GUIDPage from './components/GUIDPage.vue';
 import OSPage from './components/OSPage.vue';
 import ModifyOSPage from './components/ModifyOSPage.vue';
 import HelpPage from './components/HelpPage.vue';
+import UpdateHelpPage from './components/UpdateHelpPage.vue';
 
 const root = '/SeeShells/'
 
@@ -23,7 +24,8 @@ const routes = [
     { path: root + 'guids', component: GUIDPage },
     { path: root + 'os', component: OSPage },
     { path: root + 'modifyos', component: ModifyOSPage },
-    { path: root + 'help', component: HelpPage }
+    { path: root + 'help', component: HelpPage },
+    { path: root + 'updatehelp', component: UpdateHelpPage }
 ];
 
 export default routes;
