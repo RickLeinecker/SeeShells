@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using Xceed.Wpf.Toolkit;
 using Xceed.Wpf.Toolkit.Primitives;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 
 namespace SeeShells.UI.Pages
 {
@@ -32,6 +33,8 @@ namespace SeeShells.UI.Pages
         private TimeSpan maxRealTimeSpan = new TimeSpan(0, 0, 1, 0); // Max time in one timeline (1 min).
 
         private static TimelinePage timelinePage;
+        private static NodeNavigation nodeNavigation;
+        private static List<Object> allNodes;
 
         private static List<ToggleButton> toggledNodes = new List<ToggleButton>();
         private Boolean AutoScroll = true;
@@ -183,6 +186,16 @@ namespace SeeShells.UI.Pages
             EventNameFilter.Clear();
         }
 
+        private void NextNode_Click(object sender, RoutedEventArgs e)
+        {
+            nodeNavigation.GoToNextNode();
+        }
+
+        private void PrevNode_Click(object sender, RoutedEventArgs e)
+        {
+            nodeNavigation.GoToPreviousNode();
+        }
+
         /// <summary>
         /// Builds a timeline dynamically. Creates one timeline for each cluster of events.
         /// </summary>
@@ -234,6 +247,7 @@ namespace SeeShells.UI.Pages
                     EmptyTimeline.Visibility = Visibility.Collapsed;
                 }
 
+                allNodes = new List<Object>();
                 List<Node.Node> nodesCluster = new List<Node.Node>(); // Holds events for one timeline at a time.
                 nodesCluster.Add(nodeList[0]);
                 DateTime previousDate = nodeList[0].aEvent.EventTime;
@@ -265,6 +279,7 @@ namespace SeeShells.UI.Pages
                 {
                     AddTimeline(nodesCluster);
                 }
+                InitializeNodeNavigation();
             }
             catch (NullReferenceException ex)
             {
@@ -296,6 +311,7 @@ namespace SeeShells.UI.Pages
                 stackedNode.Style = (Style)Resources["StackedNode"];
                 TimelinePanel.SetDate(stackedNode, stackedNode.events[0].EventTime);
                 stackedNode.Content = stackedNode.events.Count.ToString();
+                allNodes.Add(stackedNode);
                 timelinePanel.Children.Add(stackedNode);
                 ConnectNodeToTimeline(timelinePanel, stackedNode.events[0].EventTime);
 
@@ -342,6 +358,7 @@ namespace SeeShells.UI.Pages
                 node.MouseEnter += HoverNode;
                 node.MouseLeave += HoverNode;
                 TimelinePanel.SetDate(node, node.aEvent.EventTime);
+                allNodes.Add(node);
                 timelinePanel.Children.Add(node);
                 ConnectNodeToTimeline(timelinePanel, node.aEvent.EventTime);
 
@@ -706,6 +723,7 @@ namespace SeeShells.UI.Pages
         {
             try
             {
+                nodeNavigation.SetNewStartingPoint(sender);
                 if (sender.GetType() == typeof(Node.Node))
                 {
                     unToggleEventsThatAreTooClose(((Node.Node)sender).GetBlockTime());
@@ -859,6 +877,14 @@ namespace SeeShells.UI.Pages
                 // Autoscroll
                 TimelineScroll.ScrollToVerticalOffset(TimelineScroll.ExtentHeight);
             }
+        }
+
+        /// <summary>
+        /// Initializes the object used for single node navigation.
+        /// </summary>
+        private void InitializeNodeNavigation()
+        {
+            nodeNavigation = new NodeNavigation(allNodes);
         }
     }
 }
