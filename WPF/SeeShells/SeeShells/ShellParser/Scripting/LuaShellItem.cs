@@ -25,9 +25,9 @@ namespace SeeShells.ShellParser.Scripting
                 state = new Lua();
                 state.LoadCLRPackage();
                 state.DoString(@" import ('System', 'SeeShells', 'SeeShells.ShellParser.ShellItems', 'SeeShells.ShellParser') ");
-                state["properties"] = properties;
-                state["shellitem"] = this;
-                state["knownGUIDs"] = KnownGuids.dict;
+                state[Constants.PROPERTIES] = properties;
+                state[Constants.SHELL_ITEM] = this;
+                state[Constants.KNOWN_GUIDS] = KnownGuids.dict;
                 this.luascript = luascript;
             }
             catch (BadImageFormatException)
@@ -44,7 +44,7 @@ namespace SeeShells.ShellParser.Scripting
         {
             get
             {
-                return GetString("TypeName");
+                return GetString(Constants.TYPENAME);
             }
         }
 
@@ -53,7 +53,7 @@ namespace SeeShells.ShellParser.Scripting
         {
             get
             {
-                return GetString("Name");
+                return GetString(Constants.NAME);
             }
         }
 
@@ -61,7 +61,7 @@ namespace SeeShells.ShellParser.Scripting
         {
             get
             {
-                return GetDate("ModifiedDate");
+                return GetDate(Constants.MODIFIED_DATE);
             }
         }
 
@@ -69,7 +69,7 @@ namespace SeeShells.ShellParser.Scripting
         {
             get
             {
-                return GetDate("AccessedDate");
+                return GetDate(Constants.ACCESSED_DATE);
             }
         }
 
@@ -77,7 +77,7 @@ namespace SeeShells.ShellParser.Scripting
         {
             get
             {
-                return GetDate("CreationDate");
+                return GetDate(Constants.CREATION_DATE);
             }
         }
 

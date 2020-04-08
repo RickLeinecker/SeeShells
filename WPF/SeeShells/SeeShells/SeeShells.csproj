@@ -121,6 +121,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Constants.cs" />
     <Compile Include="IO\HtmlIO.cs" />
     <Compile Include="IO\CsvIO.cs" />
     <Compile Include="IO\CsvParsedShellItem.cs" />

@@ -35,8 +35,8 @@ namespace SeeShells.ShellParser.ShellItems
         {
             
             var ret = base.GetAllProperties();
-            AddPairIfNotNull(ret, "Flags", Flags);
-            AddPairIfNotNull(ret, "Guid", Guid);
+            AddPairIfNotNull(ret, Constants.FLAGS, Flags);
+            AddPairIfNotNull(ret, Constants.GUID_LOWER, Guid);
             return ret;
         }
 

@@ -33,8 +33,8 @@ namespace SeeShells.ShellParser.ShellItems
         public override IDictionary<string, string> GetAllProperties()
         {
             var ret = base.GetAllProperties();
-            AddPairIfNotNull(ret, "Guid", Guid);
-            AddPairIfNotNull(ret, "Flags", Flags);
+            AddPairIfNotNull(ret, Constants.GUID_LOWER, Guid);
+            AddPairIfNotNull(ret, Constants.FLAGS, Flags);
             return ret;
         }
     }
