@@ -58,7 +58,7 @@ namespace SeeShells.UI.Node
 
         /// <summary>
         /// Navigates to the next node back in time.
-        /// </summary
+        /// </summary>
         public void GoToPreviousNode()
         {
             currIndex--;
