@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media;
-using SeeShells.UI.Pages;
 
 namespace SeeShells.UI.Node
 {
     /// <summary>
-    /// Used to navigate trough nodes one by one
+    /// Used to navigate through nodes one by one.
     /// </summary>
     public class NodeNavigation
     {
@@ -61,7 +57,7 @@ namespace SeeShells.UI.Node
         }
 
         /// <summary>
-        /// Navigates to the next node beack in time.
+        /// Navigates to the next node back in time.
         /// </summary
         public void GoToPreviousNode()
         {
@@ -93,14 +89,14 @@ namespace SeeShells.UI.Node
         /// <summary>
         /// Used to set a new starting point from where to navigate nodes one by one.
         /// </summary>
-        /// <param name="node">the node that a user clicks from the timeline to become the begining node for navigation</param>
+        /// <param name="node">the node that a user clicks from the timeline to become the beginning node for navigation </param>
         public void SetNewStartingPoint(Object node)
         {
             currIndex = nodes.IndexOf(node);
         }
 
         /// <summary>
-        /// Changes the style of the node that last visited trough navigation back to default.
+        /// Changes the style of the node that was last visited through navigation back to default.
         /// </summary>
         private void ResetPrevNodeStyle()
         {
@@ -118,7 +114,7 @@ namespace SeeShells.UI.Node
         }
 
         /// <summary>
-        /// Sorts the nodes based on the time the event occures. This is done because there are ordering issues if the nodes are parsed directly from the childern of UI elements that contain them.
+        /// Sorts the nodes based on the time the event occurs. This is done because there are ordering issues if the nodes are parsed directly from the children of UI elements that contain them.
         /// </summary>
         private void SortNodes()
         {
@@ -127,9 +123,9 @@ namespace SeeShells.UI.Node
         }
 
         /// <summary>
-        /// Compares nodes by their event time fields, reguardless of the node type.
+        /// Compares nodes by their event time fields, regardless of the node type.
         /// </summary>
-        /// <param name="x">First node for camparison</param>
+        /// <param name="x">First node for comparison</param>
         /// <param name="y">Second node for comparison</param>
         /// <returns></returns>
         private static int CompareNodes(Object x, Object y)
