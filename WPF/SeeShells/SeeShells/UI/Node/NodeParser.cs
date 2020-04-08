@@ -57,8 +57,9 @@ namespace SeeShells.UI.Node
             block.Text += aEvent.EventType + "\n";
             block.MouseEnter += Pages.TimelinePage.HoverBlock;
             block.MouseLeave += Pages.TimelinePage.HoverBlock;
-            block.MouseDown += Pages.TimelinePage.ClickBlock;
-            block.MouseUp += Pages.TimelinePage.ClickBlock;
+            block.MouseRightButtonDown += Pages.TimelinePage.ClickBlock;
+            block.MouseRightButtonUp += Pages.TimelinePage.ClickBlock;
+            block.MouseLeftButtonDown += Pages.TimelinePage.LeftPopOut;
 
             ContextMenu contextMenu = new ContextMenu();
 
