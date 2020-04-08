@@ -114,8 +114,8 @@ namespace SeeShells.UI.Pages
 
         private async void OSUpdateButton_Click(object sender, RoutedEventArgs e)
         {
-            string location = locations.OSFileLocation;
-            if (!ContinueAfterSendingOverwriteWarning(location))
+            string location = GetSaveLocationFromBrowsing(locations.OSFileLocation);
+            if (location.Equals(string.Empty))
                 return;
 
             string message = "File saved at\n" + location;
@@ -139,7 +139,8 @@ namespace SeeShells.UI.Pages
             Mouse.OverrideCursor = Cursors.Arrow;
             MessageBox.Show(message, caption, MessageBoxButton.OK, image);
             UpdateOSVersionList();
-
+            if (image == MessageBoxImage.Information)
+                locations.OSFileLocation = location;
         }
 
         private void GUIDBrowseButton_Click(object sender, RoutedEventArgs e)
@@ -153,8 +154,8 @@ namespace SeeShells.UI.Pages
 
         private async void GUIDUpdateButton_Click(object sender, RoutedEventArgs e)
         {
-            string location = locations.GUIDFileLocation;
-            if (!ContinueAfterSendingOverwriteWarning(location))
+            string location = GetSaveLocationFromBrowsing(locations.GUIDFileLocation);
+            if (location.Equals(string.Empty))
                 return;
 
             string message = "File saved at\n" + location;
@@ -177,6 +178,9 @@ namespace SeeShells.UI.Pages
 
             Mouse.OverrideCursor = Cursors.Arrow;
             MessageBox.Show(message, caption, MessageBoxButton.OK, image);
+            if (image == MessageBoxImage.Information)
+                locations.GUIDFileLocation = location;
+
         }
 
         private void ScriptBrowseButton_Click(object sender, RoutedEventArgs e)
@@ -190,8 +194,8 @@ namespace SeeShells.UI.Pages
 
         private async void ScriptUpdateButton_Click(object sender, RoutedEventArgs e)
         {
-            string location = locations.ScriptFileLocation;
-            if (!ContinueAfterSendingOverwriteWarning(location))
+            string location = GetSaveLocationFromBrowsing(locations.ScriptFileLocation);
+            if (location.Equals(string.Empty))
                 return;
 
             string message = "File saved at\n" + location;
@@ -214,36 +218,10 @@ namespace SeeShells.UI.Pages
 
             Mouse.OverrideCursor = Cursors.Arrow;
             MessageBox.Show(message, caption, MessageBoxButton.OK, image);
+
+            if (image == MessageBoxImage.Information)
+                locations.ScriptFileLocation = location;
         }
-
-        private bool ContinueAfterSendingOverwriteWarning(string path)
-        {
-            MessageBoxResult answer;
-
-            if (File.Exists(path))
-            {
-                answer = MessageBox.Show("This button will overwrite the file currently at\n" + path + "\nwith the most recent configuration data.\nWould you like to continue?",
-                    "Overwrite file?",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Warning);
-
-                if(answer == MessageBoxResult.Yes)
-                    return true;
-
-                return false;
-            }
-
-            answer = MessageBox.Show("This button will create a file at\n" + path + "\nwith the most recent configuration data.\nWould you like to continue?",
-                    "Create file?",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Warning);
-            if (answer == MessageBoxResult.Yes)
-                return true;
-
-            return false;
-
-        }
-
 
         private bool UserSelectedFile(string result)
         {
@@ -265,6 +243,19 @@ namespace SeeShells.UI.Pages
                 return string.Empty;
 
             return openFileDialog.FileName;
+        }
+
+        private string GetSaveLocationFromBrowsing(string defaultLocation)
+        {
+            string path = defaultLocation.Substring(0, defaultLocation.LastIndexOf('\\'));
+            SaveFileDialog saveFileDialog = new SaveFileDialog()
+            {
+                Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*",
+                InitialDirectory = path,
+                FileName = defaultLocation.Split('\\').Last(),
+                OverwritePrompt = true
+            };
+            return saveFileDialog.ShowDialog() == true ? saveFileDialog.FileName : string.Empty;
         }
 
         private async void ParseButton_Click(object sender, RoutedEventArgs e)
