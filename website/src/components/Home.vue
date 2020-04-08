@@ -27,8 +27,11 @@ export default {
 </script>
 
 <style scoped>
-    div{
-        font-size: x-large;
+    #home {
+        margin:auto;
+        height: 100%;
+        width: 90%;
+        font-size: large;
     }
 
 </style>
