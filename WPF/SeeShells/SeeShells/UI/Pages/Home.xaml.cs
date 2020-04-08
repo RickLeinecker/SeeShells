@@ -289,6 +289,10 @@ namespace SeeShells.UI.Pages
             {
                 App.ShellItems = await ParseShellBags();
                 List<IEvent> events = EventParser.GetEvents(App.ShellItems);
+                if (App.nodeCollection.nodeList != null)
+                {
+                    App.nodeCollection.nodeList.Clear();
+                }
                 App.nodeCollection.ClearAllFilters();
                 App.nodeCollection.nodeList.AddRange(NodeParser.GetNodes(events));
             }
