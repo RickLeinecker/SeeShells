@@ -59,8 +59,8 @@ namespace SeeShells.ShellParser.ShellItems
             // Unknown - Empty ( 1 byte)
             // Unknown - size? - 2 bytes
             // CFSF - 4 bytes
-            // sub shell item data size - 2 bytes
             Signature = unpack_dword(0x06);
+            // sub shell item data size - 2 bytes
 
             int off = 0x0A;
             SubItem = new FILEENTRY_FRAGMENT(buf, offset + off, this, 0x04);
@@ -70,9 +70,9 @@ namespace SeeShells.ShellParser.ShellItems
 
             // 5e591a74-df96-48d3-8d67-1733bcee28ba
             DelegateItemIdentifier = unpack_guid(off);
-            off += 10;
+            off += 16;
             ItemClassIdentifier = unpack_guid(off);
-            off += 10;
+            off += 16;
             ExtensionBlock = new ExtensionBlockBEEF0004(buf, offset + off);
             ExtensionBlocks.Add(ExtensionBlock);            
             
