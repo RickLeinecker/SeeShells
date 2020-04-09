@@ -36,9 +36,8 @@
                         </td>
                     </tr>
                 </tbody>
-
             </table>
-            <div id="messages"></div>
+
         </div>
         <br />
         <div id="osContent">

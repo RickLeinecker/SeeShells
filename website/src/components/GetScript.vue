@@ -12,8 +12,13 @@
                          rows="10"></b-form-textarea>
         <br />
         <b-button @click="onSubmit" variant="primary">{{buttonText}}</b-button>
-        <br/>
-        <div id="messages"></div>
+        <br />
+        <b-alert v-model="showSuccessAlert" variant="success" dismissible>
+            <strong>Script saved! </strong>To use it in the desktop application, just update your script configuration file in the application.
+        </b-alert>
+        <b-alert v-model="showErrorAlert" variant="danger" dismissible>
+            <strong>Error! </strong> Failed to update the script.
+        </b-alert>
     </div>
 </template>
 
@@ -26,7 +31,9 @@
                 identifier: '',
                 hexIdentifier: '0x71',
                 text: '',
-                buttonText: 'Select a shell item identifier above.' 
+                buttonText: 'Select a shell item identifier above.',
+                showSuccessAlert: false,
+                showErrorAlert: false
             }
         },
 
@@ -80,7 +87,7 @@
                     var result = JSON.parse(xhr.responseText);
 
                     if (result.success == 1) {
-                        (document.getElementById('messages')).insertAdjacentHTML('afterend', '<div class="alert alert-success alert-dismissible">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong>Script saved! </strong>To use it in the desktop application, just update your script configuration file in the application. </div>');       
+                        this.showSuccessAlert = true;
                     }
                     else if (result.message == "You must log in to perform this action.") {
                             this.$session.destroy();
@@ -88,12 +95,12 @@
                             location.reload();
                     }
                     else {
-                        (document.getElementById('messages')).insertAdjacentHTML('afterend', '<div class="alert alert-danger alert-dismissible">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong>Error! </strong> Failed to update the script. </div>');                    
+                        this.showErrorAlert = true;
                     }
                 }
                 catch (err) { 
                     console.log(err);
-                    (document.getElementById('messages')).insertAdjacentHTML('afterend', '<div class="alert alert-danger alert-dismissible">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong>Error! </strong> Failed to update the script. </div>');                    
+                    this.showErrorAlert = true;
                 }
             }
         }
