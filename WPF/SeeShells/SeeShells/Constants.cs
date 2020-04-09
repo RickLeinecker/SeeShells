@@ -28,8 +28,7 @@ namespace SeeShells
         public const string KNOWN_GUIDS = "knownGUIDs";
         public const string LONG_NAME = "LongName";
         public const string LOCALIZED_NAME = "LocalizedName";
-        public const string GUID_LOWER = "Guid";
-        public const string GUID_UPPER = "GUID";
+        public const string GUID = "GUID";
         public const string FOLDER_ID = "FolderID";
         public const string FLAGS = "Flags";
         public const string FILE_SIZE = "FileSize";
