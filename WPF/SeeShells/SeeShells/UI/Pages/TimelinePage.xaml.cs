@@ -233,7 +233,6 @@ namespace SeeShells.UI.Pages
                     if (node.Visibility == Visibility.Visible)
                         nodeList.Add(node);
                     node.block.Visibility = Visibility.Collapsed;
-
                 }
 
                 if (nodeList.Count == 0)
@@ -804,9 +803,28 @@ namespace SeeShells.UI.Pages
         }
 
         /// <summary>
-        /// This pops up an information window when a block is clicked.
+        /// This pops up context menu for a block.
         /// </summary>
         public static void ClickBlock(object sender, EventArgs e)
+        {
+            ((InfoBlock)sender).ContextMenu.PlacementTarget = sender as Button;
+            ((InfoBlock)sender).ContextMenu.IsOpen = true;
+        }
+
+        /// <summary>
+        /// This pops up a new window with information from the block (selection in context menu).
+        /// </summary>
+        public static void popOut(object sender, EventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            InfoBlock block = (InfoBlock)menuItem.Tag;
+            block.PopOutInfo();
+        }
+
+        /// <summary>
+        /// This pops up a new window with information from the block.
+        /// </summary>
+        public static void LeftPopOut(object sender, EventArgs e)
         {
             ((InfoBlock)sender).PopOutInfo();
         }
