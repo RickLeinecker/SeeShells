@@ -71,8 +71,8 @@ namespace SeeShells.ShellParser.ShellItems
         public override IDictionary<string, string> GetAllProperties()
         {
             var dict = base.GetAllProperties();
-            AddPairIfNotNull(dict, "GUID", guid);
-            AddPairIfNotNull(dict, "FolderID", folder_id);
+            AddPairIfNotNull(dict, Constants.GUID, guid);
+            AddPairIfNotNull(dict, Constants.FOLDER_ID, folder_id);
             return dict;
         }
     }

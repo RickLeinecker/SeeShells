@@ -81,9 +81,9 @@ namespace SeeShells.ShellParser.ShellItems
         public override IDictionary<string, string> GetAllProperties()
         {
             var ret = base.GetAllProperties();
-            AddPairIfNotNull(ret, "Signature", Signature);
-            AddPairIfNotNull(ret, "DelegateItemIdentifier", DelegateItemIdentifier);
-            AddPairIfNotNull(ret, "ItemClassIdentifier", ItemClassIdentifier);
+            AddPairIfNotNull(ret, Constants.SIGNATURE, Signature);
+            AddPairIfNotNull(ret, Constants.DELEGATE_ITEM_ID, DelegateItemIdentifier);
+            AddPairIfNotNull(ret, Constants.ITEM_CLASS_ID, ItemClassIdentifier);
             return ret;
         }
     }

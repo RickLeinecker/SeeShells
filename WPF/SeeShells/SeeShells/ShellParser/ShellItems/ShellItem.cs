@@ -71,13 +71,13 @@ namespace SeeShells.ShellParser.ShellItems
         public virtual IDictionary<string, string> GetAllProperties()
         {
             SortedDictionary<string, string> properties = new SortedDictionary<string, string>();
-            AddPairIfNotNull(properties, "Size", Size.ToString("X2")); //hexidecimal with 2 numerical places (aka a byte)
-            AddPairIfNotNull(properties, "Type", Type.ToString("X2"));
-            AddPairIfNotNull(properties, "TypeName", TypeName);
-            AddPairIfNotNull(properties, "Name", Name);
-            AddPairIfNotNull(properties, "ModifiedDate", ModifiedDate);
-            AddPairIfNotNull(properties, "AccessedDate", AccessedDate);
-            AddPairIfNotNull(properties, "CreationDate", CreationDate);
+            AddPairIfNotNull(properties, Constants.SIZE, Size.ToString("X2")); //hexidecimal with 2 numerical places (aka a byte)
+            AddPairIfNotNull(properties, Constants.TYPE, Type.ToString("X2"));
+            AddPairIfNotNull(properties, Constants.TYPENAME, TypeName);
+            AddPairIfNotNull(properties, Constants.NAME, Name);
+            AddPairIfNotNull(properties, Constants.MODIFIED_DATE, ModifiedDate);
+            AddPairIfNotNull(properties, Constants.ACCESSED_DATE, AccessedDate);
+            AddPairIfNotNull(properties, Constants.CREATION_DATE, CreationDate);
             return properties;
         }
 

@@ -25,9 +25,9 @@ namespace SeeShells.ShellParser.ShellItems.ExtensionBlocks
         public virtual IDictionary<string, string> GetAllProperties()
         {
             SortedDictionary<string, string> properties = new SortedDictionary<string, string>();
-            AddPairIfNotNull(properties, "Size", Size.ToString("X2") ); //hexidecimal with 2 numerical places (aka a byte)
-            AddPairIfNotNull(properties, "ExtensionVersion", ExtensionVersion.ToString() );
-            AddPairIfNotNull(properties, "Signature", Signature.ToString("X4") );
+            AddPairIfNotNull(properties, Constants.SIZE, Size.ToString("X2") ); //hexidecimal with 2 numerical places (aka a byte)
+            AddPairIfNotNull(properties, Constants.EXTENSION_VERSION, ExtensionVersion.ToString() );
+            AddPairIfNotNull(properties, Constants.SIGNATURE, Signature.ToString("X4") );
             return properties;
         }
     }

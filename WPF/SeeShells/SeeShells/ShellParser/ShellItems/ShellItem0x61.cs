@@ -78,12 +78,12 @@ namespace SeeShells.ShellParser.ShellItems
         public override IDictionary<string, string> GetAllProperties()
         {
             var ret = base.GetAllProperties();
-            AddPairIfNotNull(ret, "Uri", Uri);
-            AddPairIfNotNull(ret, "FTPHostname", FTPHostname);
-            AddPairIfNotNull(ret, "FTPUsername", FTPUsername);
-            AddPairIfNotNull(ret, "FTPPassword", FTPPassword);
-            AddPairIfNotNull(ret, "Flags", Flags);
-            AddPairIfNotNull(ret, "ConnectionDate", ConnectionDate);
+            AddPairIfNotNull(ret, Constants.URI, Uri);
+            AddPairIfNotNull(ret, Constants.FTP_HOST_NAME, FTPHostname);
+            AddPairIfNotNull(ret, Constants.FTP_USER_NAME, FTPUsername);
+            AddPairIfNotNull(ret, Constants.FTP_PASSWORD, FTPPassword);
+            AddPairIfNotNull(ret, Constants.FLAGS, Flags);
+            AddPairIfNotNull(ret, Constants.CONNECTION_DATE, ConnectionDate);
             return ret;
         }
     }

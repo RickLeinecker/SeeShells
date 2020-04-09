@@ -34,10 +34,10 @@ namespace SeeShells.ShellParser.ShellItems
         public override IDictionary<string, string> GetAllProperties()
         {
             var ret =  base.GetAllProperties();
-            AddPairIfNotNull(ret, "Flags", Flags);
-            AddPairIfNotNull(ret, "Location", Location);
-            AddPairIfNotNull(ret, "Description", Description);
-            AddPairIfNotNull(ret, "Comments", Comments);
+            AddPairIfNotNull(ret, Constants.FLAGS, Flags);
+            AddPairIfNotNull(ret, Constants.LOCATION, Location);
+            AddPairIfNotNull(ret, Constants.DESCRIPTION, Description);
+            AddPairIfNotNull(ret, Constants.COMMENTS, Comments);
             return ret;
         }
     }
