@@ -794,7 +794,7 @@ namespace SeeShells.UI.Pages
         }
 
         /// <summary>
-        /// This pops up a new window with information from the block.
+        /// This pops up a new window with information from the block (selection in context menu).
         /// </summary>
         public static void popOut(object sender, EventArgs e)
         {
