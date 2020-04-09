@@ -26,9 +26,11 @@
 </template>
 
 <script>
+    import CheckIfAuthenticated from '../mixins/CheckIfAuthenticated';
 
     export default {
         name: 'HelpPage',
+        mixins: [CheckIfAuthenticated],
         data() {
             return {
                 helpTitle: '',
@@ -93,28 +95,6 @@
                     console.log(err);
                     (document.getElementById('messages')).insertAdjacentHTML('afterend', '<div class="alert alert-danger alert-dismissible">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong>Error! </strong> Failed to update the help information. </div>');                    
                 }
-            }
-        },
-        beforeMount() {
-            var url = this.$baseurl + 'SessionIsActive';
-
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", url, false);
-            xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-            xhr.setRequestHeader("X-Auth-Token", this.$session.get('session'));
-
-            try {
-                xhr.send(null);
-                var result = JSON.parse(xhr.responseText);
-
-                if (result.success != 1) {
-                        this.$session.destroy();
-                        this.$router.push('/SeeShells/login');
-                        location.reload();
-                }
-            }
-            catch (err) {
-                console.info(err);
             }
         },
         mounted() {
