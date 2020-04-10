@@ -235,6 +235,10 @@ namespace SeeShells.UI.Pages
                     node.block.Visibility = Visibility.Collapsed;
                 }
 
+                // if the last nodes were all the same time, we still need to check if they are the new highest maxStackedNodes
+                if (currentMaxStackedNodes > maxStackedNodes)
+                    maxStackedNodes = currentMaxStackedNodes;
+
                 if (nodeList.Count == 0)
                 {
                     EmptyTimeline.Visibility = Visibility.Visible;
