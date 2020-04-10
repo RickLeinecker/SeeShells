@@ -38,11 +38,17 @@ namespace SeeShells.ShellParser.Registry
             foreach (RegistryKey userStore in userStores)
             {
                 logger.Debug("NEW USER SID: " + userStore.Name);
+                string userOfStore = FindOnlineUsername(userStore);
 
                 foreach (string location in Parser.GetRegistryLocations())
                 {
                     foreach (RegistryKeyWrapper keyWrapper in IterateRegistry(userStore.OpenSubKey(location), location, null))
                     {
+                        if (userOfStore != string.Empty)
+                        {
+                            keyWrapper.RegistryUser = userOfStore;
+                        }
+
                         retList.Add(keyWrapper);
                     }
                 }
@@ -50,6 +56,50 @@ namespace SeeShells.ShellParser.Registry
 
             return retList;
 
+        }
+
+        private string FindOnlineUsername(RegistryKey userStore)
+        {
+            string retval = string.Empty;
+
+            List<string> usernameLocations = Parser.GetUsernameLocations();
+
+            Dictionary<string, int> likelyUsernames = new Dictionary<string, int>();
+            foreach (string usernameLocation in usernameLocations)
+            {
+                if (userStore.OpenSubKey(usernameLocation) != null)
+                {
+                    //based on the values in '...\Explorer\Shell Folders' the [2] value in the string may not always be the username, but it does appear the most.
+                    foreach (string value in userStore.OpenSubKey(usernameLocation).GetValueNames())
+                    {
+                        string valueData = (string)userStore.OpenSubKey(usernameLocation).GetValue(value);
+                        string[] pathParts = valueData.Split('\\');
+                        if (pathParts.Length > 2)
+                        {
+                            string username = pathParts[2]; //usually in the form of C:\Users\username
+                            if (!likelyUsernames.ContainsKey(username))
+                            {
+                                likelyUsernames[username] = 1;
+                            }
+                            else
+                            {
+                                likelyUsernames[username]++;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    return retval;
+                }
+            }
+            //most occurred value is probably the username.
+            if (likelyUsernames.Count >= 1)
+            {
+                retval = likelyUsernames.OrderByDescending(pair => pair.Value).First().Key;
+            }
+
+            return retval;
         }
 
         /// <summary>
