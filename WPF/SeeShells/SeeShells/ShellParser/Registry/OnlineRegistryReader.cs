@@ -62,10 +62,8 @@ namespace SeeShells.ShellParser.Registry
         {
             string retval = string.Empty;
 
-            //todo refactor this List into key-value pairs for lookup, we have to hardcode key-values otherwise.
             List<string> usernameLocations = Parser.GetUsernameLocations();
 
-            //todo we know of the Desktop value inside the "Shell Folders" location, so naively try this until a better way is found
             Dictionary<string, int> likelyUsernames = new Dictionary<string, int>();
             foreach (string usernameLocation in usernameLocations)
             {
