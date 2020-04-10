@@ -11,7 +11,14 @@
                 </b-form-group>
             </div>
             <b-button @click="onSubmit" variant="primary">Update Help Content</b-button>
-            <div id="messages"></div>
+
+            <b-alert v-model="showSuccessAlert" variant="success" dismissible>
+                <strong>Help saved! </strong>The updated help information can now be seen on the website and in the application.
+            </b-alert>
+            <b-alert v-model="showErrorAlert" variant="danger" dismissible>
+                <strong>Error! </strong> Failed to update the help information.
+            </b-alert>
+            
             <div>
                 <br />
                 <h2>Preview of the Help Content: </h2>
@@ -35,6 +42,8 @@
             return {
                 helpTitle: '',
                 helpText: '<h5>Loading help...</h5>',
+                showSuccessAlert: false,
+                showErrorAlert: false
             }
         },
         methods: {
@@ -80,20 +89,20 @@
                     var result = JSON.parse(xhr.responseText);
 
                     if (result.success == 1) {
-                        (document.getElementById('messages')).insertAdjacentHTML('afterend', '<div class="alert alert-success alert-dismissible">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong>Help saved! </strong>The updated help information can now be seen on the website and in the application. </div>');       
+                        this.showSuccessAlert = true;
                     }
                     else if (result.message == "You must log in to perform this action.") {
-                            this.$session.destroy();
-                            this.$router.push('/SeeShells/login');
-                            location.reload();
+                        this.$session.destroy();
+                        this.$router.push('/SeeShells/login');
+                        location.reload();
                     }
                     else {
-                        (document.getElementById('messages')).insertAdjacentHTML('afterend', '<div class="alert alert-danger alert-dismissible">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong>Error! </strong> Failed to update the help information. </div>');                    
+                        this.showErrorAlert = true;
                     }
                 }
                 catch (err) { 
                     console.log(err);
-                    (document.getElementById('messages')).insertAdjacentHTML('afterend', '<div class="alert alert-danger alert-dismissible">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong>Error! </strong> Failed to update the help information. </div>');                    
+                    this.showErrorAlert = true;
                 }
             }
         },

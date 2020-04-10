@@ -8,7 +8,13 @@
         <br />
 
         <p>If this GUID already exists, it will be overwritten with the name you input here.</p>
-        <div id="messages"></div>
+
+        <b-alert v-model="showSuccessAlert" variant="success" dismissible>
+            <strong>GUID saved! </strong>To use it in the desktop application, just update your GUID configuration file in the application.
+        </b-alert>
+        <b-alert v-model="showErrorAlert" variant="danger" dismissible>
+            <strong>Error! </strong> Failed to add or update the GUID.
+        </b-alert>
 
     </div>
 </template>
@@ -20,7 +26,9 @@
         data() {
             return {
                 guid: '',
-                name: ''
+                name: '',
+                showSuccessAlert: false,
+                showErrorAlert: false
             }
         },
         methods: {
@@ -43,7 +51,7 @@
 
                     if (result.success == 1) {
                         location.reload();
-                        (document.getElementById('messages')).insertAdjacentHTML('afterend', '<div class="alert alert-success alert-dismissible">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong>GUID saved! </strong>To use it in the desktop application, just update your GUID configuration file in the application. </div>');       
+                        this.showSuccessAlert = true;
                     }
                     else if (result.message == "You must log in to perform this action.") {
                             this.$session.destroy();
@@ -51,12 +59,12 @@
                             location.reload();
                     }
                     else {
-                        (document.getElementById('messages')).insertAdjacentHTML('afterend', '<div class="alert alert-danger alert-dismissible">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong>Error! </strong> Failed to add or update the GUID. </div>');                    
+                        this.showErrorAlert = true;
                     }
                 }
                 catch (err) { 
                     console.log(err);
-                    (document.getElementById('messages')).insertAdjacentHTML('afterend', '<div class="alert alert-danger alert-dismissible">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong>Error! </strong> Failed to add or update the GUID. </div>');                    
+                    this.showErrorAlert = true;
                 }
             }
         }

@@ -1,6 +1,6 @@
 <template>
   <div id="register">
-    <b-form class="m-5" @submit="onRegister" v-if="show">
+    <b-form class="m-5" @submit="onRegister">
       <b-form-group label="Username:" >
         <b-form-input v-model="form.name" required placeholder="Enter username"></b-form-input>
       </b-form-group>
@@ -9,7 +9,14 @@
           <b-form-input v-model="form.password" type="password" required placeholder="Enter password"></b-form-input>
           <password v-model="form.password" :strength-meter-only="true" />
           <b-form-input v-model="form.passwordconfirm" type="password" required placeholder="Re-enter password"></b-form-input>
-          <div id="messages"></div>
+
+          <b-alert v-model="showSuccessAlert" variant="success" dismissible>
+              <strong>Registration sent! </strong>You must wait for a current administrator to approve you now.
+          </b-alert>
+          <b-alert v-model="showErrorAlert" variant="danger" dismissible>
+              <strong>Error! </strong> {{errorMessage}}
+          </b-alert>
+
       </b-form-group>
 
       <b-button type="register" variant="primary">Register</b-button>
@@ -23,14 +30,16 @@
         name: 'RegisterForm',
         components: { Password },
         data() {
-          return {
-            form: {
-                  name: '',
-                  password: '',
-                  passwordconfirm: '',
-            },
-            show: true
-          }
+            return {
+                form: {
+                    name: '',
+                    password: '',
+                    passwordconfirm: ''
+                },
+                showSuccessAlert: false,
+                showErrorAlert: false,
+                errorMessage: ''
+            }
         },
         methods: {
             onRegister(event) {
@@ -49,20 +58,23 @@
                         var result = JSON.parse(xhr.responseText);
 
                         if (result.success == 1) {
-                            (document.getElementById('messages')).insertAdjacentHTML('afterend', '<div class="alert alert-info alert-dismissible">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong>Registration sent! </strong>You must wait for a current administrator to approve you now. </div>');
-        
+                            this.showSuccessAlert = true;
                         }
                         else {
-                            (document.getElementById('messages')).insertAdjacentHTML('afterend', '<div class="alert alert-danger alert-dismissible">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong>Error! </strong>' + result.error + ' Please try again later. </div>');
+                            this.errorMessage = result.error + ' Please try again.';
+                            this.showErrorAlert = true;
                         }
 
                     }
                     catch (err) { 
-                        console.log(err.message)
+                        console.log(err.message);
+                        this.errorMessage = 'Failed to register account.';
+                        this.showErrorAlert = true;
                     }
                 }
                 else {
-                    (document.getElementById('messages')).insertAdjacentHTML('afterend', '<div class="alert alert-danger alert-dismissible">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong>Passwords don\'t match! </strong>Re-enter the passwords. </div>');
+                    this.errorMessage = 'Passwords don\'t match! Re-enter the passwords.';
+                    this.showErrorAlert = true;
                 }
             }
         }

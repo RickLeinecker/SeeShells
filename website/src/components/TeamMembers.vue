@@ -7,7 +7,7 @@
                 <img src="./../assets/logo.png" alt="Sara" style="width:100%">
                 <div class="container">
                     <h2>Sara Frackiewicz</h2>
-                    <p class="title">Project Manager, API, and Website</p>
+                    <p class="title">API, Scripting, and Administrative Website</p>
                 </div>
             </div>
         </div>
@@ -18,7 +18,7 @@
                     <h2>
                         Klayton Killough
                     </h2>
-                    <p class="title">WPF</p>
+                    <p class="title">WPF Shellbag Parser and IO</p>
                 </div>
             </div>
         </div>
@@ -27,7 +27,7 @@
                 <img src="./../assets/logo.png" alt="Aleks" style="width:100%">
                 <div class="container">
                     <h2>Aleksandar Stoyanov</h2>
-                    <p class="title">WPF</p>
+                    <p class="title">WPF Shellbag Parser and Timeline</p>
                 </div>
             </div>
         </div>
@@ -36,7 +36,7 @@
                 <img src="./../assets/logo.png" alt="Bridget" style="width:100%">
                 <div class="container">
                     <h2>Bridget Woodye</h2>
-                    <p class="title">WPF</p>
+                    <p class="title">WPF GUI and Timeline</p>
                 </div>
             </div>
         </div>
@@ -45,7 +45,7 @@
                 <img src="./../assets/logo.png" alt="Yara" style="width:100%">
                 <div class="container">
                     <h2>Yara As-Saidi</h2>
-                    <p class="title">WPF and Website</p>
+                    <p class="title">WPF and Website Content</p>
                 </div>
             </div>
         </div>

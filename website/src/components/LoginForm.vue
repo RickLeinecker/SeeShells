@@ -1,13 +1,17 @@
 <template>
     <div id="login">
-        <b-form class="m-5" @submit="onLogin" v-if="show">
+        <b-form class="m-5" @submit="onLogin">
             <b-form-group label="Username:">
                 <b-form-input v-model="form.name" required placeholder="Enter username"></b-form-input>
             </b-form-group>
 
             <b-form-group label="Password:">
                 <b-form-input v-model="form.password" type="password" required placeholder="Enter password"></b-form-input>
-                <div id="messages"></div>
+
+                <b-alert v-model="showErrorAlert" variant="danger" dismissible>
+                    <strong>Error! </strong> Failed to login. Please try again.
+                </b-alert>
+
             </b-form-group>
 
             <b-button type="login" variant="primary">Login</b-button>
@@ -24,7 +28,7 @@
                   name: '',
                   password: ''
             },
-            show: true
+            showErrorAlert: false
           }
         },
         methods: {
@@ -49,11 +53,11 @@
                         location.reload();
                     }
                     else {
-                        (document.getElementById('messages')).insertAdjacentHTML('afterend', '<div class="alert alert-danger alert-dismissible">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong>Error! </strong> Failed to login. Please try again. </div>');                    
+                        this.showErrorAlert = true;
                     }
                 }
                 catch (err) { 
-                    (document.getElementById('messages')).insertAdjacentHTML('afterend', '<div class="alert alert-danger alert-dismissible">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong>Error! </strong> Failed to login. Please try again. </div>');                    
+                    this.showErrorAlert = true;
                 }
             }
         }

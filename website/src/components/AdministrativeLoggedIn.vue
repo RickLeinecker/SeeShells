@@ -26,7 +26,7 @@
                     xhr.send();
                 }
                 catch (err) { 
-                    alert(err.message)
+                    console.log(err.message)
                 }
 
                 this.$session.destroy();
