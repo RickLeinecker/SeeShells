@@ -235,6 +235,10 @@ namespace SeeShells.UI.Pages
                     node.block.Visibility = Visibility.Collapsed;
                 }
 
+                // if the last nodes were all the same time, we still need to check if they are the new highest maxStackedNodes
+                if (currentMaxStackedNodes > maxStackedNodes)
+                    maxStackedNodes = currentMaxStackedNodes;
+
                 if (nodeList.Count == 0)
                 {
                     EmptyTimeline.Visibility = Visibility.Visible;
@@ -316,25 +320,13 @@ namespace SeeShells.UI.Pages
 
                 // Adds invisible blocks as padding for a nice vertical allignment.
                 int numBlocksNeeded = maxStackedNodes - stackedNode.nodes.Count;
-                TextBlock alignmentBlock;
-                if (numBlocksNeeded >= 0)
-                {
-                    alignmentBlock = new TextBlock
+                TextBlock alignmentBlock = new TextBlock
                     {
                         Style = (Style)Resources["TimelineBlock"],
                         Visibility = Visibility.Collapsed,
                         Height = numBlocksNeeded * 70
                     };
-                }
-                else
-                {
-                    alignmentBlock = new TextBlock
-                    {
-                        Style = (Style)Resources["TimelineBlock"],
-                        Visibility = Visibility.Collapsed,
-                        Height = 0
-                    };
-                }
+
                 stackedNode.alignmentBlock = alignmentBlock;
                 TimelinePanel.SetDate(stackedNode.alignmentBlock, stackedNode.nodes[0].GetBlockTime());
                 blockPanel.Children.Add(stackedNode.alignmentBlock);
@@ -362,25 +354,12 @@ namespace SeeShells.UI.Pages
                 ConnectNodeToTimeline(timelinePanel, node.aEvent.EventTime);
 
                 // Adds invisible block as padding for a nice vertical allignment.
-                TextBlock alignmentBlock;
-                if (maxStackedNodes >= 1)
-                {
-                    alignmentBlock = new TextBlock
+                TextBlock alignmentBlock = new TextBlock
                     {
                         Style = (Style)Resources["TimelineBlock"],
                         Visibility = Visibility.Collapsed,
                         Height = (maxStackedNodes - 1) * 70
                     };
-                }
-                else
-                {
-                    alignmentBlock = new TextBlock
-                    {
-                        Style = (Style)Resources["TimelineBlock"],
-                        Visibility = Visibility.Collapsed,
-                        Height = 0
-                    };
-                }
 
                 node.alignmentBlock = alignmentBlock;
                 TimelinePanel.SetDate(node.alignmentBlock, node.GetBlockTime());
