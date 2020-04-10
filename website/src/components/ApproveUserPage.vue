@@ -10,10 +10,12 @@
 
 <script>
     import NewUsers from './NewUsers.vue';
+    import CheckIfAuthenticated from '../mixins/CheckIfAuthenticated';
 
     export default {
         name: 'ApproveUsers',
         components: { NewUsers },
+        mixins: [CheckIfAuthenticated]
     }
 </script>
 

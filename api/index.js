@@ -108,6 +108,23 @@ app.post('/login', function (req, res) {
     );
 });
 
+app.get('/SessionIsActive', function (req, res) {
+    let promise = database.getSession(req.header('x-auth-token'));
+    promise.then(
+        function (result) {
+            if (result == true) {
+                res.send({ "success": 1 });
+            }
+            else {
+                res.redirect('/notauthenticated');
+            }
+        },
+        function (err) {
+            res.redirect('/notauthenticated');
+        }
+    )
+});
+
 app.get('/getNewUsers', function (req, res) {
     let promise = database.getUnapprovedUsers();
     promise.then(

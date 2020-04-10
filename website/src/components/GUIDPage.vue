@@ -11,10 +11,12 @@
 <script>
     import GUIDList from './ViewGUIDs.vue';
     import NewGUID from './NewGUID.vue';
+    import CheckIfAuthenticated from '../mixins/CheckIfAuthenticated';
 
     export default {
         name: 'GUIDPage',
         components: { GUIDList, NewGUID },
+        mixins: [CheckIfAuthenticated]
     }
 </script>
 

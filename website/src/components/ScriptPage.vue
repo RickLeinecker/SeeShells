@@ -13,10 +13,12 @@
 <script>
     import ExampleScript from './ExampleScript.vue';
     import CurrentScript from './GetScript.vue';
+    import CheckIfAuthenticated from '../mixins/CheckIfAuthenticated';
 
     export default {
         name: 'Scripts',
         components: { ExampleScript, CurrentScript },
+        mixins: [CheckIfAuthenticated]
     }
 </script>
 

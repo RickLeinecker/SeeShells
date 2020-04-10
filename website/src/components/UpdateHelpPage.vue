@@ -26,9 +26,11 @@
 </template>
 
 <script>
+    import CheckIfAuthenticated from '../mixins/CheckIfAuthenticated';
 
     export default {
         name: 'HelpPage',
+        mixins: [CheckIfAuthenticated],
         data() {
             return {
                 helpTitle: '',

@@ -50,10 +50,12 @@
 <script>
 
     import ViewOSandFiles from './ViewOSandFiles.vue';
+    import CheckIfAuthenticated from '../mixins/CheckIfAuthenticated';
 
     export default {
         name: 'ModifyOSPage',
         components: { ViewOSandFiles },
+        mixins: [CheckIfAuthenticated],
         data() {
             return {
                 newlocation: '',
@@ -161,7 +163,7 @@
                     }
                 }
             }
-        },   
+        },
         mounted() {
             this.$nextTick().then(this.populateForm);
         }
