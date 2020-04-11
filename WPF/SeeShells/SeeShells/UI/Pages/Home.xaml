@@ -34,7 +34,7 @@
                 <Viewbox Grid.Row="0" Grid.ColumnSpan="2">
                     <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal">
                             <RadioButton x:Name="OfflineCheck" Content="Offline Registry" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5" Checked="OfflineChecked" Unchecked="OfflineUnchecked"/>
-                            <RadioButton x:Name="LiveCheck" Content="Live Registry" IsChecked="True" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5"/>
+                            <RadioButton x:Name="LiveCheck" Content="Live Registry" IsChecked="True" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5" Checked="OnlineChecked" Unchecked="OnlineUnchecked"/>
                     </StackPanel>
                 </Viewbox>
                 
@@ -86,9 +86,10 @@
 
         <Grid x:Name="AdvancedOptions" Visibility="Collapsed" Grid.Row="2">
             <Grid.RowDefinitions>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Name="MultiUserRow" Height="2*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="5*"/>
@@ -123,7 +124,13 @@
                     </StackPanel>
                 </StackPanel>
             </Viewbox>
-            <Viewbox Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <Viewbox Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,0,0,5">
+            <StackPanel Orientation="Horizontal">
+                    <Label Content="Parse All User Accounts:" Foreground="LightGray" />
+                    <CheckBox x:Name="multiUserCheck" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Viewbox>
+                <Viewbox Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
                     <Button x:Name="GUIDBrowseButton" Content="Browse" Click="GUIDBrowseButton_Click"  Margin="10,0"/>
                     <Button x:Name="GUIDUpdateButton" Content="Update File" Click="GUIDUpdateButton_Click"  Margin="10,0"/>

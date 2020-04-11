@@ -327,8 +327,10 @@ namespace SeeShells.UI.Pages
 
         private async Task<List<IShellItem>> ParseShellBags()
         {
+            bool parseAllUsers = multiUserCheck.IsChecked.GetValueOrDefault(false);
             bool useRegistryHiveFiles = OfflineCheck.IsChecked.GetValueOrDefault(false);
             string osVersion = OSVersion.SelectedItem == null ? string.Empty : OSVersion.SelectedItem.ToString();
+            
             //potentially long running operation, operate in another thread.
             return await Task.Run(() =>
             {
@@ -351,7 +353,8 @@ namespace SeeShells.UI.Pages
                 }
                 else //perform online shellbag parsing
                 {
-                    OnlineRegistryReader onlineReader = new OnlineRegistryReader(parser);
+
+                    OnlineRegistryReader onlineReader = new OnlineRegistryReader(parser, parseAllUsers);
                     retList.AddRange(ShellBagParser.GetShellItems(onlineReader));
                 }
 
@@ -420,6 +423,21 @@ namespace SeeShells.UI.Pages
         public void HelpButton_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new HelpPage());
+        }
+
+        private void OnlineChecked(object sender, RoutedEventArgs e)
+        {
+            if (MultiUserRow != null) //check has to be made because race condition with InitializeComponent()
+                toggleOnlineAdvancedOptions(true);
+        }
+        private void OnlineUnchecked(object sender, RoutedEventArgs e)
+        {
+           toggleOnlineAdvancedOptions(false);
+        }
+
+        private void toggleOnlineAdvancedOptions(bool showOptions)
+        {
+            MultiUserRow.Height = showOptions ? visibleRow : hiddenRow;
         }
 
         private void OfflineChecked(object sender, EventArgs e)

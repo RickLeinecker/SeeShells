@@ -115,6 +115,8 @@ namespace SeeShells.UI.Pages
             }
 
             emitter.ItemsSource = eventTypeList;
+            emitter.Items.Refresh();
+
         }
 
         private void ClearEventTypeFilter_Click(object sender, RoutedEventArgs e)
@@ -147,6 +149,7 @@ namespace SeeShells.UI.Pages
             }
 
             emitter.ItemsSource = eventUserList;
+            emitter.Items.Refresh();
         }
 
         private void ClearUserFilter_Click(object sender, RoutedEventArgs e)
@@ -638,6 +641,8 @@ namespace SeeShells.UI.Pages
             TicksBar.Children.Clear();
             TimeStamps.Children.Clear();
             Blocks.Children.Clear();
+            eventTypeList.Clear();
+            eventUserList.Clear();
             BuildTimeline();
         }
 
