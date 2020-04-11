@@ -134,13 +134,10 @@ namespace SeeShells.ShellParser.Registry
                     {
                         try
                         {
-                        var k = hive.GetKey(valueName.KeyPath);
-                        foreach (KeyValue keyValue in k.Values)
-                        {
-                            byte[] byteVal = keyValue.ValueDataRaw;
+                            KeyValue rkValue = rk.Values.First(val => val.ValueName == valueName.KeyName);
+                            byte[] byteVal = rkValue.ValueDataRaw;
                             rkNextWrapper = new RegistryKeyWrapper(rkNext, byteVal, hive, parent);
                             retList.Add(rkNextWrapper);
-                        }
                         }
 
                         catch (OverrunBufferException ex)
