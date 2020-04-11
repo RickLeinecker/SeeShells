@@ -1,7 +1,9 @@
+---
 # SeeShells
 SeeShells collects ShellBags specific Windows Registry keys and parses through them, and organizes the data found in them to display them on a graphical timeline.\
 The graphical timeline is the unique feature that SeeShells offers over other existing parsers: this timeline makes ShellBag data easier to understand and facilitates the process of finding a significant pattern or piece of evidence.
 
+---
 ## How to Use
 ### Parsing Shellbags on your machine (Online Parsing)
 By default SeeShells will use the registry of the currently running Windows machine.\
@@ -85,6 +87,7 @@ Right clicking on the event’s summary will give you the option to filter the t
 #### Multiple Events
  If multiple events occurred at the same time the events are considered stacked. A number inside the node will represent how many events occurred at that particular point in time. All event summaries will be shown once clicking on the stacked event. 
 
+---
 ### Filters 
 
 #### Event Date Filter
