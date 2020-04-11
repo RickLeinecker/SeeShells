@@ -84,7 +84,6 @@ namespace SeeShells.ShellParser.Registry
             UserSID = UserSID.ToUpper().Replace("_CLASSES", "");
             RegistrySID = UserSID;
 
-            //todo somehow retrieve usernames, this may need to be passed into this adapter.
             //if we dont know the username, default to the SID. 
             RegistryUser = RegistrySID;
 
@@ -122,7 +121,6 @@ namespace SeeShells.ShellParser.Registry
             UserSID = UserSID.ToUpper().Replace("_CLASSES", "");
             RegistrySID = UserSID;
 
-            //todo somehow retrieve usernames, this may need to be passed into this adapter.
             //if we dont know the username, default to the SID. 
             RegistryUser = RegistrySID;
 

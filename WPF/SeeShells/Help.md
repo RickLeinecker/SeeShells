@@ -1,7 +1,9 @@
+---
 # SeeShells
 SeeShells collects ShellBags specific Windows Registry keys and parses through them, and organizes the data found in them to display them on a graphical timeline.\
 The graphical timeline is the unique feature that SeeShells offers over other existing parsers: this timeline makes ShellBag data easier to understand and facilitates the process of finding a significant pattern or piece of evidence.
 
+---
 ## How to Use
 ### Parsing Shellbags on your machine (Online Parsing)
 By default SeeShells will use the registry of the currently running Windows machine.\
@@ -54,6 +56,15 @@ Because the identifiers for folders and Windows controls are stored as unique id
 #### Shell Item Script Configuration File (_Scripts.json_)
 The script configuration file contains Lua scripts for parsing ShellItems contents which were discovered after the initial release of SeeShells.\
 By updating this file, SeeShells can display more events or more detailed information about known events inside the timeline and while exporting information.
+
+#### Parse All User Accounts
+By default, SeeShells will only parse the information from the currently running user account.\
+This option enables traversal over the filesystem to retrieve shellbags from other user accounts that are locally on the machine.\
+This option also requires that SeeShells be run with administrative privileges due to the need to traverse through all user folders.\
+SeeShells does not attempt to traverse over network domains or network locations for finding Shellbag information.
+
+To separate Shellbag data by user account, use the **User Filter** while viewing the Timeline. *(See: Filters – User Filter)*
+
 ---
 ## Viewing the Data
 After loading Shellbag data, the timeline will be displayed  and options for filtering  and exporting the shown data will be displayed.
@@ -76,6 +87,7 @@ Right clicking on the event’s summary will give you the option to filter the t
 #### Multiple Events
  If multiple events occurred at the same time the events are considered stacked. A number inside the node will represent how many events occurred at that particular point in time. All event summaries will be shown once clicking on the stacked event. 
 
+---
 ### Filters 
 
 #### Event Date Filter
