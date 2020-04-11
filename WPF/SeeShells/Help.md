@@ -54,6 +54,15 @@ Because the identifiers for folders and Windows controls are stored as unique id
 #### Shell Item Script Configuration File (_Scripts.json_)
 The script configuration file contains Lua scripts for parsing ShellItems contents which were discovered after the initial release of SeeShells.\
 By updating this file, SeeShells can display more events or more detailed information about known events inside the timeline and while exporting information.
+
+#### Parse All User Accounts
+By default, SeeShells will only parse the information from the currently running user account.\
+This option enables traversal over the filesystem to retrieve shellbags from other user accounts that are locally on the machine.\
+This option also requires that SeeShells be run with administrative privileges due to the need to traverse through all user folders.\
+SeeShells does not attempt to traverse over network domains or network locations for finding Shellbag information.
+
+To separate Shellbag data by user account, use the **User Filter** while viewing the Timeline. *(See: Filters – User Filter)*
+
 ---
 ## Viewing the Data
 After loading Shellbag data, the timeline will be displayed  and options for filtering  and exporting the shown data will be displayed.
