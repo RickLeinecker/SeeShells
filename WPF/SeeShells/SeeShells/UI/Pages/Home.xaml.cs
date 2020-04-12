@@ -487,6 +487,7 @@ namespace SeeShells.UI.Pages
             OSVersion.IsEnabled = value;
             LiveCheck.IsEnabled = value;
             ToggleAdv.IsEnabled = value;
+            multiUserCheck.IsEnabled = value;
         }
 
         /// <summary>
