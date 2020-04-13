@@ -7,9 +7,9 @@
             <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
             <b-collapse id="nav-collapse" is-nav>
-                <router-link to='/SeeShells/about' tag="menuitem"><b-navbar-item>About</b-navbar-item></router-link>
-                <router-link to='/SeeShells/help' tag="menuitem"><b-navbar-item>Documentation</b-navbar-item></router-link>
-                <router-link to='/SeeShells/team' tag="menuitem"><b-navbar-item>Developer Team</b-navbar-item></router-link>
+                <router-link to='/SeeShells/about' tag="menuitem">About</router-link>
+                <router-link to='/SeeShells/help' tag="menuitem">Documentation</router-link>
+                <router-link to='/SeeShells/team' tag="menuitem">Developer Team</router-link>
                 <b-navbar-nav>
                     <b-nav-item href="https://github.com/RickLeinecker/SeeShells">GitHub Page</b-nav-item>
                 </b-navbar-nav>
