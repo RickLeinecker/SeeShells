@@ -268,9 +268,7 @@ namespace SeeShells.UI.Pages
                     return;
 
             //cover UI
-            Mouse.OverrideCursor = Cursors.Wait;
-            ParseButton.Content = "Parsing...";
-            EnableUIElements(false);
+            ShowParsingInProgress(true);
 
             //begin the parsing process
             Stopwatch stopwatch = new Stopwatch();
@@ -278,7 +276,14 @@ namespace SeeShells.UI.Pages
 
             try
             {
-                App.ShellItems = await ParseShellBags();
+                List<IShellItem> shellItems = await ParseShellBags();
+                if (shellItems.Count == 0)
+                {
+                    LogAggregator.Instance.ShowIfNotEmpty();
+                    ShowParsingInProgress(false);
+                    return;
+                }
+                App.ShellItems = shellItems;
                 List<IEvent> events = EventParser.GetEvents(App.ShellItems);
                 if (App.nodeCollection.nodeList != null)
                 {
@@ -290,9 +295,7 @@ namespace SeeShells.UI.Pages
             catch (System.Security.SecurityException)
             {
                 showErrorMessage("Please exit the program and run SeeShells as an administrator to parse a live registry.", "Access Denied");
-                ParseButton.Content = "Parse";
-                EnableUIElements(true);
-                Mouse.OverrideCursor = Cursors.Arrow;
+                ShowParsingInProgress(false);
                 return;
             }
 
@@ -300,12 +303,10 @@ namespace SeeShells.UI.Pages
             logger.Info("Parsing Complete. ShellItems Parsed: " + App.ShellItems.Count + ". Time Elapsed: " + stopwatch.ElapsedMilliseconds / 1000 + " seconds");
 
             //Restore UI
-            ParseButton.Content = "Parse";
-            EnableUIElements(true);
+            ShowParsingInProgress(false);
 
             //Go to Timeline
-            Mouse.OverrideCursor = Cursors.Arrow;
-            if(timelinePage == null)
+            if (timelinePage == null)
             {
                 timelinePage = new TimelinePage();
                 NavigationService.Navigate(timelinePage);
@@ -322,7 +323,13 @@ namespace SeeShells.UI.Pages
                 App.pages.Add("timelinepage", timelinePage);
 
             }
+        }
 
+        private void ShowParsingInProgress(bool isParsing)
+        {
+            ParseButton.Content = isParsing ? "Parsing..." : "Parse";
+            EnableUIElements(!isParsing);
+            Mouse.OverrideCursor = isParsing ? Cursors.Wait : Cursors.Arrow;
         }
 
         private async Task<List<IShellItem>> ParseShellBags()

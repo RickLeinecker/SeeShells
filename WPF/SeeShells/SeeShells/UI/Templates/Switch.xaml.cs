@@ -18,6 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SeeShells.ShellParser.ShellItems;
 
 namespace SeeShells.UI.Templates
 {
@@ -77,12 +78,20 @@ namespace SeeShells.UI.Templates
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 InitialDirectory = Directory.GetCurrentDirectory(),
-                Filter = "CSV File (*.csv)|*.csv"
+                Filter = "CSV File (*.csv)|*.csv",
+                ReadOnlyChecked = true
             };
 
             if (openFileDialog.ShowDialog() != true)
                 return;
             var file = openFileDialog.FileName;
+            List<IShellItem> csvShelltems = CsvIO.ImportCSVFile(file);
+            if (csvShelltems.Count == 0)
+            {
+                LogAggregator.Instance.ShowIfNotEmpty();
+                return;
+            }
+
             if (App.ShellItems != null)
             {
                 App.ShellItems.Clear();
@@ -92,7 +101,7 @@ namespace SeeShells.UI.Templates
                 App.nodeCollection.nodeList.Clear();
             }
 
-            App.ShellItems = CsvIO.ImportCSVFile(file);
+            App.ShellItems = csvShelltems;
             List<IEvent> events = EventParser.GetEvents(App.ShellItems);
             App.nodeCollection.ClearAllFilters();
             App.nodeCollection.nodeList.AddRange(NodeParser.GetNodes(events));
@@ -115,7 +124,7 @@ namespace SeeShells.UI.Templates
                     App.NavigationService.Navigate(Home.timelinePage);
                 }
             }
-
+            LogAggregator.Instance.ShowIfNotEmpty();
         }
     }
 }

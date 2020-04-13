@@ -12,7 +12,7 @@ namespace SeeShells.ShellParser.ShellItems
         /// </summary>
         ushort Size { get; }
         /// <summary>
-        /// Unique two byte identifier that represents an indicator for the shell item.
+        /// Unique byte identifier that represents an indicator for the shell item.
         /// Subtypes exist and must be further seperated by other information in the object. 
         /// Has no effect on signature based Shell items.
         /// See <seealso cref="TypeName"/> for a Human readable interpretation of the Shell Item.

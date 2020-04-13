@@ -10,7 +10,19 @@ namespace SeeShells.ShellParser.ShellItems
     {
         public virtual ushort Size { get; protected set; }
         public virtual byte Type { get; protected set; }
-        public virtual string TypeName { get; protected set; }
+
+        public virtual string TypeName
+        {
+            get
+            {
+                return "Unknown";
+            }
+            protected set
+            {
+
+            }
+        }
+
         public virtual string Name
         {
             get

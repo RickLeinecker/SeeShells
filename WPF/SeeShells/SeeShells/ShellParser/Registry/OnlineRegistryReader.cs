@@ -210,49 +210,58 @@ namespace SeeShells.ShellParser.Registry
             }
 
             string retval = string.Empty;
-
-            List<string> usernameLocations = Parser.GetUsernameLocations();
-
-            Dictionary<string, int> likelyUsernames = new Dictionary<string, int>();
-            foreach (string usernameLocation in usernameLocations)
+            try
             {
-                if (userStore.OpenSubKey(usernameLocation) != null)
+
+                List<string> usernameLocations = Parser.GetUsernameLocations();
+
+                Dictionary<string, int> likelyUsernames = new Dictionary<string, int>();
+                foreach (string usernameLocation in usernameLocations)
                 {
-                    //based on the values in '...\Explorer\Shell Folders' the [2] value in the string may not always be the username, but it does appear the most.
-                    foreach (string value in userStore.OpenSubKey(usernameLocation).GetValueNames())
+                    if (userStore.OpenSubKey(usernameLocation) != null)
                     {
-                        string valueData = (string)userStore.OpenSubKey(usernameLocation).GetValue(value);
-                        string[] pathParts = valueData.Split('\\');
-                        if (pathParts.Length > 2)
+                        //based on the values in '...\Explorer\Shell Folders' the [2] value in the string may not always be the username, but it does appear the most.
+                        foreach (string value in userStore.OpenSubKey(usernameLocation).GetValueNames())
                         {
-                            string username = pathParts[2]; //usually in the form of C:\Users\username
-                            if (!likelyUsernames.ContainsKey(username))
+                            string valueData = (string) userStore.OpenSubKey(usernameLocation).GetValue(value);
+                            string[] pathParts = valueData.Split('\\');
+                            if (pathParts.Length > 2)
                             {
-                                likelyUsernames[username] = 1;
-                            }
-                            else
-                            {
-                                likelyUsernames[username]++;
+                                string username = pathParts[2]; //usually in the form of C:\Users\username
+                                if (!likelyUsernames.ContainsKey(username))
+                                {
+                                    likelyUsernames[username] = 1;
+                                }
+                                else
+                                {
+                                    likelyUsernames[username]++;
+                                }
                             }
                         }
                     }
+                    else
+                    {
+                        return retval;
+                    }
                 }
-                else
+
+                //most occurred value is probably the username.
+                if (likelyUsernames.Count >= 1)
                 {
-                    return retval;
+                    retval = likelyUsernames.OrderByDescending(pair => pair.Value).First().Key;
+                }
+
+                //add this to our existing list for easy lookup for later potential user hives
+                if (retval != null && retval != string.Empty)
+                {
+                    sidToUsernameMappings.Add(sid, retval);
                 }
             }
-            //most occurred value is probably the username.
-            if (likelyUsernames.Count >= 1)
+            catch (Exception ex)
             {
-                retval = likelyUsernames.OrderByDescending(pair => pair.Value).First().Key;
+                logger.Error(ex, $"Unable to retrieve username from hive {userStore.Name}");
             }
 
-            //add this to our existing list for easy lookup for later potential user hives
-            if (retval != null && retval != string.Empty)
-            {
-                sidToUsernameMappings.Add(sid, retval);
-            }
             return retval;
         }
 
