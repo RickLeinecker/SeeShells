@@ -3,7 +3,7 @@
         <h1>Welcome to SeeShells</h1>
         <h4>Extract Information - Create Timeline - Apply filters - Export HTML Report or Raw data to csv </h4>
         <p/>
-        <button type="button" @click="onClick">Download SeeShells.exe</button>
+        <button type="button" @click="onClick" title="https://github.com/RickLeinecker/SeeShells/releases/latest/download/SeeShells.exe">Download SeeShells.exe</button>
         <p style="text-align:center">
             <br />
             <br />
