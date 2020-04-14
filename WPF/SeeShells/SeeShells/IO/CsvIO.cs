@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using NLog;
+using SeeShells.UI;
 
 namespace SeeShells.IO
 {
@@ -12,6 +14,8 @@ namespace SeeShells.IO
     /// </summary>
     public static class CsvIO
     {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         /// <summary>
         /// Creates a CSV file with ShellBag data in a given location.
         /// </summary>
@@ -43,9 +47,9 @@ namespace SeeShells.IO
                 keysMap.Add(keysArray[i], i);
             }
 
-            // Writes the headers to the CSV and parses over the properties of each ShellItem again in oder to obtain the values
+            // Writes the headers to the CSV and parses over the properties of each ShellItem again in order to obtain the values
             // for each property, which are then placed in an array acording to the index that they map to and written to the CSV.
-            using (var writer = new StreamWriter(filePath, true))
+            using (var writer = new StreamWriter(filePath, false))
             {
                 writer.WriteLine(string.Join(",", keysArray));
                 writer.Flush();
@@ -72,29 +76,81 @@ namespace SeeShells.IO
         public static List<IShellItem> ImportCSVFile(String filePath)
         {
             List<IShellItem> retList = new List<IShellItem>();
-            using (var reader = new StreamReader(filePath))
-            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            try
             {
-                csv.Read();
-                csv.ReadHeader();
-                string[] propertyValues = csv.Context.HeaderRecord;
-                int propertyValuesCurrIndex = 0;
-
-                while (csv.Read())
+                using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (var reader = new StreamReader(fileStream))
+                using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {
-                    IDictionary<string, string> properties = new Dictionary<string, string>();
-                    for (int i = 0; i < csv.Context.Record.Length; i++)
+                    csv.Read();
+                    csv.ReadHeader();
+                    string[] propertyValues = csv.Context.HeaderRecord;
+                    int propertyValuesCurrIndex = 0;
+                    int failedReadRows = 0;
+
+                    while (csv.Read())
                     {
-                        if(!csv.GetField(i).Equals(""))
+                        try
                         {
-                            properties.Add(propertyValues[propertyValuesCurrIndex], csv.GetField(i));
+                            IDictionary<string, string> properties = new Dictionary<string, string>();
+                            for (int i = 0; i < csv.Context.Record.Length; i++)
+                            {
+                                if (!csv.GetField(i).Equals(""))
+                                {
+                                    properties.Add(propertyValues[propertyValuesCurrIndex], csv.GetField(i));
+                                }
+
+                                propertyValuesCurrIndex++;
+                            }
+
+                            propertyValuesCurrIndex = 0;
+                            retList.Add(new CsvParsedShellItem(properties));
                         }
-                        propertyValuesCurrIndex++;
+                        catch (Exception ex)
+                        {
+                            failedReadRows++;
+                            string message;
+
+                            if (ex is KeyNotFoundException)
+                            {
+                                message = $"Cannot extract events from Shellbag at row {csv.Context.RawRow}. Missing required information, See log.txt for more information.";
+                            }
+                            else
+                            {
+                                message = $"Failed to read row {csv.Context.RawRow} in the CSV file.";
+                            }
+
+                            logger.Warn(message);
+                            LogAggregator.Instance.Add(message);
+                        }
                     }
-                    propertyValuesCurrIndex = 0;
-                    retList.Add(new CsvParsedShellItem(properties));
+
+                    //too many failed rows, just report that multiple failed (if all failed, dont report)
+                    if (failedReadRows > 10 && retList.Count != 0)
+                    {
+                        LogAggregator.Instance.Clear();
+                        LogAggregator.Instance.Add($"Failed to read multiple in the CSV file. See log.txt for more information.");
+                    } else if (retList.Count == 0)
+                    {
+                        LogAggregator.Instance.Clear();
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                var message = $"Failed to read CSV file {filePath}";
+                logger.Error(ex, message);
+                LogAggregator.Instance.Add(message);
+                return retList;
+            }
+
+            if (retList.Count == 0)
+            {
+                string message = $"No Shellbag records found in file.";
+                logger.Info(message);
+                LogAggregator.Instance.Add(message);
+            }
+
             return retList;
         }
     }
