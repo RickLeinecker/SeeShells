@@ -99,13 +99,21 @@
             <Viewbox x:Name="OsConfigText" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,0,0,5">
                 <StackPanel Orientation="Vertical">
                     <Label Content="OS Configuration File" Foreground="LightGray" />
-                    <TextBox x:Name="OSFileLocationTextBox" MinWidth="200" Text="{Binding OSFileLocation, Mode=OneWay}" VerticalContentAlignment="Center" IsEnabled="False"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox x:Name="OSFileLocationTextBox" MinWidth="200" Text="{Binding OSFileLocation, Mode=OneWay}" VerticalContentAlignment="Center" IsEnabled="False"/>
+                    </StackPanel>
                 </StackPanel>
             </Viewbox>
-            <Viewbox x:Name="OsConfig" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
+            <Viewbox x:Name="OsConfig" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left">
                 <StackPanel Orientation="Horizontal">
                     <Button x:Name="OSBrowseButton" Content="Browse" Click="OSBrowseButton_Click" Margin="10,0"/>
                     <Button x:Name="OSUpdateButton" Content="Update File" Click="OSUpdateButton_Click"  Margin="10,0"/>
+                </StackPanel>
+            </Viewbox>
+            <Viewbox Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="GUIDBrowseButton" Content="Browse" Click="GUIDBrowseButton_Click"  Margin="10,0"/>
+                    <Button x:Name="GUIDUpdateButton" Content="Update File" Click="GUIDUpdateButton_Click"  Margin="10,0"/>
                 </StackPanel>
             </Viewbox>
             <Viewbox Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,0,0,5">
@@ -130,12 +138,7 @@
                     <CheckBox x:Name="multiUserCheck" VerticalAlignment="Center"/>
                 </StackPanel>
             </Viewbox>
-                <Viewbox Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
-                <StackPanel Orientation="Horizontal">
-                    <Button x:Name="GUIDBrowseButton" Content="Browse" Click="GUIDBrowseButton_Click"  Margin="10,0"/>
-                    <Button x:Name="GUIDUpdateButton" Content="Update File" Click="GUIDUpdateButton_Click"  Margin="10,0"/>
-                </StackPanel>
-            </Viewbox>
+
             <Viewbox Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left"  VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
                     <Button x:Name="ScriptBrowseButton" Content="Browse" Click="ScriptBrowseButton_Click"  Margin="10,0"/>
