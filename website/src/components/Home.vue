@@ -8,7 +8,7 @@
             <br />
             <br />
             SeeShells is an information extraction software.
-            SeeShells is a standalone, open source executable that can run both online and offline.
+            SeeShells is a standalone, open source executable that can run both online and offline registry hives.
             It extracts and parses through Windows Registry information. This data is then converted into two forms.
             The first is a csv file that contains all the raw data we obtain. The second is a human readable timeline.
             The timeline provides an interactive, easier to read visualization of the data extracted from the windows registries. This information
